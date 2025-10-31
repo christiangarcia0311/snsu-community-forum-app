@@ -31,4 +31,5 @@ Stream is a community-driven forum platform built fot **Surigao Del Norte State 
 
 | [<img src="https://github.com/christiangarcia0311.png" width="100px;">](https://github.com/christiangarcia0311) |
 |:--:|
+| [Christian Garcia](https://github.com/christiangarcia0311) | 
 | Lead Developer |
