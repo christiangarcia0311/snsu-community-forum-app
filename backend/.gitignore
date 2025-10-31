@@ -1,0 +1,14 @@
+# Django & Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Virtual environment
+venv/
+env/
+
+# IDE and system files
+.vscode/
+.idea/
+*.swp
