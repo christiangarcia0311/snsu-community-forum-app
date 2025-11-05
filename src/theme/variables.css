@@ -1,2 +1,25 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+    --primary-shade: #3db02d;
+    --secondary-shade: #ffac10;
+    --tertiary-shade: #a6a6a6;
+    --dark-shade: #737373;
+    --font-primary: Arial, sans-serif;
+
+    /* Map ionic primary color */
+    --ion-color-primary: var(--primary-shade);
+}
+.center-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-header {
+    height: 60px;
+    width: auto;
+    display: flex;
+}
