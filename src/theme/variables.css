@@ -6,11 +6,15 @@ http://ionicframework.com/docs/theming/ */
     --secondary-shade: #ffac10;
     --tertiary-shade: #a6a6a6;
     --dark-shade: #737373;
+    --light-shade: #eeeeee;
     --font-primary: Arial, sans-serif;
 
     /* Map ionic primary color */
     --ion-color-primary: var(--primary-shade);
+    --ion-color-secondary: var(--secondary-shade);
+    --ion-color-secondary-contrast: #ffffff;
 }
+
 .center-display {
     display: flex;
     justify-content: center;
@@ -18,7 +22,37 @@ http://ionicframework.com/docs/theming/ */
     height: 100%;
 }
 
+.center-welcome {
+    display: flex;
+    justify-content: center;  
+    align-items: center;     
+    height: 100%;             
+    width: 100%;              
+    flex-direction: column;  
+    text-align: center;
+}
+
+.center-header {
+    font-size: 36px;
+    color:  var(--primary-shade);
+    font-weight: bold;
+    font-family: var(--font-primary);
+    margin-top: 5px;
+}
+
+.center-description {
+    font-size: 12px;
+    color: var(--tertiary-shade);
+    padding: 10px 20px;
+    margin-top: -5px;
+}
+
 .logo-header {
     height: 60px;
     width: auto;
+}
+
+.logo-mainpage {
+    height: 170px;
+    width: 170px;
 }

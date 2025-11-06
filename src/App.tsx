@@ -37,7 +37,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 
 /* Tab Pages */
-import Tabs from "./Tabs";
+import Welcome from "./components/app/Welcome";
+import { WelcomePage } from "./pages/WelcomePage";
 
 setupIonicReact();
 
@@ -54,7 +55,7 @@ const App: React.FC = () => {
   
   return (
     <IonApp>
-      <Tabs />
+      <WelcomePage />
     </IonApp>
   );
 };
