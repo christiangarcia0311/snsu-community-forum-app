@@ -14,18 +14,18 @@ const AppRoute = () => {
   return (
     <>
 
-      {/* Default Route */}
+      {/* Default */}
       <Redirect exact from='/' to='/welcome' />
 
 
-      {/* Routes for Welcome Page */}
+      {/* Welcome */}
       <Route path='/welcome' render={() => <WelcomePage />} exact={true} />
 
-      {/* Auth Routes */}
+      {/* Auth */}
       <Route path='/auth/signin' render={() => <AuthSignIn />} exact={true} />
       <Route path='/auth/signup' render={() => <AuthSignUp />} exact={true} />
 
-      {/* Mount Tabs container (Tab routes live under /tabs/*) */}
+      {/* Tabs */}
       <Route path='/tabs' render={() => <Tabs />} />
 
     </>
