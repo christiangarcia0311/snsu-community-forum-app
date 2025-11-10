@@ -7,6 +7,7 @@ http://ionicframework.com/docs/theming/ */
     --tertiary-shade: #a6a6a6;
     --dark-shade: #737373;
     --light-shade: #eeeeee;
+    --red-shade: #c50f0fe3;
     --font-primary: Arial, sans-serif;
 
     /* Map ionic primary color */
@@ -20,13 +21,23 @@ http://ionicframework.com/docs/theming/ */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    margin-top: 40px;
 }
 
 .center-card {
     width: 380px;
     --background: transparent;
     --box-shadow: none;
+    box-shadow: none !important;
+}
+
+.center-separator {
+    text-align: center;
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
 }
 
 .center-welcome {
@@ -76,6 +87,7 @@ http://ionicframework.com/docs/theming/ */
     width: 170px;
 }
 
+/* auth page */
 .logo-auth {
     height: 120px;
     width: auto;
@@ -86,8 +98,38 @@ http://ionicframework.com/docs/theming/ */
 }
 
 .btn-auth {
-    margin-top: 20px;
+    margin-top: 25px;
     width: 100%;
     height: 50px;    
     --box-shadow: none;
+    --color: var(--light-shade);
+}
+
+.btn-auth-google {
+    width: 100%;
+    height: 50px;    
+    --box-shadow: none;
+    --color: var(--light-shade);
+    --background: var(--red-shade);
+}
+
+.txt-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.txt-auth {
+    color: var(--tertiary-shade);
+}
+
+.line {
+    flex: 1;                         /* expand to fill available space */
+    height: 1px;
+    background: var(--tertiary-shade); /* line color */
+    display: block;
+}
+
+.links {
+    margin-top: 10px;
+    color: var(--secondary-shade);
 }
