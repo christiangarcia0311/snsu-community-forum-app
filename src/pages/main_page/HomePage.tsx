@@ -4,18 +4,16 @@ import {
     IonContent
 } from '@ionic/react'
 
-/* custom styling */
-import '../theme/variables.css'
 
-const CommunityPage = () => {
+const HomePage = () => {
     return (
         <IonContent>
             <div className="center-display">
-                Community Page
+                Home Page
             </div>
         </IonContent>
     )
 }
 
 
-export default CommunityPage
+export default HomePage

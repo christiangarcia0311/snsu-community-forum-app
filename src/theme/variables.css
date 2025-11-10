@@ -15,11 +15,18 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-secondary-contrast: #ffffff;
 }
 
+/* Align items in center */
 .center-display {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.center-card {
+    width: 380px;
+    --background: transparent;
+    --box-shadow: none;
 }
 
 .center-welcome {
@@ -30,6 +37,18 @@ http://ionicframework.com/docs/theming/ */
     width: 100%;              
     flex-direction: column;  
     text-align: center;
+}
+
+.adjust-content {
+    margin-top: 20px; 
+}
+
+.adjust-container {
+    padding: 20px 10px;
+}
+
+.adjust-background {
+    --background: transparent;
 }
 
 .center-header {
@@ -55,4 +74,20 @@ http://ionicframework.com/docs/theming/ */
 .logo-mainpage {
     height: 170px;
     width: 170px;
+}
+
+.logo-auth {
+    height: 120px;
+    width: auto;
+}
+
+.inpt-auth {
+    --border-radius: 30px;
+}
+
+.btn-auth {
+    margin-top: 20px;
+    width: 100%;
+    height: 50px;    
+    --box-shadow: none;
 }

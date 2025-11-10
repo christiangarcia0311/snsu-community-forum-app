@@ -1,7 +1,7 @@
 import { IonApp, setupIonicReact } from "@ionic/react";
 import { IonRouterOutlet } from "@ionic/react";
 import { useEffect } from "react";
-
+import { IonReactRouter } from "@ionic/react-router";
 /* prevent overlap android */
 import { StatusBar } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
@@ -36,9 +36,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-/* Tab Pages */
-import Welcome from "./components/app/Welcome";
-import { WelcomePage } from "./pages/WelcomePage";
+import AppRoute from "./AppRoute";
 
 setupIonicReact();
 
@@ -55,7 +53,11 @@ const App: React.FC = () => {
   
   return (
     <IonApp>
-      <WelcomePage />
+      <IonReactRouter>
+        <IonRouterOutlet>
+          {AppRoute()}
+        </IonRouterOutlet>
+      </IonReactRouter>
     </IonApp>
   );
 };

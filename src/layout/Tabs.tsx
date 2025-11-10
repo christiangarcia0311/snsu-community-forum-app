@@ -4,11 +4,11 @@ import { IonReactRouter } from '@ionic/react-router'
 
 
 /* Route Pages */
-import AppRoute from './AppRoute'
+import AppRoute from '../AppRoute'
 
 /* Tab Buttons and Header */
-import TabHeader from './components/tabs/TabHeader'
-import TabButtons from './components/tabs/TabButton'
+import TabHeader from '../components/tabs/TabHeader'
+import TabButtons from '../components/tabs/TabButton'
 
 const Tabs: React.FC = () => {
     return (

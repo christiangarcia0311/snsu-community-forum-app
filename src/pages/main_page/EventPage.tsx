@@ -4,8 +4,6 @@ import {
     IonContent
 } from '@ionic/react'
 
-/* custom styling */
-import '../theme/variables.css'
 
 const EventPage = () => {
     return (

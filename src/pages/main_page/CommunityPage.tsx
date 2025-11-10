@@ -4,18 +4,15 @@ import {
     IonContent
 } from '@ionic/react'
 
-/* custom styling */
-import '../theme/variables.css'
-
-const ProfilePage = () => {
+const CommunityPage = () => {
     return (
         <IonContent>
             <div className="center-display">
-                Profile Page
+                Community Page
             </div>
         </IonContent>
     )
 }
 
 
-export default ProfilePage
+export default CommunityPage
