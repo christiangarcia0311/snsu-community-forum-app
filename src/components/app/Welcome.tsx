@@ -12,7 +12,7 @@ const Welcome = () => {
     const history =  useHistory()
 
     const handleGetStarted = () => {
-        history.push('/auth')
+        history.push('/auth/signin')
     }
 
     return (

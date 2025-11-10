@@ -1,26 +1,42 @@
+import { useHistory } from 'react-router'
+
 import {
     IonPage,
     IonContent,
     IonCard,
     IonCardContent,
+    IonCheckbox,
     IonIcon,
     IonText,
     IonButton,
     IonInput,
-    IonItem
+    IonItem,
+    IonFooter,
+    IonToolbar,
+    IonTitle
 } from '@ionic/react'
 
 // icons 
 
 import {
+    person,
     mail,
-    lockClosed,
-    logoGoogle,
-    helpCircle
+    key,
+    logoGoogle
 } from 'ionicons/icons'
 
 
-const Auth = () => {
+const AuthSignUp = () => {
+
+    const history  = useHistory()
+
+    const currentYear = new Date().getFullYear()
+    const appName = 'Stream'
+
+    const handleSwap = () => {
+        history.push('/auth/signin')
+    }
+
     return (
         <IonPage>
             <IonContent className='ion-padding'>
@@ -31,30 +47,52 @@ const Auth = () => {
                                 <div className='center-display'>
                                     <img src="/favicon.png" alt="Logo" className='logo-auth' />
                                 </div>
-                        
+
+                                <IonItem className='adjust-background'>
+                                    <IonIcon slot='start' icon={person} aria-hidden="true" />
+                                    <IonInput 
+                                        type='text'
+                                        className='adjust-content inpt-AuthSignUp'
+                                        placeholder='Enter your username'
+                                        label='Username'
+                                        labelPlacement='stacked'
+                                    />
+                                </IonItem>
                                 <IonItem className='adjust-background'>
                                     <IonIcon slot='start' icon={mail} aria-hidden="true" />
                                     <IonInput 
                                         type='email'
-                                        className='adjust-content inpt-auth'
+                                        className='adjust-content inpt-AuthSignUp'
                                         placeholder='Enter your email'
                                         label='Email Address'
                                         labelPlacement='stacked'
                                     />
                                 </IonItem>
                                 <IonItem className='adjust-background'>
-                                    <IonIcon slot='start' icon={lockClosed} aria-hidden="true" />
+                                    <IonIcon slot='start' icon={key} aria-hidden="true" />
                                     <IonInput 
                                         type='password'
-                                        className='adjust-content inpt-auth'
+                                        className='adjust-content inpt-AuthSignUp'
                                         placeholder='Enter your password'
                                         label='Password'
                                         labelPlacement='stacked'
                                     />
                                 </IonItem>
+                                <IonItem className='adjust-background'>
+                                    <IonIcon slot='start' icon={key} aria-hidden="true" />
+                                    <IonInput 
+                                        type='password'
+                                        className='adjust-content inpt-AuthSignUp'
+                                        placeholder='Confirm your password'
+                                        label='Confirm Password'
+                                        labelPlacement='stacked'
+                                    />
+                                </IonItem>
 
                                 <IonItem lines='none' className='adjust-background'>
-                                    <a href="/" className='links' slot='end'>Forgot Password?</a>
+                                    <IonCheckbox justify='end' className='links-container'>
+                                        I accept the <a href="/" className='links-checks'>Terms and Conditions</a>
+                                    </IonCheckbox>
                                 </IonItem>
 
                                 <IonItem lines='none' className='adjust-background'>
@@ -63,7 +101,7 @@ const Auth = () => {
                                         className='btn-auth'
                                         shape='round'
                                     >
-                                        Sign In
+                                        Sign Up
                                     </IonButton>
                                 </IonItem>
 
@@ -81,22 +119,32 @@ const Auth = () => {
                                             slot='start' 
                                             icon={logoGoogle}
                                         />
-                                        Continue with Google
+                                        Sign Up with Google
                                     </IonButton>
                                 </IonItem>
                                 
                                 <div className="txt-container">
                                     <IonText className='txt-auth'>
-                                        Don't have an account? <a href="/auth" className='links' >Sign Up</a>
+                                        Already have an account? <a onClick={() => handleSwap()} className='links' >Sign In</a>
                                     </IonText>
                                 </div>
                             </IonCardContent>
                         </IonCard>
                     </div>
                 </div>
+
+                
             </IonContent>
+
+            <IonFooter>
+                <IonToolbar className='txt-container-footer'>
+                    <IonTitle>
+                        <p className='txt-copyright'>&copy; {currentYear} {appName}. All Rights Reserved.</p>
+                    </IonTitle>
+                </IonToolbar>
+            </IonFooter>
         </IonPage>
     )
 }
 
-export default Auth
+export default AuthSignUp

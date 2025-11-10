@@ -1,6 +1,11 @@
 import React from 'react'
-import Auth from '../../components/auth/Auth'
+
+import AuthSignIn from '../../components/auth/AuthSignIn'
 
 export const AuthPage: React.FC = () => {
-    return <Auth />
+    return (
+        <>
+            <AuthSignIn />
+        </>
+    )
 }
