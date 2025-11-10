@@ -2,11 +2,12 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
 /* App Pages */
-import { WelcomePage } from './pages/welcome_page/WelcomePage'
-import Tabs from './layout/Tabs'
+import { WelcomePage } from '../pages/welcome_page/WelcomePage'
 
-import AuthSignIn from './components/auth/AuthSignIn'
-import AuthSignUp from './components/auth/AuthSignUp'
+import Tabs from '../layout/Tabs'
+
+import AuthSignIn from '../components/auth/AuthSignIn'
+import AuthSignUp from '../components/auth/AuthSignUp'
 
 
 const AppRoute = () => {

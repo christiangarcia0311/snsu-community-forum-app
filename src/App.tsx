@@ -2,6 +2,8 @@ import { IonApp, setupIonicReact } from "@ionic/react";
 import { IonRouterOutlet } from "@ionic/react";
 import { useEffect } from "react";
 import { IonReactRouter } from "@ionic/react-router";
+
+
 /* prevent overlap android */
 import { StatusBar } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
@@ -36,7 +38,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-import AppRoute from "./AppRoute";
+import AppRoute from "./routes/AppRoute";
 
 setupIonicReact();
 
