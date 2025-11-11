@@ -15,11 +15,11 @@ const AppRoute = () => {
     <>
 
       {/* Default */}
-      <Redirect exact from='/' to='/welcome' />
+      {/*<Redirect exact from='/' to='/welcome' /> */}
 
 
       {/* Welcome */}
-      <Route path='/welcome' render={() => <WelcomePage />} exact={true} />
+      <Route path='/' render={() => <WelcomePage />} exact={true} />
 
       {/* Auth */}
       <Route path='/auth/signin' render={() => <AuthSignIn />} exact={true} />

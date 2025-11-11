@@ -12,7 +12,8 @@ import {
     IonItem,
     IonFooter,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonPopover
 } from '@ionic/react'
 
 // icons 
@@ -69,7 +70,12 @@ const AuthSignIn = () => {
                                 </IonItem>
 
                                 <IonItem lines='none' className='adjust-background'>
-                                    <a href="/" className='links' slot='end'>Forgot Password?</a>
+                                    <a id='forgot-pass' className='links' slot='end'>Forgot Password?</a>
+                                    <IonPopover trigger='forgot-pass' side='top' size='auto'>
+                                        <IonContent class='ion-padding'>
+                                            Enter your email to reset your password.
+                                        </IonContent>
+                                    </IonPopover>
                                 </IonItem>
 
                                 <IonItem lines='none' className='adjust-background'>
@@ -101,9 +107,9 @@ const AuthSignIn = () => {
                                 </IonItem>
                                 
                                 <div className="txt-container">
-                                    <IonText className='txt-auth'>
+                                    <a className='txt-auth'>
                                         Don't have an account? <a onClick={() => handleSwap()} className='links' >Sign Up</a>
-                                    </IonText>
+                                    </a>
                                 </div>
                             </IonCardContent>
                         </IonCard>

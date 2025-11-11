@@ -124,9 +124,9 @@ const AuthSignUp = () => {
                                 </IonItem>
                                 
                                 <div className="txt-container">
-                                    <IonText className='txt-auth'>
+                                    <p className='txt-auth'>
                                         Already have an account? <a onClick={() => handleSwap()} className='links' >Sign In</a>
-                                    </IonText>
+                                    </p>
                                 </div>
                             </IonCardContent>
                         </IonCard>
