@@ -1,3 +1,4 @@
+import React, { useState} from 'react'
 import { useHistory } from 'react-router'
 
 import {
@@ -20,7 +21,6 @@ import {
 
 import {
     mail,
-    lockClosed,
     key,
     logoGoogle
 } from 'ionicons/icons'
@@ -32,6 +32,10 @@ const AuthSignIn = () => {
 
     const currentYear = new Date().getFullYear()
     const appName = 'Stream'
+
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [message, setMessage]  useState('')
 
     const handleSwap = () => {
         history.push('/auth/signup')
