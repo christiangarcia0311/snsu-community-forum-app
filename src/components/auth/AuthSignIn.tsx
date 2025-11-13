@@ -88,6 +88,7 @@ const AuthSignIn = () => {
                                         labelPlacement='stacked'
                                         value={username}
                                         onIonChange={(e) => setUsername(e.detail.value!)}
+                                        required
                                     />
                                 </IonItem>
                                 <IonItem className='adjust-background'>
@@ -100,6 +101,7 @@ const AuthSignIn = () => {
                                         labelPlacement='stacked'
                                         value={password}
                                         onIonChange={(e) => setPassword(e.detail.value!)}
+                                        required
                                     />
                                 </IonItem>
 

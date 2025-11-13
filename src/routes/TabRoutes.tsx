@@ -1,5 +1,8 @@
 import { Route } from 'react-router-dom'
 
+// protected route
+import ProtectedRoute from './ProtectedRoute'
+
 /* App Pages */
 import HomePage from '../pages/main_page/HomePage'
 import EventPage from '../pages/main_page/EventPage'
@@ -9,11 +12,11 @@ import ProfilePage from '../pages/main_page/ProfilePage'
 
 const TabRoutes = () => (
     <>
-        <Route path='/tabs/home' render={() => <HomePage />} exact={true} />
-        <Route path='/tabs/events' render={() => <EventPage />} exact={true} />
-        <Route path='/tabs/forum' render={() => <ForumPage />} exact={true} />
-        <Route path='/tabs/community' render={() => <CommunityPage />} exact={true} />
-        <Route path='/tabs/profile' render={() => <ProfilePage />} exact={true} />
+        <ProtectedRoute path='/tabs/home' component={HomePage} exact={true} />
+        <ProtectedRoute path='/tabs/events' component={EventPage} exact={true} />
+        <ProtectedRoute path='/tabs/forum' component={ForumPage} exact={true} />
+        <ProtectedRoute path='/tabs/community' component={CommunityPage} exact={true} />
+        <ProtectedRoute path='/tabs/profile' component={ProfilePage} exact={true} />
     </>
 )
 

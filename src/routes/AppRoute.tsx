@@ -1,5 +1,6 @@
 import React from 'react' 
 import { Route, Redirect } from 'react-router-dom'
+import ProtectedRoute from './ProtectedRoute'
 
 /* App Pages */
 import { WelcomePage } from '../pages/welcome_page/WelcomePage'
@@ -19,14 +20,19 @@ const AppRoute = () => {
 
 
       {/* Welcome */}
-      <Route path='/' render={() => <WelcomePage />} exact={true} />
+      <Route path='/' render={() => <AuthSignIn />} exact={true} />
 
       {/* Auth */}
       <Route path='/auth/signin' render={() => <AuthSignIn />} exact={true} />
       <Route path='/auth/signup' render={() => <AuthSignUp />} exact={true} />
 
       {/* Tabs */}
-      <Route path='/tabs' render={() => <Tabs />} />
+      <ProtectedRoute path='/tabs' component={Tabs} />
+
+      {/* Redirect /tabs to /tabs/home as default */}
+      <Route exact path='/tabs'>
+        <Redirect to='/tabs/home' />
+      </Route>
 
     </>
   )

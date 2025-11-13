@@ -10,6 +10,8 @@ http://ionicframework.com/docs/theming/ */
     --red-shade: #c50f0fe3;
     --font-primary: Arial, sans-serif;
 
+    --logout-button-bg: var(--red-shade);
+
     /* Map ionic primary color */
     --ion-color-primary: var(--primary-shade);
     --ion-color-secondary: var(--secondary-shade);
@@ -21,7 +23,6 @@ http://ionicframework.com/docs/theming/ */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
 }
 
 .center-card {
@@ -50,6 +51,12 @@ http://ionicframework.com/docs/theming/ */
     text-align: center;
 }
 
+.profile-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 10px;
+}
+
 .adjust-content {
     margin-top: 20px; 
 }
@@ -60,6 +67,12 @@ http://ionicframework.com/docs/theming/ */
 
 .adjust-background {
     --background: transparent;
+}
+
+.align-header {
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .center-header {
@@ -82,6 +95,17 @@ http://ionicframework.com/docs/theming/ */
     width: auto;
 }
 
+.header-img {
+    display: flex;
+    justify-content: center;  
+    align-items: center; 
+    margin-top: 20px;
+}
+
+.header-profile {
+    border-radius: 50%;
+}
+
 .logo-mainpage {
     height: 170px;
     width: 170px;
@@ -91,7 +115,6 @@ http://ionicframework.com/docs/theming/ */
 .logo-auth {
     height: 170px;
     width: auto;
-    margin-bottom: 20px;
 }
 
 .inpt-auth {
@@ -114,6 +137,10 @@ http://ionicframework.com/docs/theming/ */
     --background: var(--red-shade);
 }
 
+.btn-logout {
+    font-size: 30px;
+}
+
 .txt-container {
     text-align: center;
     margin-top: 50px;
@@ -121,6 +148,26 @@ http://ionicframework.com/docs/theming/ */
 
 .txt-auth {
     color: var(--tertiary-shade);
+}
+
+.txt-main-header {
+    margin-bottom: 40px;
+}
+
+.txt-header {
+    text-align: center;
+    color: var(--secondary-shade);
+}
+.txt-subheader {
+    text-align: center;
+    color: var(--tertiary-shade);
+    font-size: 14px;
+}
+
+.txt-highlight {
+    color: var(--dark-shade);
+    padding-left: 10px;
+    margin-top: 30px;
 }
 
 .txt-container-footer {
