@@ -14,16 +14,20 @@ import {
     IonFooter,
     IonToolbar,
     IonTitle,
-    IonPopover
+    IonPopover,
+    IonAlert
 } from '@ionic/react'
 
 // icons 
 
 import {
-    mail,
+    person,
     key,
     logoGoogle
 } from 'ionicons/icons'
+
+// sign in service
+import { signinUser } from '../../services/AuthService'
 
 
 const AuthSignIn = () => {
@@ -33,9 +37,31 @@ const AuthSignIn = () => {
     const currentYear = new Date().getFullYear()
     const appName = 'Stream'
 
+
+    // -- handle Sign in state --
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [message, setMessage]  useState('')
+
+    // -- handle Sign in message --
+    const [message, setMessage] =  useState('')
+    const [showMessage, setShowMessage] = useState(false)
+
+    const handleSignIn =  async () => {
+
+        try {
+            const data = await signinUser(username, password)
+            setMessage(`Welcome ${data.username}!`)
+            setShowMessage(true)
+
+            setTimeout(() => {
+                history.push('/tabs')
+            }, 1200)
+
+        } catch (error: any) {
+            setMessage(error.error || 'Sign in failed')
+            setShowMessage(true)
+        }
+    }
 
     const handleSwap = () => {
         history.push('/auth/signup')
@@ -53,13 +79,15 @@ const AuthSignIn = () => {
                                 </div>
                         
                                 <IonItem className='adjust-background'>
-                                    <IonIcon slot='start' icon={mail} aria-hidden="true" />
+                                    <IonIcon slot='start' icon={person} aria-hidden="true" />
                                     <IonInput 
-                                        type='email'
+                                        type='text'
                                         className='adjust-content inpt-AuthSignIn'
-                                        placeholder='Enter your email'
-                                        label='Email Address'
+                                        placeholder='Enter your username'
+                                        label='Username'
                                         labelPlacement='stacked'
+                                        value={username}
+                                        onIonChange={(e) => setUsername(e.detail.value!)}
                                     />
                                 </IonItem>
                                 <IonItem className='adjust-background'>
@@ -70,6 +98,8 @@ const AuthSignIn = () => {
                                         placeholder='Enter your password'
                                         label='Password'
                                         labelPlacement='stacked'
+                                        value={password}
+                                        onIonChange={(e) => setPassword(e.detail.value!)}
                                     />
                                 </IonItem>
 
@@ -87,6 +117,7 @@ const AuthSignIn = () => {
                                         expand='block'
                                         className='btn-auth'
                                         shape='round'
+                                        onClick={() => handleSignIn()}
                                     >
                                         Sign In
                                     </IonButton>
@@ -114,6 +145,16 @@ const AuthSignIn = () => {
                                     <a className='txt-auth'>
                                         Don't have an account? <a onClick={() => handleSwap()} className='links' >Sign Up</a>
                                     </a>
+                                </div>
+
+                                <div className="message">
+                                    <IonAlert
+                                        isOpen={showMessage}
+                                        onDidDismiss={() => setShowMessage(false)}
+                                        header='Sign In'
+                                        message={message}
+                                        buttons={['OK']}
+                                    />
                                 </div>
                             </IonCardContent>
                         </IonCard>
