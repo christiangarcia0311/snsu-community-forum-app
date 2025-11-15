@@ -12,7 +12,6 @@ import TabButtons from '../components/tabs/TabButton'
 const Tabs: React.FC = () => {
     return (
         <IonPage>
-            <TabHeader />
             <IonTabs>
                 <IonRouterOutlet>
                     <TabRoutes />

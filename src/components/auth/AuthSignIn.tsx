@@ -4,25 +4,22 @@ import { useHistory } from 'react-router'
 import {
     IonPage,
     IonContent,
-    IonCard,
-    IonCardContent,
     IonIcon,
     IonText,
     IonButton,
     IonInput,
-    IonItem,
+    IonGrid,
+    IonRow,
+    IonCol,
     IonFooter,
     IonToolbar,
     IonTitle,
-    IonPopover,
+    IonLoading,
     IonAlert
 } from '@ionic/react'
 
 // icons 
-
 import {
-    person,
-    key,
     logoGoogle
 } from 'ionicons/icons'
 
@@ -46,123 +43,166 @@ const AuthSignIn = () => {
     const [message, setMessage] =  useState('')
     const [showMessage, setShowMessage] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+    const [loadingNavigate, setLoadingNavigate] = useState(false)
+
     const handleSignIn =  async () => {
 
-        try {
-            const data = await signinUser(username, password)
-            setMessage(`Welcome ${data.username}!`)
+        if (!username.trim() || !password.trim()) {
+            setMessage('Please enter both username and password.')
             setShowMessage(true)
 
             setTimeout(() => {
+                setShowMessage(false)
+            }, 1500)
+
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            await signinUser(username, password)
+            setMessage('Sign in successful!')
+            setShowMessage(true)
+            
+            setTimeout(() => {
+                setShowMessage(false)
+            }, 1500)
+
+            setTimeout(() => {
+                setLoading(false)
                 history.push('/tabs')
             }, 1200)
 
         } catch (error: any) {
-            setMessage(error.error || 'Sign in failed')
+            setLoading(false)
+            setMessage(error?.error || 'Invald credentials')
             setShowMessage(true)
+
+            setTimeout(() => {
+                setShowMessage(false)
+            }, 1500)
         }
     }
 
     const handleSwap = () => {
-        history.push('/auth/signup')
+
+        setLoadingNavigate(true)
+
+        setTimeout(() => {
+            setLoadingNavigate(false)
+            history.push('/auth/signup')
+        }, 600)
     }
 
     return (
         <IonPage>
             <IonContent className='ion-padding'>
-                <div className='center-display'>
-                    <div>
-                        <IonCard className='center-card'>
-                            <IonCardContent>
-                                <div className='center-display'>
-                                    <img src="/favicon.png" alt="Logo" className='logo-auth' />
-                                </div>
-                        
-                                <IonItem className='adjust-background'>
-                                    <IonIcon slot='start' icon={person} aria-hidden="true" />
-                                    <IonInput 
-                                        type='text'
-                                        className='adjust-content inpt-AuthSignIn'
-                                        placeholder='Enter your username'
-                                        label='Username'
-                                        labelPlacement='stacked'
-                                        value={username}
-                                        onIonChange={(e) => setUsername(e.detail.value!)}
-                                        required
-                                    />
-                                </IonItem>
-                                <IonItem className='adjust-background'>
-                                    <IonIcon slot='start' icon={key} aria-hidden="true" />
-                                    <IonInput 
-                                        type='password'
-                                        className='adjust-content inpt-AuthSignIn'
-                                        placeholder='Enter your password'
-                                        label='Password'
-                                        labelPlacement='stacked'
-                                        value={password}
-                                        onIonChange={(e) => setPassword(e.detail.value!)}
-                                        required
-                                    />
-                                </IonItem>
+                <IonGrid>
 
-                                <IonItem lines='none' className='adjust-background'>
-                                    <a id='forgot-pass' className='links' slot='end'>Forgot Password?</a>
-                                    <IonPopover trigger='forgot-pass' side='top' size='auto'>
-                                        <IonContent class='ion-padding'>
-                                            Enter your email to reset your password.
-                                        </IonContent>
-                                    </IonPopover>
-                                </IonItem>
+                    <IonRow className='ion-text-center'>
+                        <IonCol>
+                            <IonText>
+                                <h2 className='auth-title-signin'>Stream</h2>
+                            </IonText>
+                        </IonCol>
+                    </IonRow>
 
-                                <IonItem lines='none' className='adjust-background'>
-                                    <IonButton
-                                        expand='block'
-                                        className='btn-auth'
-                                        shape='round'
-                                        onClick={() => handleSignIn()}
-                                    >
-                                        Sign In
-                                    </IonButton>
-                                </IonItem>
+                    <IonRow>
+                        <IonCol>
+                            <IonInput
+                                type='text'
+                                placeholder='Enter username'
+                                labelPlacement='floating'
+                                label='Email or username'
+                                fill='outline'
+                                className='ion-margin-top'
+                                value={username}
+                                onIonChange={(e) => setUsername(e.detail.value!)}
+                                required
+                            />
+                            <IonInput
+                                type='password'
+                                placeholder='Enter password'
+                                labelPlacement='floating'
+                                label='Password'
+                                fill='outline'
+                                className='ion-margin-top'
+                                value={password}
+                                onIonChange={(e) => setPassword(e.detail.value!)}
+                                required
+                            />
+                            <IonButton
+                                expand='block'
+                                className='auth-signup ion-margin-top'
+                                onClick={() => handleSignIn()}
+                                disabled={loading}
+                            >
+                                Sign In
+                            </IonButton>
 
-                                <div className="center-separator">
-                                    <span className='line'></span>OR<span className='line'></span>
-                                </div>
+                            <div className="center-separator">
+                                <span className='auth-line'></span>OR<span className='auth-line'></span>
+                            </div>
 
-                                <IonItem lines='none' className='adjust-background'>
-                                    <IonButton
-                                        expand='block'
-                                        className='btn-auth-google'
-                                        shape='round'
-                                    >
-                                        <IonIcon 
-                                            slot='start' 
-                                            icon={logoGoogle}
-                                        />
-                                        Continue with Google
-                                    </IonButton>
-                                </IonItem>
-                                
-                                <div className="txt-container">
-                                    <a className='txt-auth'>
-                                        Don't have an account? <a onClick={() => handleSwap()} className='links' >Sign Up</a>
-                                    </a>
-                                </div>
+                            <IonButton
+                                expand='block'
+                                shape='round'
+                                className='auth-google-signin'
+                                fill='clear'
+                            >
+                                <IonIcon 
+                                    slot='start' 
+                                    icon={logoGoogle}
+                                />
+                                Continue with Gsuite Account
+                            </IonButton>
+                        </IonCol>
+                    </IonRow>
 
-                                <div className="message">
-                                    <IonAlert
-                                        isOpen={showMessage}
-                                        onDidDismiss={() => setShowMessage(false)}
-                                        header='Sign In'
-                                        message={message}
-                                        buttons={['OK']}
-                                    />
-                                </div>
-                            </IonCardContent>
-                        </IonCard>
-                    </div>
-                </div>
+                    <IonRow className='ion-text-center ion-margin-top ion-margin-bottom'>
+                        <IonCol>
+                            <IonText className='auth-swap'>
+                                <p>Don't have an account? <a onClick={handleSwap}  className='auth-link-highlight'>Sign up</a></p>
+                            </IonText>
+                        </IonCol>
+                    </IonRow>
 
+                    <br /><br />
+                    <IonRow className='ion-margin-top ion-text-center'>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>Stream</a>
+                                </IonText>
+                            </IonCol>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>About</a>
+                                </IonText>
+                            </IonCol>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>Privacy</a>
+                                </IonText>
+                            </IonCol>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>Terms</a>
+                                </IonText>
+                            </IonCol>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>Threads</a>
+                                </IonText>
+                            </IonCol>
+                            <IonCol>
+                                <IonText>
+                                    <a href="" className='auth-sponsor'>API</a>
+                                </IonText>
+                            </IonCol>
+                        </IonRow>
+                </IonGrid>
                 
             </IonContent>
 
@@ -173,6 +213,26 @@ const AuthSignIn = () => {
                     </IonTitle>
                 </IonToolbar>
             </IonFooter>
+
+            {/* LOADING STATES AND POPUPS */}
+            <IonLoading 
+                isOpen={loading}
+                message={'Signing you in...'}
+                spinner='dots'
+            />
+
+            <IonLoading 
+                isOpen={loadingNavigate}
+                message={'Opening sign up page...'}
+                spinner='dots'
+            />
+
+            <IonAlert
+                isOpen={showMessage}
+                onDidDismiss={() => setShowMessage(false)}
+                message={message}
+                onDurationChange={() => setShowMessage(false)}
+            />
         </IonPage>
     )
 }

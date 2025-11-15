@@ -8,7 +8,9 @@ http://ionicframework.com/docs/theming/ */
     --dark-shade: #737373;
     --light-shade: #eeeeee;
     --red-shade: #c50f0fe3;
+    --light-red-shade: #e71c1ce3;
     --font-primary: Arial, sans-serif;
+    --font-header: 'HeaderFont', sans-serif;
 
     --logout-button-bg: var(--red-shade);
 
@@ -16,6 +18,136 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-primary: var(--primary-shade);
     --ion-color-secondary: var(--secondary-shade);
     --ion-color-secondary-contrast: #ffffff;
+    --ion-color-danger: var(--light-red-shade);
+}
+
+/* FONTS */
+@font-face {
+    font-family: 'HeaderFont';
+    src: url('../../src/assets/fonts/ValentineMonster.ttf') format('truetype');
+}
+
+/* PROFILE PAGE*/
+.txt-highlight {
+    color: var(--tertiary-shade);
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+.txt-highlight-description {
+    padding-left: 45px;
+    font-size: 12px;
+}
+
+.auth-profile {
+    color: var(--light-red-shade);
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    margin: auto;
+}
+
+.profile-image {
+    object-fit: cover;
+}
+
+.profile-name {
+    color: var(--secondary-shade);
+}
+
+.profile-email {
+    color:var(--tertiary-shade);
+    font-size: 14px;
+    margin-top: 0;
+}
+
+/* AUTH SIGN UP */
+.auth-title {
+    font-family: var(--font-header);
+    font-size: 36px;
+}
+
+.auth-title-signin {
+    font-family: var(--font-header);
+    font-size: 42px;
+    margin: 30px 0px;
+}
+
+.auth-sub-title {
+    font-size: 16px;
+    margin: 0 30px;
+    font-weight: bold;
+    color: var(--tertiary-shade);
+}
+
+.auth-reminder {
+    font-size: 12px;
+    color: var(--tertiary-shade);
+    margin-top: 20px;
+}
+
+.auth-service {
+    font-size: 12px;
+    color: var(--tertiary-shade);
+    margin-top: 20px;
+}
+
+.auth-link-highlight {
+    color: var(--secondary-shade);
+    text-decoration: none;
+}
+
+.auth-sponsor {
+    font-size: 14px;
+    color: var(--tertiary-shade);
+    text-decoration: none;
+}
+
+.auth-google-button {
+    --background: var(--red-shade);
+    --color: var(--light-shade);
+    --box-shadow: none;
+    width: 100%;
+    height: 50px;
+}
+
+.auth-google-signin {
+    --color: var(--primary-shade);
+    --border: 1px solid var(--primary-shade);
+    --box-shadow: none;
+    width: 100%;
+    height: 50px;
+}
+
+.auth-signup {
+    --color: var(--light-shade);
+    --box-shadow: none;
+    width: 100%;
+    height: 50px;
+}
+
+.auth-swap {
+    color: var(--tertiary-shade);
+}
+
+.auth-line {
+    flex: 1;                         
+    height: 1px;
+    background: var(--tertiary-shade);
+    display: block;
+}
+
+.center-separator {
+    color: var(--tertiary-shade);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    font-size: 14px;
+    margin: 20px 0px;
 }
 
 /* Align items in center */
@@ -30,15 +162,6 @@ http://ionicframework.com/docs/theming/ */
     --background: transparent;
     --box-shadow: none;
     box-shadow: none !important;
-}
-
-.center-separator {
-    text-align: center;
-    margin: 20px 0px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
 }
 
 .center-welcome {
@@ -95,16 +218,6 @@ http://ionicframework.com/docs/theming/ */
     width: auto;
 }
 
-.header-img {
-    display: flex;
-    justify-content: center;  
-    align-items: center; 
-    margin-top: 20px;
-}
-
-.header-profile {
-    border-radius: 50%;
-}
 
 .logo-mainpage {
     height: 170px;
@@ -137,9 +250,6 @@ http://ionicframework.com/docs/theming/ */
     --background: var(--red-shade);
 }
 
-.btn-logout {
-    font-size: 30px;
-}
 
 .txt-container {
     text-align: center;
@@ -154,22 +264,6 @@ http://ionicframework.com/docs/theming/ */
     margin-bottom: 40px;
 }
 
-.txt-header {
-    text-align: center;
-    color: var(--secondary-shade);
-}
-.txt-subheader {
-    text-align: center;
-    color: var(--tertiary-shade);
-    font-size: 14px;
-}
-
-.txt-highlight {
-    color: var(--dark-shade);
-    padding-left: 10px;
-    margin-top: 30px;
-}
-
 .txt-container-footer {
     --background: transparent;
     --box-shadow: none;
@@ -182,12 +276,7 @@ http://ionicframework.com/docs/theming/ */
     background: transparent;
 }
 
-.line {
-    flex: 1;                         /* expand to fill available space */
-    height: 1px;
-    background: var(--tertiary-shade); /* line color */
-    display: block;
-}
+
 
 .links {
     margin-top: 10px;
