@@ -49,6 +49,13 @@ http://ionicframework.com/docs/theming/ */
     margin: auto;
 }
 
+.profile-avatar-logout {
+    width: 40px;
+    height: 40px;
+    margin: auto;
+    border: var(--light-red-shade) 1px solid;
+}
+
 .profile-image {
     object-fit: cover;
 }
@@ -61,6 +68,28 @@ http://ionicframework.com/docs/theming/ */
     color:var(--tertiary-shade);
     font-size: 14px;
     margin-top: 0;
+}
+
+.profile-about-label {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.profile-thread-header {
+    font-size: 18px;
+    color: var(--tertiary-shade);
+}
+
+.profile-thread-sub {
+    font-size: 14px;
+    color: var(--dark-shade);
+}
+
+.profile-thread-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38vh;
 }
 
 /* AUTH SIGN UP */

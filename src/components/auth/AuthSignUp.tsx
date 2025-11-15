@@ -16,17 +16,17 @@ import {
     IonGrid,
     IonCol,
     IonRow,
-    IonLoading
+    IonLoading,
+    IonAlert
 } from '@ionic/react'
 
 // icons 
-
 import {
-    person,
-    mail,
-    key,
     logoGoogle
 } from 'ionicons/icons'
+
+// auth service
+import { signupUser } from '../../services/AuthService'
 
 
 const AuthSignUp = () => {
@@ -36,7 +36,111 @@ const AuthSignUp = () => {
     const currentYear = new Date().getFullYear()
     const appName = 'Stream'
 
+    const [firstname, setFirstname] = useState('')
+    const [lastname, setLastname] = useState('')
+    const [birthDate, setBirthDate] = useState('')
+    const [gender, setGender] = useState('')
+    const [username, setUsername] = useState('')
+    const [role, setRole] = useState('')
+    const [department, setDepartment] = useState('')
+    const [course, setCourse] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    
+    const [loading, setLoading] = useState(false)
     const [loadingNavigate, setLoadingNavigate] = useState(false)
+    const [message, setMessage] = useState('')
+    const [showMessage, setShowMessage] = useState(false)
+
+    // -- SIGN UP USER --
+    const handleSignUp = async () => {
+
+        // -- VALIDATE REQUIRED FEILDS -- 
+        if (!firstname.trim() || !lastname.trim() || !username.trim() || 
+            !email.trim() || !password.trim() || !confirmPassword.trim() ||
+            !birthDate || !gender || !role || !department || !course) {
+            setMessage('Please fill in all required fields')
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 2000)
+            return
+        }
+
+        // -- VALIDATE PASSWORD MATCH --
+        if (password !== confirmPassword) {
+            setMessage('Passwords do not match')
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 2000)
+            return
+        }
+
+        // -- VALIDATE EMAIL DOMAIN --
+        if (!email.endsWith('@ssct.edu.ph')) {
+            setMessage('Email must be from ssct.edu.ph domain')
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 2000)
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            // -- PREPARE DATA TO BE INSERT IN DATABASE --
+            const formData = new FormData()
+            formData.append('username', username)
+            formData.append('email', email)
+            formData.append('password', password)
+            formData.append('confirm_password', confirmPassword)
+
+            // -- PROFILE DATA IN JSON STRING --
+            const profileData = {
+                firstname,
+                lastname,
+                birth_date: birthDate,
+                gender,
+                role,
+                department,
+                course
+            }
+
+            console.log('Profile data:', profileData)
+            console.log('Email:', email)
+            console.log('Username:', username)
+
+            formData.append('profile', JSON.stringify(profileData))
+
+       
+
+            // -- SIGN UP USER --
+            await signupUser(formData)
+
+            setMessage('Account created successfully!')
+            setShowMessage(true)
+
+            setTimeout(() => {
+                setShowMessage(false)
+                setLoading(false)
+                history.push('/auth/signin')
+            }, 2000)
+
+        } catch (error: any) {
+            setLoading(false)
+        
+            // -- VALIDATION ERROR FROM BACKEND --
+            if (error.username) {
+                setMessage(error.username[0])
+            } else if (error.email) {
+                setMessage(error.email[0])
+            } else if (error.confirm_password) {
+                setMessage(error.confirm_password[0])
+            } else {
+                setMessage(error.error || 'Signup failed. Please try again.')
+            }
+        
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 3000)
+        }
+    }
 
     const handleSwap = () => {
 
@@ -96,6 +200,9 @@ const AuthSignUp = () => {
                                     labelPlacement='floating'
                                     label='Firstname'
                                     fill='outline'
+                                    value={firstname}
+                                    onIonChange={(e) => setFirstname(e.detail.value!)}
+                                    required
                                 />
                             </IonCol>
                             <IonCol>
@@ -105,6 +212,9 @@ const AuthSignUp = () => {
                                     labelPlacement='floating'
                                     label='Lastname'
                                     fill='outline'
+                                    value={lastname}
+                                    onIonChange={(e) => setLastname(e.detail.value!)}
+                                    required
                                 />
                             </IonCol>
                         </IonRow>
@@ -117,9 +227,18 @@ const AuthSignUp = () => {
                                     labelPlacement='floating'
                                     label='Birth Date'
                                     fill='outline'
+                                    value={birthDate}
+                                    onIonChange={(e) => setBirthDate(e.detail.value!)}
+                                    required
                                 />
 
-                                <IonSelect label='Select gender' labelPlacement='floating' className='ion-margin-top'>
+                                <IonSelect 
+                                    label='Select gender' 
+                                    labelPlacement='floating' 
+                                    className='ion-margin-top'
+                                    value={gender}
+                                    onIonChange={(e) => setGender(e.detail.value!)}
+                                >
                                     <IonSelectOption value='male'>Male</IonSelectOption>
                                     <IonSelectOption value='female'>Female</IonSelectOption>
                                 </IonSelect>
@@ -131,9 +250,18 @@ const AuthSignUp = () => {
                                     label='Username'
                                     fill='outline'
                                     className='ion-margin-top'
+                                    value={username}
+                                    onIonChange={(e) => setUsername(e.detail.value!)}
+                                    required
                                 />
 
-                                <IonSelect label='Select role' labelPlacement='floating' className='ion-margin-top'>
+                                <IonSelect 
+                                    label='Select role' 
+                                    labelPlacement='floating' 
+                                    className='ion-margin-top'
+                                    value={role}
+                                    onIonChange={(e) => setRole(e.detail.value!)}
+                                >
                                     <IonSelectOption value='student'>Student</IonSelectOption>
                                     <IonSelectOption value='faculty'>Faculty</IonSelectOption>
                                 </IonSelect>
@@ -142,19 +270,29 @@ const AuthSignUp = () => {
 
                         <IonRow>
                             <IonCol>
-                                <IonSelect label='Department' labelPlacement='floating'>
-                                    <IonSelectOption value='CCIS'>CCIS</IonSelectOption>
-                                    <IonSelectOption value='COE'>COE</IonSelectOption>
-                                    <IonSelectOption value='CAS'>CAS</IonSelectOption>
-                                    <IonSelectOption value='CBT'>CBT</IonSelectOption>
+                                <IonSelect 
+                                    label='Department' 
+                                    labelPlacement='floating'
+                                    value={department}
+                                    onIonChange={(e) => setDepartment(e.detail.value!)}
+                                >
+                                    <IonSelectOption value='ccis'>CCIS</IonSelectOption>
+                                    <IonSelectOption value='coe'>COE</IonSelectOption>
+                                    <IonSelectOption value='cas'>CAS</IonSelectOption>
+                                    <IonSelectOption value='cbt'>CBT</IonSelectOption>
                                 </IonSelect>
                             </IonCol>
                             <IonCol>
-                                <IonSelect label='Course' labelPlacement='floating'>
-                                    <IonSelectOption value='BSCS'>BS in Computer Science</IonSelectOption>
-                                    <IonSelectOption value='BSIT'>BS in Information Technology</IonSelectOption>
-                                    <IonSelectOption value='BSIS'>BS in Information Systems</IonSelectOption>
-                                    <IonSelectOption value='BSCpE'>BS in Computer Engineering</IonSelectOption>
+                                <IonSelect 
+                                    label='Course' 
+                                    labelPlacement='floating'
+                                    value={course}
+                                    onIonChange={(e) => setCourse(e.detail.value!)}
+                                >
+                                    <IonSelectOption value='bscs'>BS in Computer Science</IonSelectOption>
+                                    <IonSelectOption value='bsit'>BS in Information Technology</IonSelectOption>
+                                    <IonSelectOption value='bsis'>BS in Information Systems</IonSelectOption>
+                                    <IonSelectOption value='bscpe'>BS in Computer Engineering</IonSelectOption>
                                 </IonSelect>
                             </IonCol>
                         </IonRow>
@@ -168,6 +306,9 @@ const AuthSignUp = () => {
                                     label='Email Address'
                                     fill='outline'
                                     className='ion-margin-top'
+                                    value={email}
+                                    onIonChange={(e) => setEmail(e.detail.value!)}
+                                    required
                                 />
 
                                 <IonInput
@@ -177,6 +318,9 @@ const AuthSignUp = () => {
                                     label='Password'
                                     fill='outline'
                                     className='ion-margin-top'
+                                    value={password}
+                                    onIonChange={(e) => setPassword(e.detail.value!)}
+                                    required
                                 />
 
                                 <IonInput
@@ -186,6 +330,9 @@ const AuthSignUp = () => {
                                     label='Confirm Password'
                                     fill='outline'
                                     className='ion-margin-top'
+                                    value={confirmPassword}
+                                    onIonChange={(e) => setConfirmPassword(e.detail.value!)}
+                                    required
                                 />
 
                                 <IonText>
@@ -206,6 +353,8 @@ const AuthSignUp = () => {
                                 <IonButton
                                     expand='block'
                                     className='auth-signup ion-margin-top'
+                                    onClick={handleSignUp}
+                                    disabled={loading}
                                 >
                                     Sign Up
                                 </IonButton>
@@ -268,10 +417,22 @@ const AuthSignUp = () => {
                 </IonFooter>
 
                 {/* LOADING STATES AND POPUPS */}
+                <IonLoading
+                    isOpen={loading}
+                    message={'Creating your account...'}
+                    spinner='dots'
+                />
+
                 <IonLoading 
                     isOpen={loadingNavigate}
                     message={'Opening sign in page...'}
                     spinner='dots'
+                />
+
+                <IonAlert
+                    isOpen={showMessage}
+                    onDidDismiss={() => setShowMessage(false)}
+                    message={message}
                 />
             </IonPage>
         </>

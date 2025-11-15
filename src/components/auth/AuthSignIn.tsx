@@ -77,7 +77,15 @@ const AuthSignIn = () => {
 
         } catch (error: any) {
             setLoading(false)
-            setMessage(error?.error || 'Invald credentials')
+            
+            if (error.detail) {
+                setMessage(error.detail)
+            } else if (error.error) {
+                setMessage(error.error)
+            } else {
+                setMessage('Invalid credentials. Please try again.')
+            }
+            
             setShowMessage(true)
 
             setTimeout(() => {
