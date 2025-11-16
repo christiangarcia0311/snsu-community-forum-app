@@ -58,8 +58,12 @@ import {
   updateProfileImage,
 } from '../../services/AuthService'
 
+// -- COMPONENTS --
 import AboutProfile from '../../components/profile/AboutProfile'
 import ThreadPost from '../../components/profile/ThreadPost'
+
+// -- MODAL COMPONENTS --
+import AccountSettings from '../../components/profile/profile_menu/AccountSettings'
 
 interface UserProfileData {
   username: string
@@ -83,16 +87,20 @@ interface UserProfileData {
 const ProfilePage = () => {
   const history = useHistory();
 
-  const [showLogoutAlert, setShowLogoutAlert] = useState(false);
-  const [loadingNavigate, setLoadingNavigate] = useState(false);
-  const [loadingProfile, setLoadingProfile] = useState(true);
-  const [showActionSheet, setShowActionSheet] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+  const [showLogoutAlert, setShowLogoutAlert] = useState(false)
+  const [loadingNavigate, setLoadingNavigate] = useState(false)
+  const [loadingProfile, setLoadingProfile] = useState(true)
+  const [showActionSheet, setShowActionSheet] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState("")
   const [selectedSegment, setSelectedSegment] = useState<string>('threads')
 
-  const [userProfile, setUserProfile] = useState<UserProfileData | null>(null);
-  const [profileImage, setProfileImage] = useState<string>(Profile);
+  const [userProfile, setUserProfile] = useState<UserProfileData | null>(null)
+  const [profileImage, setProfileImage] = useState<string>(Profile)
+
+
+  // -- USER PROFILE MENU --
+  const [showAccountSettings, setShowAccountSettings] = useState(false)
 
   useEffect(() => {
     fetchUserProfile();
@@ -213,7 +221,10 @@ const ProfilePage = () => {
           <p className="txt-highlight">Your account</p>
           <IonItem lines="none" className="adjust-background ion-margin-bottom">
             <IonLabel>
-              <IonButton fill="clear">
+              <IonButton 
+                fill="clear"
+                onClick={() => setShowAccountSettings(true)}
+              >
                 <IonIcon
                   icon={personCircleOutline}
                   slot="start"
@@ -418,11 +429,19 @@ const ProfilePage = () => {
                     className="profile-image"
                   />
                 </IonAvatar>&nbsp;&nbsp;&nbsp;
-                <IonText>Logout</IonText>
+                <IonText>Logout {userProfile?.firstname}</IonText>
               </IonButton>
             </IonLabel>
           </IonItem>
 
+          {/* -- PROFILE MODAL -- */}
+          <AccountSettings
+            isOpen={showAccountSettings}
+            onDidDismiss={() => setShowAccountSettings(false)}
+          />
+
+
+          {/* -- LOGOUT ALERT CONFIRMATION AND ACTIONS -- */}
           <IonAlert
             isOpen={showLogoutAlert}
             onDidDismiss={() => setShowLogoutAlert(false)}

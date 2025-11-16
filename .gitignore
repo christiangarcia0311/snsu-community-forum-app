@@ -34,3 +34,6 @@ yarn-error.log*
 .venv/
 __pycache__/
 *.pyc
+
+# image
+media/

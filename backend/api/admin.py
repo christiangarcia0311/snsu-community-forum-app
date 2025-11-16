@@ -5,7 +5,7 @@ from .models import UserProfile
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'lastname', 'firstname', 'user__email', 'role', 'course', 'department', 'created_at', 'updated_at']
     search_fields = ['lastname', 'firstname', 'user__email']
-    list_filter = ['created_at', 'updated_at']
+    list_filter = ['lastname', 'firstname', 'user__email', 'created_at']
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
