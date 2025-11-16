@@ -105,6 +105,12 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
     profile_image_url = serializers.SerializerMethodField()
     
+    gender_display = serializers.CharField(source='get_gender_display', read_only=True)
+    role_display = serializers.CharField(source='get_role_display', read_only=True)
+    department_display = serializers.CharField(source='get_department_display', read_only=True)
+    course_display = serializers.CharField(source='get_course_display', read_only=True)
+    
+    
     class Meta:
         model = UserProfile
         fields = [
@@ -114,9 +120,13 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             'lastname',
             'birth_date',
             'gender',
+            'gender_display',
             'role',
+            'role_display',
             'department',
+            'department_display',
             'course',
+            'course_display',
             'profile_image',
             'profile_image_url',
             'created_at'

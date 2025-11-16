@@ -62,18 +62,22 @@ import AboutProfile from '../../components/profile/AboutProfile'
 import ThreadPost from '../../components/profile/ThreadPost'
 
 interface UserProfileData {
-  username: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  birth_date: string;
-  gender: string;
-  role: string;
-  department: string;
-  course: string;
-  profile_image: string | null;
-  profile_image_url: string | null;
-  created_at: string;
+  username: string
+  email: string
+  firstname: string
+  lastname: string
+  birth_date: string
+  gender: string
+  gender_display: string
+  role: string
+  role_display: string
+  department: string
+  department_display: string
+  course: string
+  course_display: string
+  profile_image: string | null
+  profile_image_url: string | null
+  created_at: string
 }
 
 const ProfilePage = () => {
