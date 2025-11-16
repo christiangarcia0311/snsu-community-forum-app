@@ -9,6 +9,9 @@ venv/
 env/
 .env/
 
+# images
+media/
+
 # IDE and system files
 .vscode/
 .idea/

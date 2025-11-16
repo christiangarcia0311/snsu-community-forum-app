@@ -15,7 +15,7 @@ import {
     IonToolbar,
     IonTitle,
     IonLoading,
-    IonAlert
+    IonToast
 } from '@ionic/react'
 
 // icons 
@@ -235,11 +235,12 @@ const AuthSignIn = () => {
                 spinner='dots'
             />
 
-            <IonAlert
+            <IonToast
                 isOpen={showMessage}
-                onDidDismiss={() => setShowMessage(false)}
                 message={message}
-                onDurationChange={() => setShowMessage(false)}
+                duration={1500}
+                position='top'
+                onDidDismiss={() => setShowMessage(false)}
             />
         </IonPage>
     )

@@ -6,6 +6,7 @@ from .models import UserProfile
 import json
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = UserProfile
         fields = [
@@ -20,6 +21,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
 
 class SignUpSerializer(serializers.ModelSerializer):
+    
     password = serializers.CharField(write_only=True, min_length=8)
     confirm_password = serializers.CharField(write_only=True)
     profile = serializers.CharField(write_only=True)
@@ -35,6 +37,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
         
     def validate_email(self, value):
+        
         '''validate email domain only for snsu students'''
         
         if not value.endswith('@ssct.edu.ph'):
@@ -46,6 +49,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return value
     
     def validate_username(self, value):
+        
         '''validate unique username for students'''
         
         if User.objects.filter(username=value).exists():
@@ -53,6 +57,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return value
     
     def validate_profile(self, value):
+        
         '''validate and parse profile JSON data'''
         
         try:
@@ -69,6 +74,7 @@ class SignUpSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Invalid JSON format for profile data')
     
     def validate(self, data):
+        
         '''validate password confirmation'''
         
         if data.get('password') != data.get('confirm_password'):
@@ -79,6 +85,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return data
     
     def create(self, validated_data):
+        
         '''create student/faculty user'''
         
         validated_data.pop('confirm_password')
@@ -99,6 +106,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         
         
 class UserProfileDetailSerializer(serializers.ModelSerializer):
+    
     '''retrieving user details'''
     
     username = serializers.CharField(source='user.username', read_only=True)
@@ -133,6 +141,7 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
         ]
         
     def get_profile_image_url(self, obj):
+        
         '''get user image'''
         
         if obj.profile_image:
@@ -140,6 +149,52 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(obj.profile_image.url)
         return None
+    
+class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
+    
+    '''update profile details'''
+    
+    username = serializers.CharField(source='user.username')
+    
+    class Meta:
+        model = UserProfile
+        fields = [
+            'username',
+            'firstname',
+            'lastname',
+            'birth_date',
+            'gender',
+            'role',
+            'department',
+            'course'
+        ]
+        
+        def validate_username(self, value):
+            
+            '''Validate unique username'''
+            
+            user = self.context['request'].user
+            if User.objects.filter(username=value).exclude(id=user.id).exists():
+                raise serializers.ValidationError('Username already taken')
+    
+            return value
+        
+        def update(self, instance, validated_data):
+            
+            '''Update profile and username'''
+            
+            user_data = validated_data.pop('user', {})
+            
+            if 'username' in user_data:
+                instance.user.username = user_data['username']
+                instance.user.save()
+            
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            
+            instance.save()
+            return instance
+    
     
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField()

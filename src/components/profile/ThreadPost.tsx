@@ -30,8 +30,8 @@ const ThreadPost: React.FC = () => {
                 </IonText>
 
                 <IonButton
-                    color="secondary"
-                    className="ion-margin-top"
+                    color='secondary'
+                    className='ion-margin-top'
                 >
                     Create First Thread
                 </IonButton>

@@ -7,7 +7,8 @@ from django.contrib.auth import login
 from .serializers import (
     SignUpSerializer, 
     SignInSerializer, 
-    UserProfileDetailSerializer
+    UserProfileDetailSerializer,
+    UpdateProfileDetailsSerializer
 )
 from .models import UserProfile
 
@@ -62,6 +63,37 @@ class UserProfileView(generics.RetrieveAPIView):
     
     def get_object(self):
         return self.request.user.profile
+    
+class UpdateProfileDetailsView(APIView):
+    
+    '''API endpoint to update user profile details'''
+    
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request):
+        profile = request.user.profile
+        serializer = UpdateProfileDetailsSerializer(
+            profile, 
+            data=request.data, 
+            partial=True,
+            context={'request': request}
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            
+            # Return updated profile with full details
+            response_serializer = UserProfileDetailSerializer(
+                profile, 
+                context={'request': request}
+            )
+            
+            return Response({
+                'message': 'Profile updated successfully',
+                'profile': response_serializer.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UpdateProfileImageView(APIView):
     

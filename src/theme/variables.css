@@ -27,6 +27,16 @@ http://ionicframework.com/docs/theming/ */
     src: url('../../src/assets/fonts/ValentineMonster.ttf') format('truetype');
 }
 
+/* HOME PAGE */
+.home-header-bg {
+    --background: transparent
+}
+
+.home-header {
+    font-size: 28px;
+    font-family: var(--font-header);
+}
+
 /* PROFILE PAGE*/
 .txt-highlight {
     color: var(--tertiary-shade);

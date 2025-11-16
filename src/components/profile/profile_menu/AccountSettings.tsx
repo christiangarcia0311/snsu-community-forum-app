@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
     IonContent,
     IonHeader,
@@ -14,17 +16,29 @@ import {
     IonModal
 } from '@ionic/react'
 
-// icons
+// -- ICONS --
 import { 
     arrowForwardOutline
 } from 'ionicons/icons'
 
+// -- SETTING COMPONENTS --
+import ProfileDetails from './settings/ProfileDetails'
+
+
 interface AccountSettingsProps {
     isOpen: boolean
     onDidDismiss: () => void
+    onProfileUpdate?: () => void
 }
 
-const AccountSettings: React.FC<AccountSettingsProps> = ({ isOpen, onDidDismiss }) => {
+const AccountSettings: React.FC<AccountSettingsProps> = ({ 
+    isOpen, 
+    onDidDismiss,
+    onProfileUpdate
+}) => {
+
+    const [showProfileDetails, setShowProfileDetails] = useState(false)
+
     return (
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
@@ -44,7 +58,13 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ isOpen, onDidDismiss 
 
                 <IonContent>
 
-                    <IonItem button detail={false} lines='full' className='adjust-background'>   
+                    <IonItem 
+                        button 
+                        detail={false} 
+                        lines='full' 
+                        className='adjust-background'
+                        onClick={() => setShowProfileDetails(true)}
+                    >   
                         <IonLabel>
                             <h2>Edit Profile Details</h2>
                             <p>Update your personal information</p>
@@ -59,12 +79,18 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({ isOpen, onDidDismiss 
                     <IonItem button detail={false} lines='full' className='adjust-background'>   
                         <IonLabel>
                             <h2>Privacy & Security</h2>
-                            <p>anage your privacy settings</p>
+                            <p>Manage your privacy settings</p>
                         </IonLabel>
                     </IonItem>
-                    
                 </IonContent>
             </IonModal>
+
+            {/* -- SETTINGS MODAL */}
+            <ProfileDetails
+                isOpen={showProfileDetails}
+                onDidDismiss={() => setShowProfileDetails(false)}
+                onProfileUpdate={onProfileUpdate}
+            />
         </>
     )
 }

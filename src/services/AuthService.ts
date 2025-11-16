@@ -69,6 +69,32 @@ export const getUserProfile = async () => {
     }
 }
 
+export const updateProfileDetails = async (profileData: {
+    username?: string
+    firstname?: string
+    lastname?: string
+    birth_date?: string
+    gender?: string
+    role?: string
+    department?: string
+    course?: string
+}) => {
+    try {
+        const response = await axios.patch(
+            `${API_BASE_URL}profile/details/`,
+            profileData,
+            {
+                headers: getAuthHeader()
+            }
+        )
+
+        return response.data
+        
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to update profile' }
+    }
+}
+
 export const updateProfileImage = async (imageFile: File) => {
     try {
         const formData = new FormData()

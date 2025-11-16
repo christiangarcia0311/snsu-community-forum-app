@@ -429,7 +429,7 @@ const ProfilePage = () => {
                     className="profile-image"
                   />
                 </IonAvatar>&nbsp;&nbsp;&nbsp;
-                <IonText>Logout {userProfile?.firstname}</IonText>
+                <IonText>Logout {userProfile?.lastname}</IonText>
               </IonButton>
             </IonLabel>
           </IonItem>
@@ -438,6 +438,7 @@ const ProfilePage = () => {
           <AccountSettings
             isOpen={showAccountSettings}
             onDidDismiss={() => setShowAccountSettings(false)}
+            onProfileUpdate={fetchUserProfile}
           />
 
 

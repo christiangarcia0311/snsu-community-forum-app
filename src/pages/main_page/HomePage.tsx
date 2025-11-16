@@ -1,17 +1,27 @@
 import React from 'react'  
 
 import {
-    IonContent
+    IonContent,
+    IonPage,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButton,
+    IonIcon
 } from '@ionic/react'
 
 
 const HomePage = () => {
     return (
-        <IonContent>
-            <div className="center-display">
-                Home Page
-            </div>
-        </IonContent>
+        <>
+            <IonHeader>
+                <IonToolbar className='home-header-bg'>
+                    <IonTitle>
+                        <h2 className='home-header'>Stream</h2>
+                    </IonTitle>
+                </IonToolbar>
+            </IonHeader>
+        </>
     )
 }
 
