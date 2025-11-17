@@ -82,6 +82,8 @@ interface UserProfileData {
   profile_image: string | null
   profile_image_url: string | null
   created_at: string
+  can_update_profile?: boolean
+  days_until_next_update?: number
 }
 
 const ProfilePage = () => {

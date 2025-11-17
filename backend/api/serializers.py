@@ -118,6 +118,8 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     department_display = serializers.CharField(source='get_department_display', read_only=True)
     course_display = serializers.CharField(source='get_course_display', read_only=True)
     
+    can_update_profile = serializers.SerializerMethodField()
+    days_until_next_update = serializers.SerializerMethodField()
     
     class Meta:
         model = UserProfile
@@ -137,7 +139,9 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             'course_display',
             'profile_image',
             'profile_image_url',
-            'created_at'
+            'created_at',
+            'can_update_profile',
+            'days_until_next_update'
         ]
         
     def get_profile_image_url(self, obj):
@@ -149,6 +153,18 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(obj.profile_image.url)
         return None
+    
+    def get_can_update_profile(self, obj):
+        
+        '''CAN UPDATE PROFILE DETAILS?'''
+        
+        return obj.can_update_profile_details()
+    
+    def get_days_until_next_update(self, obj):
+        
+        '''CALCULATE DAYS UNTIL NEXT UPDATE'''
+        
+        return obj.days_until_next_update()
     
 class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
     
@@ -169,31 +185,31 @@ class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
             'course'
         ]
         
-        def validate_username(self, value):
-            
-            '''Validate unique username'''
-            
-            user = self.context['request'].user
-            if User.objects.filter(username=value).exclude(id=user.id).exists():
-                raise serializers.ValidationError('Username already taken')
-    
-            return value
+    def validate_username(self, value):
         
-        def update(self, instance, validated_data):
-            
-            '''Update profile and username'''
-            
-            user_data = validated_data.pop('user', {})
-            
-            if 'username' in user_data:
-                instance.user.username = user_data['username']
-                instance.user.save()
-            
-            for attr, value in validated_data.items():
-                setattr(instance, attr, value)
-            
-            instance.save()
-            return instance
+        '''Validate unique username'''
+        
+        user = self.context['request'].user
+        if User.objects.filter(username=value).exclude(id=user.id).exists():
+            raise serializers.ValidationError('Username already taken')
+
+        return value
+    
+    def update(self, instance, validated_data):
+        
+        '''Update profile and username'''
+        
+        user_data = validated_data.pop('user', {})
+        
+        if 'username' in user_data:
+            instance.user.username = user_data['username']
+            instance.user.save()
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
     
     
 class SignInSerializer(serializers.Serializer):

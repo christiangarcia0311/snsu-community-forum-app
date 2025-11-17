@@ -11,6 +11,8 @@ from .serializers import (
     UpdateProfileDetailsSerializer
 )
 from .models import UserProfile
+from django.utils import timezone
+
 
 class SignUpView(generics.CreateAPIView):
     
@@ -72,6 +74,15 @@ class UpdateProfileDetailsView(APIView):
     
     def patch(self, request):
         profile = request.user.profile
+        
+        if not profile.can_update_profile_details():
+            days_remaining = profile.days_until_next_update()
+            return Response({
+                'error': f'You can only update your profile once every 7 days. Please wait {days_remaining} more day(s).',
+                'days_remaining': days_remaining,
+                'can_update': False
+            }, status=status.HTTP_403_FORBIDDEN)
+        
         serializer = UpdateProfileDetailsSerializer(
             profile, 
             data=request.data, 
@@ -80,7 +91,10 @@ class UpdateProfileDetailsView(APIView):
         )
         
         if serializer.is_valid():
-            serializer.save()
+            profile = serializer.save()
+            
+            profile.last_profile_details_update = timezone.now()
+            profile.save()
             
             # Return updated profile with full details
             response_serializer = UserProfileDetailSerializer(

@@ -136,6 +136,19 @@ http://ionicframework.com/docs/theming/ */
     color: var(--light-red-shade);
 }
 
+.profile-message-details {
+    color: var(--secondary-shade);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-message-text {
+    margin: 0;
+    font-size: 14px;
+}
+
 .profile-avatar {
     width: 120px;
     height: 120px;

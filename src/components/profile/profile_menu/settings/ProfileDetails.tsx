@@ -16,13 +16,15 @@ import {
     IonLabel,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonText
 } from '@ionic/react'
 
 // -- ICONS --
 import { 
     arrowForwardOutline,
-    saveOutline
+    saveOutline,
+    informationCircleOutline
 } from 'ionicons/icons'
 
 // -- SERVICES --
@@ -44,6 +46,8 @@ interface UserProfileData {
     role: string
     department: string
     course: string
+    can_update_profile?: boolean
+    days_until_next_update?: number
 }
 
 const ProfileDetails: React.FC<ProfileDetailsProps> = ({ 
@@ -67,6 +71,10 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
     const [department, setDepartment] = useState('')
     const [course, setCourse] = useState('')
 
+    const [canUpdateProfile, setCanUpdateProfile] = useState(true)
+    const [daysUntilNextUpdate, setDaysUntilNextUpdate] = useState(0)
+
+
     useEffect(() => {
         if (isOpen) {
             fetchProfileData()
@@ -89,6 +97,9 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
             setRole(profile.role)
             setDepartment(profile.department)
             setCourse(profile.course)
+
+            setCanUpdateProfile(profile.can_update_profile ?? true)
+            setDaysUntilNextUpdate(profile.days_until_next_update ?? 0)
             
             setLoadingData(false)
 
@@ -103,6 +114,13 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
     }
 
     const handleUpdateProfile = async () => {
+
+        // -- CHECK IF UPDATE IS ALLOWED --
+        if (!canUpdateProfile) {
+            setToastMessage(`You can update your profile in ${daysUntilNextUpdate} day(s)`)
+            setShowToast(true)
+            return
+        }
         
         // -- VALIDATE REQUIRED FIELDS --
         if (!username.trim() || !firstname.trim() || !lastname.trim() || 
@@ -142,10 +160,17 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
         } catch (error: any) {
             setLoading(false)
             
-            if (error.username) {
+            if (error.error) {
+                setToastMessage(error.error)
+            } else if (error.username) {
                 setToastMessage(error.username[0])
             } else {
-                setToastMessage(error.error || 'Failed to update profile')
+                setToastMessage('Failed to update profile')
+            }
+
+            if (error.days_remaining !== undefined) {
+                setDaysUntilNextUpdate(error.days_remaining)
+                setCanUpdateProfile(false)
             }
             
             setShowToast(true)
@@ -172,6 +197,25 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                 <IonContent>
                     <IonGrid className='ion-padding'>
 
+                        {/* COOLDOWN WARNING */}
+                        {!canUpdateProfile && (
+                            <IonRow>
+                                <IonRow>
+                                    <IonCol>
+                                        <div className='profile-message-details'>
+                                            <IonIcon icon={informationCircleOutline} size='large' slot='start' />
+                                            <IonText>
+                                                <p className='profile-message-text'>
+                                                    You cannot update your profile for <strong>{daysUntilNextUpdate} day(s)</strong>. 
+                                                    Profile updates are allowed once every 7 days.
+                                                </p>
+                                            </IonText>
+                                        </div>
+                                    </IonCol>
+                                </IonRow>
+                            </IonRow>
+                        )}
+
                         <IonRow className='ion-margin-top'>
                             <IonCol>
                                 <IonInput
@@ -181,6 +225,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     fill='outline'
                                     value={firstname}
                                     onIonChange={(e) => setFirstname(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                     required
                                 />
                             </IonCol>
@@ -192,6 +237,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     fill='outline'
                                     value={lastname}
                                     onIonChange={(e) => setLastname(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                     required
                                 />
                             </IonCol>
@@ -206,6 +252,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     fill='outline'
                                     value={username}
                                     onIonChange={(e) => setUsername(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                     required
                                 />
                             </IonCol>
@@ -239,6 +286,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     fill='outline'
                                     value={birthDate}
                                     onIonChange={(e) => setBirthDate(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                     required
                                 />
                             </IonCol>
@@ -248,6 +296,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     labelPlacement='floating'
                                     value={gender}
                                     onIonChange={(e) => setGender(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                 >
                                     <IonSelectOption value='male'>Male</IonSelectOption>
                                     <IonSelectOption value='female'>Female</IonSelectOption>
@@ -262,6 +311,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     labelPlacement='floating'
                                     value={role}
                                     onIonChange={(e) => setRole(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                 >
                                     <IonSelectOption value='student'>Student</IonSelectOption>
                                     <IonSelectOption value='faculty'>Faculty</IonSelectOption>
@@ -273,6 +323,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     labelPlacement='floating'
                                     value={department}
                                     onIonChange={(e) => setDepartment(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                 >
                                     <IonSelectOption value='ccis'>CCIS</IonSelectOption>
                                     <IonSelectOption value='coe'>COE</IonSelectOption>
@@ -290,6 +341,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     labelPlacement='floating'
                                     value={course}
                                     onIonChange={(e) => setCourse(e.detail.value!)}
+                                    disabled={!canUpdateProfile}
                                 >
                                     <IonSelectOption value='bscs'>BS in Computer Science</IonSelectOption>
                                     <IonSelectOption value='bsit'>BS in Information Technology</IonSelectOption>
@@ -304,7 +356,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                 <IonButton
                                     expand='block'
                                     onClick={handleUpdateProfile}
-                                    disabled={loading || loadingData}
+                                    disabled={loading || loadingData || !canUpdateProfile}
                                 >
                                     <IonIcon icon={saveOutline} slot='start' />
                                     Save Changes

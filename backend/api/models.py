@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 class UserProfile(models.Model):
     GENDER_CHOICES = [
@@ -38,9 +40,36 @@ class UserProfile(models.Model):
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    last_profile_details_update = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.user.username} - {self.firstname} {self.lastname}"
+    
+    def can_update_profile_details(self):
+        
+        '''UPDATE PROFILE ONCE EVERY 7 DAYS'''
+        
+        if not self.last_profile_details_update:
+            return True
+        
+        cooldown_period = timedelta(days=1)
+        time_since_update = timezone.now() - self.last_profile_details_update
+        
+        return time_since_update >= cooldown_period
+        
+    
+    def days_until_next_update(self):
+        
+        '''CALCULATE DAYS UNTIL NEXT UPDATE'''
+        
+        if not self.last_profile_details_update:
+            return 0
+        
+        cooldown_period = timedelta(days=7)
+        time_since_update = timezone.now() - self.last_profile_details_update
+        days_remaining = (cooldown_period - time_since_update).days
+        
+        return max(0, days_remaining)
     
     class Meta:
         verbose_name = 'User Profile'
