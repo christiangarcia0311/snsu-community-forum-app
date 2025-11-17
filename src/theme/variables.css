@@ -9,8 +9,13 @@ http://ionicframework.com/docs/theming/ */
     --light-shade: #eeeeee;
     --red-shade: #c50f0fe3;
     --light-red-shade: #e71c1ce3;
+
+    --highlight-primary: #013220;
+    --highlight-neon: #0FFF50;
+
     --font-primary: Arial, sans-serif;
     --font-header: 'HeaderFont', sans-serif;
+    --font-header-title: 'HeaderTitle', sans-serif;
 
     --logout-button-bg: var(--red-shade);
 
@@ -27,6 +32,11 @@ http://ionicframework.com/docs/theming/ */
     src: url('../../src/assets/fonts/ValentineMonster.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'HeaderTitle';
+    src: url('../../src/assets/fonts/Instagram_Sans_Headline.otf') format('truetype');
+}
+
 /* HOME PAGE */
 .home-header-bg {
     --background: transparent
@@ -35,6 +45,79 @@ http://ionicframework.com/docs/theming/ */
 .home-header {
     font-size: 28px;
     font-family: var(--font-header);
+}
+
+.home-icon {
+    font-size: 26px;
+    color: var(--light-shade);
+}
+
+.home-searchbar {
+    --icon-color: var(--primary-shade);
+}
+
+.home-chip {
+    --background: var(--highlight-primary);
+    --color: var(--highlight-neon);
+    --border-radius: 20px;
+    --box-shadow: none;
+}
+
+/* HOME THREAD POST */
+.home-thread-post {
+    margin: 10px;
+    --background: var(--ion-background-color);
+}
+
+.home-post-avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.home-post-photo {
+    object-fit: cover;
+}
+
+.home-post-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--secondary-shade);
+}
+
+.home-post-date {
+    font-size: 12px;
+    color: var(--tertiary-shade);
+    margin: 0;
+}
+
+
+.home-thread-title {
+    font-size: 34px;
+    font-weight: bold;
+    color: var(--ion-text-color);
+    margin: 0 0 10px 0;
+}
+
+.home-thread-content {
+    font-size: 14px;
+    color: var(--dark-shade);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.home-thread-actions {
+    border-top: 1px solid var(--ion-border-color);
+    padding-top: 10px;
+}
+
+.home-action-button {
+    --color: var(--tertiary-shade);
+    text-transform: none;
+    font-size: 14px;
+}
+
+.action-button ion-icon {
+    font-size: 20px;
 }
 
 /* PROFILE PAGE*/
