@@ -170,7 +170,7 @@ class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
     
     '''update profile details'''
     
-    username = serializers.CharField(source='user.username')
+    username = serializers.CharField() 
     
     class Meta:
         model = UserProfile
@@ -199,16 +199,15 @@ class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
         
         '''Update profile and username'''
         
-        user_data = validated_data.pop('user', {})
+        username = validated_data.pop('username', None)
         
-        if 'username' in user_data:
-            instance.user.username = user_data['username']
+        if username:
+            instance.user.username = username
             instance.user.save()
         
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         
-        instance.save()
         return instance
     
     

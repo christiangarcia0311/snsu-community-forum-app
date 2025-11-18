@@ -52,7 +52,7 @@ class UserProfile(models.Model):
         if not self.last_profile_details_update:
             return True
         
-        cooldown_period = timedelta(days=1)
+        cooldown_period = timedelta(days=7)
         time_since_update = timezone.now() - self.last_profile_details_update
         
         return time_since_update >= cooldown_period
