@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'api',
+    'portal',
+    'threads',
 ]
 
 MIDDLEWARE = [
@@ -152,7 +153,6 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8100",
     "http://127.0.0.1:8100",
-    "https://j0hw80ww-8100.asse.devtunnels.ms",
 ]
 
 # --- MEDIA FILES CONFIGURATION ---

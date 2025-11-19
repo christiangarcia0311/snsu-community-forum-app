@@ -9,9 +9,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
-        ('User Account', {
-            'fields': ('user',)
-        }),
         ('Personal Information', {
             'fields': ('firstname', 'lastname', 'birth_date', 'gender')
         }),
@@ -29,4 +26,3 @@ class UserProfileAdmin(admin.ModelAdmin):
     def email_display(self, obj):
         return obj.user.email
     email_display.short_description = 'Email'
-    #list_editable = ['role', 'course', 'department']
