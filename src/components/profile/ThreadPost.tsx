@@ -15,7 +15,7 @@ const ThreadPost: React.FC = () => {
             <div>
                 <IonIcon 
                     icon={addCircleOutline} 
-                    style={{ fontSize: '64px', color: 'var(--tertiary-shade)' }}
+                    className='profile-thread-icon'
                 />
                 
                 <IonText>

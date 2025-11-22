@@ -198,6 +198,11 @@ http://ionicframework.com/docs/theming/ */
     height: 38vh;
 }
 
+.profile-thread-icon {
+    font-size: 64px;
+    color: var(--tertiary-shade);
+}
+
 /* AUTH SIGN UP */
 .auth-title {
     font-family: var(--font-header);

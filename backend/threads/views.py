@@ -1,3 +1,118 @@
-from django.shortcuts import render
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
-# Create your views here.
+from .models import ThreadPost
+from .serializers import ThreadPostSerializer, ThreadPostCreateSerializer
+
+class ThreadPostListView(APIView):
+    
+    '''API endpoint for listing all thread posts'''
+
+    def get(self, request):
+        threads =  ThreadPost.object.all()
+        serializers = ThreadPostSerializer(threads, many=True, context={'request': request})
+        return Response(serializers.data, status=status.HTTP_200_OK)
+    
+class ThreadPostCreateView(APIView):
+    
+    '''API endpoint for creating a new thread post'''
+    
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self, request):
+        serializer = ThreadPostCreateSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            thread = serializer.save(author=request.user)
+            
+            response_serializer = ThreadPostSerializer(thread, context={'request': request}) 
+            
+            return Response({
+                'message': 'Thread post created!',
+                'thread': response_serializer.data
+            }, status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    
+class ThreadPostDetailView(APIView):
+    
+    '''API endpoint for retrieving, updating and deleting a thread post'''
+    
+    def get_object(self, pk):
+        try:
+            return ThreadPost.objects.get(pk=pk)
+        except ThreadPost.DoesNotExist:
+            return None 
+        
+    def get(self, request, pk):
+        thread = self.get_object(pk)
+        
+        if not thread:
+            return Response({
+                'error': 'Thread post not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        serializer = ThreadPostSerializer(thread, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk):
+        thread = self.get_object(pk)
+        
+        if not thread:
+            return Response({
+                'error': 'Thread post not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        # check thread post owner
+        if thread.author != request.user:
+            return Response({
+                'error': 'You do not have permission to update this thread post'
+            }, status=status.HTTP_403_FORBIDDEN)
+            
+        serializer = ThreadPostCreateSerializer(thread, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = ThreadPostSerializer(thread, context={'request': request})
+            
+            return Response({
+                'message': 'Thread post updated',
+                'thread': response_serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        thread = self.get_object(pk)
+        
+        if not thread:
+            return Response({
+                'error': 'Thread post not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        # check thread post owner
+        if thread.author != request.user:
+            return Response({
+                'error': 'You do not have permission to update this thread post'
+            }, status=status.HTTP_403_FORBIDDEN)
+            
+        thread.delete()
+        return Response({
+            'message': 'Thread post deleted'
+        }, status=status.HTTP_200_OK)
+        
+        
+class UserThreadPostsView(APIView):
+    
+    '''API endpoint retrieving thread posts by specific user'''
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        threads = ThreadPost.objects.filter(author=request.user)
+        serializer = ThreadPostSerializer(threads, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
