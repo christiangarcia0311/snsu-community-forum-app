@@ -11,11 +11,13 @@ export const signupUser = async (formData: FormData) => {
             }
         })
 
-        console.log('Signup successful:', response.data)
+        // for debugging
+        //console.log('Signup successful:', response.data)
         return response.data
 
     } catch (error: any) {
-        console.error('Signup error:', error.response?.data || error)
+        // for debugging
+        // console.error('Signup error:', error.response?.data || error)
         throw error.response?.data || { error: 'Something went wrong' }
     }
 }

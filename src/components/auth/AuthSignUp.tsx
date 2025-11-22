@@ -74,6 +74,14 @@ const AuthSignUp = () => {
             return
         }
 
+        // -- VALIDATE PASSWORD LENGTH --
+        if (password.length < 8) {
+            setMessage('Password must be at least 8 characters long')
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 2000)
+            return
+        }
+
         // -- VALIDATE EMAIL DOMAIN --
         if (!email.endsWith('@ssct.edu.ph')) {
             setMessage('Email must be from ssct.edu.ph domain')
@@ -131,6 +139,8 @@ const AuthSignUp = () => {
                 setMessage(error.username[0])
             } else if (error.email) {
                 setMessage(error.email[0])
+            } else if (error.password) {
+                setMessage(error.password[0])
             } else if (error.confirm_password) {
                 setMessage(error.confirm_password[0])
             } else {
