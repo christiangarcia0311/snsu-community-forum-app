@@ -552,7 +552,9 @@ const ProfilePage = () => {
                 {/* CONTENTS */}
                 {
                   selectedSegment === 'threads' && (
-                    <ThreadPost />
+                    <div>
+                      <ThreadPost />
+                    </div>
                   )
                 }
 

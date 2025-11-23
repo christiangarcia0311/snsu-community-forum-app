@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
     IonModal,
@@ -11,8 +11,6 @@ import {
     IonGrid,
     IonRow,
     IonCol,
-    IonItem,
-    IonLabel,
     IonImg,
     IonInput,
     IonTextarea,
@@ -28,29 +26,61 @@ import {
 } from 'ionicons/icons'
 
 // services 
-import { createThreadPost } from '../../../services/ThreadService'
+import { updateThreadPost, getThreadPostById } from '../../../services/ThreadService'
 
-interface CreateThreadProps {
+interface UpdateThreadProps {
     isOpen: boolean 
     onDidDismiss: () => void
-    onThreadCreated?: () => void
+    onThreadUpdated?: () => void
+    threadId: number | null
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({
+const UpdateThread: React.FC<UpdateThreadProps> = ({
     isOpen,
     onDidDismiss,
-    onThreadCreated
+    onThreadUpdated,
+    threadId
 }) => {
 
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [image, setImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(null)
+    const [existingImage, setExistingImage] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
+    const [loadingData, setLoadingData] = useState(false)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState('')
 
-    const handleCreateThreadPost = async () => {
+    useEffect(() => {
+        if (isOpen && threadId) {
+            fetchThreadData()
+        }
+    }, [isOpen, threadId])
+
+    const fetchThreadData = async () => {
+        if (!threadId) return
+
+        setLoadingData(true)
+
+        try {
+            const data: any = await getThreadPostById(threadId)
+            setTitle(data.title)
+            setContent(data.content)
+            
+            if (data.image) {
+                setExistingImage(data.image)
+            }
+        } catch (error: any) {
+            console.error('Failed to fetch thread:', error)
+            setToastMessage('Failed to load thread data')
+            setShowToast(true)
+        } finally {
+            setLoadingData(false)
+        }
+    }
+
+    const handleUpdateThreadPost = async () => {
         
         // -- VALIDATION --
         if (!title.trim() || !content.trim()) {
@@ -71,23 +101,24 @@ const CreateThread: React.FC<CreateThreadProps> = ({
             return
         }
 
+        if (!threadId) return
+
         setLoading(true)
 
-        // create post 
         try {
-            await createThreadPost(title, content, image || undefined)
-            setToastMessage('Thread post created')
+            await updateThreadPost(threadId, title, content, image || undefined)
+            setToastMessage('Thread post updated successfully')
             setShowToast(true)
 
-            // reset form after
+            // reset form
             setTitle('')
             setContent('')
             setImage(null)
             setImagePreview(null)
+            setExistingImage(null)
 
-            // calback ni bai 
-            if (onThreadCreated) {
-                onThreadCreated()
+            if (onThreadUpdated) {
+                onThreadUpdated()
             }
 
             setTimeout(() => {
@@ -102,19 +133,19 @@ const CreateThread: React.FC<CreateThreadProps> = ({
             } else if (error.content) {
                 setToastMessage(error.content[0])
             } else {
-                setToastMessage(error.error || 'Failed to create thread')
+                setToastMessage(error.error || 'Failed to update thread')
             }
             
             setShowToast(true)
         }
-
     }
 
-    const handleCancelThreadPost = () => {
+    const handleCancelUpdate = () => {
         setTitle('')
         setContent('')
         setImage(null)
         setImagePreview(null)
+        setExistingImage(null)
         onDidDismiss()
     }
 
@@ -122,15 +153,22 @@ const CreateThread: React.FC<CreateThreadProps> = ({
         const file = event.target.files?.[0]
 
         if (file) {
-
-            // -- VALIDATED FILE SIZE -- 
+            // -- VALIDATE FILE SIZE -- 
             if (file.size > 5 * 1024 * 1024) {
                 setToastMessage('Image size should be less than 5MB')
                 setShowToast(true)
                 return
             }
 
+            // -- VALIDATE FILE TYPE --
+            if (!file.type.startsWith('image/')) {
+                setToastMessage('Please select a valid image file')
+                setShowToast(true)
+                return
+            }
+
             setImage(file)
+            setExistingImage(null)
 
             // -- PREVIEW --
             const reader = new FileReader()
@@ -139,13 +177,13 @@ const CreateThread: React.FC<CreateThreadProps> = ({
             }
             
             reader.readAsDataURL(file)
-
         }
     }
 
     const handleRemoveImage = () => {
         setImage(null)
         setImagePreview(null)
+        setExistingImage(null)
     }
 
     return (
@@ -153,11 +191,11 @@ const CreateThread: React.FC<CreateThreadProps> = ({
             
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Create Thread</IonTitle>
+                    <IonTitle>Update Thread</IonTitle>
                     <IonButton
                         slot='end'
                         fill='clear'
-                        onClick={handleCancelThreadPost}
+                        onClick={handleCancelUpdate}
                     >
                         <IonIcon size='large' icon={arrowForwardOutline} />
                     </IonButton>
@@ -169,32 +207,34 @@ const CreateThread: React.FC<CreateThreadProps> = ({
 
                     <IonRow>
                         <IonCol>
-                                <IonInput
-                                    type='text'
-                                    label='Title'
-                                    labelPlacement='floating'
-                                    placeholder='Write your title here'
-                                    maxlength={255}
-                                    counter={true}
-                                    value={title}
-                                    onIonInput={(e) => setTitle(e.detail.value!)}
-                                />
+                            <IonInput
+                                type='text'
+                                label='Title'
+                                labelPlacement='floating'
+                                placeholder='Write your title here'
+                                maxlength={255}
+                                counter={true}
+                                value={title}
+                                onIonInput={(e) => setTitle(e.detail.value!)}
+                                disabled={loadingData}
+                            />
                         </IonCol>
                     </IonRow>
 
                     <IonRow className='ion-margin-top'>
                         <IonCol>
-                                <IonTextarea
-                                    label='Content'
-                                    labelPlacement='floating'
-                                    placeholder='Write your thread content here...'
-                                    rows={4}
-                                    autoGrow={true}
-                                    maxlength={5000}
-                                    counter={true}
-                                    value={content}
-                                    onIonInput={(e) => setContent(e.detail.value!)}
-                                />
+                            <IonTextarea
+                                label='Content'
+                                labelPlacement='floating'
+                                placeholder='Write your thread content here...'
+                                rows={4}
+                                autoGrow={true}
+                                maxlength={5000}
+                                counter={true}
+                                value={content}
+                                onIonInput={(e) => setContent(e.detail.value!)}
+                                disabled={loadingData}
+                            />
                         </IonCol>
                     </IonRow>
 
@@ -204,13 +244,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                                 expand='block'
                                 fill='outline'
                                 color='medium'
-                                onClick={() => document.getElementById('thread-image-input')?.click()}
+                                onClick={() => document.getElementById('update-thread-image-input')?.click()}
+                                disabled={loadingData}
                             >
                                 <IonIcon icon={imageOutline} slot='start' />
-                                {image ? 'Change image' : 'Add image'}
+                                {(image || existingImage) ? 'Change image' : 'Add image'}
                             </IonButton>
                             <input
-                                id='thread-image-input'
+                                id='update-thread-image-input'
                                 type='file'
                                 accept='image/*'
                                 className='thread-image-input'
@@ -219,11 +260,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                         </IonCol>
                     </IonRow>
 
-                    {imagePreview && (
-                        <IonRow className='ion-marhin-top'>
+                    {(imagePreview || existingImage) && (
+                        <IonRow className='ion-margin-top'>
                             <IonCol>
                                 <div className="thread-image-preview">
-                                    <IonImg src={imagePreview} alt='Preview' />
+                                    <IonImg 
+                                        src={imagePreview || existingImage!} 
+                                        alt='Preview' 
+                                    />
                                     <IonButton
                                         fill='clear'
                                         color='danger'
@@ -241,9 +285,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                         <IonCol>
                             <IonButton
                                 expand='block'
-                                onClick={handleCreateThreadPost}
+                                onClick={handleUpdateThreadPost}
+                                disabled={loading || loadingData}
                             >
-                                Publish
+                                Update Thread
                             </IonButton>
                         </IonCol>
                         <IonCol>
@@ -251,7 +296,8 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                                 expand='block'
                                 fill='outline'
                                 color='danger'
-                                onClick={handleCancelThreadPost}
+                                onClick={handleCancelUpdate}
+                                disabled={loading || loadingData}
                             >
                                 Cancel
                             </IonButton>
@@ -262,14 +308,21 @@ const CreateThread: React.FC<CreateThreadProps> = ({
             </IonContent>
 
             <IonLoading
+                isOpen={loadingData}
+                message='Loading thread data...'
+                spinner='dots'
+            />
+
+            <IonLoading
                 isOpen={loading}
-                message='Creating thread post...'
+                message='Updating thread post...'
                 spinner='dots'
             />
 
             <IonToast
                 isOpen={showToast}
                 onDidDismiss={() => setShowToast(false)}
+                message={toastMessage}
                 duration={2000}
                 position='top'
             />
@@ -278,4 +331,4 @@ const CreateThread: React.FC<CreateThreadProps> = ({
     )
 }
 
-export default CreateThread
+export default UpdateThread

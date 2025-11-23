@@ -65,7 +65,8 @@ http://ionicframework.com/docs/theming/ */
 
 /* HOME THREAD POST */
 .home-thread-post {
-    margin: 10px;
+    margin-left: 0;
+    margin-right: 0;
     --background: var(--ion-background-color);
 }
 
@@ -79,9 +80,9 @@ http://ionicframework.com/docs/theming/ */
 }
 
 .home-post-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
-    color: var(--secondary-shade);
+    color: var(--light-shade);
 }
 
 .home-post-date {
@@ -94,7 +95,7 @@ http://ionicframework.com/docs/theming/ */
 .home-thread-title {
     font-size: 34px;
     font-weight: bold;
-    color: var(--ion-text-color);
+    color: var(--secondary-shade);
     margin: 0 0 10px 0;
 }
 
@@ -288,6 +289,25 @@ http://ionicframework.com/docs/theming/ */
     width: 100%;
     font-size: 14px;
     margin: 20px 0px;
+}
+
+/* THREAD POST */
+.thread-image-input {
+    display: none;
+}
+
+.thread-image-preview {
+    position: relative;
+}
+
+.thread-button-preview {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.thread-title-click {
+    cursor: pointer;
 }
 
 /* Align items in center */

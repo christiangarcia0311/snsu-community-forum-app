@@ -1,7 +1,11 @@
 import axios from 'axios'
-import { getAuthHeader } from './AuthService'
+
 
 const API_BASE_URL = 'http://localhost:8000/api/threads/'
+
+const getAuthToken = () => {
+    return localStorage.getItem('access_token')
+}
 
 interface ThreadPostData {
     id: number
@@ -18,7 +22,13 @@ interface ThreadPostData {
 export const getAllThreadPost = async (): Promise<ThreadPostData[]> => {
     
     try {
-        const response = await axios.get(`${API_BASE_URL}posts/`)
+        const token = getAuthToken()
+        const response = await axios.get(`${API_BASE_URL}posts/`,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        
         return response.data
     } catch (error: any) {
         throw error.response?.data || { error: 'Failed to fetch thread posts' }
@@ -29,10 +39,10 @@ export const getAllThreadPost = async (): Promise<ThreadPostData[]> => {
 export const getUserThreadPost = async (): Promise<ThreadPostData[]> => {
     
     try {
-        const token = await getAuthHeader()
+        const token = getAuthToken()
         const response = await axios.get(`${API_BASE_URL}my-posts/`, {
             headers: {
-                'Authorization': `Token ${token}`,
+                'Authorization': `Bearer ${token}`,
             },
         })
 
@@ -62,7 +72,7 @@ export const createThreadPost = async (
 ): Promise<any> => {
     
     try {
-        const token = await getAuthHeader()
+        const token = getAuthToken()
         const formData =  new FormData()
 
         formData.append('title', title)
@@ -74,7 +84,7 @@ export const createThreadPost = async (
 
         const response =  await axios.post(`${API_BASE_URL}create/`, formData, {
             headers: {
-                'Authorization': `Token ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
             },
         })
@@ -82,6 +92,57 @@ export const createThreadPost = async (
         return response.data
     } catch (error: any) {
         throw error.response?.data || { error: 'Failed to create thread' }
+    }
+
+}
+
+// -- UPDATE --
+export const updateThreadPost = async (
+    id: number,
+    title: string,
+    content: string,
+    image?: File
+): Promise<any> => {
+
+    try {
+        const token = getAuthToken()
+        const formData = new FormData()
+
+        formData.append('title', title)
+        formData.append('content', content)
+
+        if (image) {
+            formData.append('image', image)
+        }
+
+        const response = await axios.put(`${API_BASE_URL}posts/${id}/`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            },
+        })
+
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to update thread post' }
+    }
+
+}
+
+// -- DELETE --
+export const deleteThreadPost = async (id: number): Promise<any> => {
+
+    try {
+        const token = getAuthToken()
+        const response = await axios.delete(`${API_BASE_URL}posts/${id}/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to delete thread post' }
     }
 
 }

@@ -4,7 +4,7 @@ from .models import ThreadPost
 from portal.serializers import UserProfileDetailSerializer
 
 class ThreadPostSerializer(serializers.ModelSerializer):
-    author_profile = UserProfileDetailSerializer(source='author.userprofile', read_only=True)
+    author_profile = UserProfileDetailSerializer(source='author.profile', read_only=True)
     author_username = serializers.CharField(source='author.username', read_only=True)
     
     class Meta:

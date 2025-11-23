@@ -11,8 +11,10 @@ class ThreadPostListView(APIView):
     
     '''API endpoint for listing all thread posts'''
 
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
-        threads =  ThreadPost.object.all()
+        threads =  ThreadPost.objects.all()
         serializers = ThreadPostSerializer(threads, many=True, context={'request': request})
         return Response(serializers.data, status=status.HTTP_200_OK)
     

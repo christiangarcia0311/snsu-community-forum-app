@@ -1,4 +1,4 @@
-import React from 'react'  
+import React, { useEffect, useState } from 'react'  
 
 import {
     IonContent,
@@ -17,9 +17,12 @@ import {
     IonCard,
     IonCardContent,
     IonImg,
-    IonBadge
+    IonBadge,
+    IonSpinner
 } from '@ionic/react'
 
+
+// icons
 import {
     notificationsOutline,
     personAddOutline,
@@ -28,8 +31,101 @@ import {
     shareSocialOutline
 } from 'ionicons/icons'
 
+// image default
+import photoDefault from '../../assets/images/profile.png'
+
+// forms
+import ViewThread from '../../components/profile/thread_post/ViewThread'
+
+// services
+import { getAllThreadPost } from '../../services/ThreadService'
+
+interface ThreadData {
+    id: number 
+    title: string
+    content: string 
+    image: string | null 
+    created_at: string 
+    updated_at: string
+    author_username?: string
+    author_profile?: any
+}
 
 const HomePage = () => {
+
+    const [threads, setThreads] = useState<ThreadData[]>([])
+    const [loading, setLoading] = useState(true)
+    const [showViewModal, setShowViewModal] = useState(false)
+    const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null)
+
+    useEffect(() => {
+        fetchAllThreadPost()
+    }, [])
+
+    const fetchAllThreadPost = async () => {
+
+        setLoading(true)
+
+        try {
+            const data = await getAllThreadPost()
+            setThreads(data)
+        } catch (error: any) {
+            console.log('Failed to fetch thread post')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleViewThreadPost = (threadId: number) => {
+        setSelectedThreadId(threadId)
+        setShowViewModal(true)
+    }
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString)
+        const now = new Date()
+        const diffInMs = now.getTime() - date.getTime()
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60))
+        const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+
+        // Just now (less than 1 minute)
+        if (diffInMinutes < 1) {
+            return 'just now'
+        }
+
+        // Minutes ago (1-59 minutes)
+        if (diffInMinutes < 60) {
+            return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`
+        }
+
+        // Hours ago (1-23 hours)
+        if (diffInHours < 24) {
+            return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`
+        }
+
+        // Days ago (1-6 days)
+        if (diffInDays < 7) {
+            return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`
+        }
+
+        // Weeks ago (7-13 days)
+        if (diffInDays < 14) {
+            const weeks = Math.floor(diffInDays / 7)
+            return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
+        }
+
+        // Full date format (14+ days)
+        return date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        })
+    }
+
     return (
         <>
             <IonHeader>
@@ -71,87 +167,133 @@ const HomePage = () => {
                 </IonGrid>
                 
                 {/* THREAD POST */}
-                <IonCard className='home-thread-post'>
-                    <IonCardContent>
-                        <IonGrid>
-                            {/* USER INFO POST */}
-                            <IonRow className='ion-align-items-center'>
-                                <IonCol size='auto'>
-                                    <IonAvatar className='home-post-avatar'>
-                                        <img 
-                                            src="https://ionicframework.com/docs/img/demos/thumbnail.svg" 
-                                            alt="profile" 
-                                            className='home-post-photo'
-                                        />
-                                    </IonAvatar>
-                                </IonCol>
-                                <IonCol>
-                                    <IonText>
-                                        <h2 className="home-post-name">SNSU | Computer Society</h2>
-                                    </IonText>
-                                    <IonText>
-                                        <p className="home-post-date">October 25 at 2:34 PM</p>
-                                    </IonText>
-                                </IonCol>
-                            </IonRow>
 
-                            {/* CONTENTS */}
-                            <IonRow>
-                                <IonCol>
-                                    <IonText>
-                                        <h2 className="home-thread-title">Logo Making Contest</h2>
-                                    </IonText>
-                                </IonCol>
-                            </IonRow>
-                            <IonRow>
-                                <IonCol>
-                                    <IonText>
-                                        <p className="ion-margin-top home-thread-content">
-                                            The Computer Society invites all BS Computer Science students to 
-                                            take part in an exciting creative challenge that will shape the 
-                                            visual identity of our organization!... See more.
-                                        </p>
-                                    </IonText>
-                                </IonCol>
-                            </IonRow>
+                {
+                    loading ? (
+                        <div className="ion-text-center">
+                            <IonSpinner />
+                            <p>Loading thread post...</p>
+                        </div>
+                    ) : threads.length === 0 ? (
+                        <div className="ion-text-center">
+                            <p>No threads available.</p>
+                        </div>
+                    ) : (
+                        threads.map((thread) => {
 
-                            {/* POST WITH IMAGE */}
-                            <IonRow className='ion-margin-top'>
-                                <IonCol>
-                                    <IonImg 
-                                        src='https://ionicframework.com/docs/img/demos/thumbnail.svg'
-                                        alt="Thread post image"
-                                        className='home-thread-image'
-                                    />
-                                </IonCol>
-                            </IonRow>
+                            const profilePicture = thread.author_profile?.profile_image_url || photoDefault
+                            const authorName = thread.author_profile 
+                                ? `${thread.author_profile.firstname} ${thread.author_profile.lastname}` 
+                                : thread.author_username || 'Unknown User'
 
-                            {/* ACTIONS */}
-                            <IonRow className='ion-margin-top home-thread-actions'>
-                                <IonCol>
-                                    <IonButton fill='clear' size='small' className='home-action-button'>
-                                        <IonIcon icon={heartOutline} slot='start' />
-                                        <IonText>24</IonText>
-                                    </IonButton>
-                                </IonCol>
-                                <IonCol>
-                                    <IonButton fill='clear' size='small' className='home-action-button'>
-                                        <IonIcon icon={chatbubbleOutline} slot='start' />
-                                        <IonText>12</IonText>
-                                    </IonButton>
-                                </IonCol>
-                                <IonCol>
-                                    <IonButton fill='clear' size='small' className='home-action-button'>
-                                        <IonIcon icon={shareSocialOutline} slot='start' />
-                                        <IonText>Share</IonText>
-                                    </IonButton>
-                                </IonCol>
-                            </IonRow>
-                        </IonGrid>
-                    </IonCardContent>
-                </IonCard>
+                            const filterContentLength = thread.content.length > 100
+                                ? thread.content.substring(0, 100) + '...' 
+                                : thread.content
+
+                            return (
+                                <IonCard key={thread.id} className='home-thread-post ion-text-left ion-padding'>
+                                    <IonCardContent>
+                                        <IonGrid>
+                                            {/* USER INFO POST */}
+                                            <IonRow className='ion-align-items-center'>
+                                                <IonCol size='auto'>
+                                                    <IonAvatar className='home-post-avatar'>
+                                                        <img 
+                                                            src={profilePicture}
+                                                            alt="profile" 
+                                                            className='home-post-photo'
+                                                        />
+                                                    </IonAvatar>
+                                                </IonCol>
+                                                <IonCol>
+                                                    <IonText>
+                                                        <h2 className="home-post-name">{authorName}</h2>
+                                                    </IonText>
+                                                    <IonText>
+                                                        <p className="home-post-date">
+                                                            <small>{formatDate(thread.created_at)}</small>
+                                                        </p>
+                                                    </IonText>
+                                                </IonCol>
+                                            </IonRow>
+                
+                                            {/* CONTENTS */}
+                                            <IonRow>
+                                                <IonCol>
+                                                    <IonText
+                                                        onClick={() => handleViewThreadPost(thread.id)}
+                                                        className='thread-title-click'
+                                                    >
+                                                        <h2 className="home-thread-title">{thread.title}</h2>
+                                                    </IonText>
+                                                </IonCol>
+                                            </IonRow>
+                                            <IonRow>
+                                                <IonCol>
+                                                    <IonText>
+                                                        <p className="ion-margin-top home-thread-content">{filterContentLength}</p>
+                                                    </IonText>
+                                                </IonCol>
+                                            </IonRow>
+                
+                                            {/* POST WITH IMAGE */}
+    
+                                            {thread.image && (
+                                                <IonRow className='ion-margin-top'>
+                                                    <IonCol>
+                                                        <IonImg 
+                                                            src={thread.image}
+                                                            alt="Thread post image"
+                                                            className='home-thread-image'
+                                                        />
+                                                    </IonCol>
+                                                </IonRow>
+                                            )}
+                                            
+                
+                                            {/* ACTIONS */}
+                                            <IonRow className='ion-margin-top home-thread-actions'>
+                                                <IonCol>
+                                                    <IonButton fill='clear' size='small' className='home-action-button'>
+                                                        <IonIcon icon={heartOutline} slot='start' />
+                                                        <IonText>24</IonText>
+                                                    </IonButton>
+                                                </IonCol>
+                                                <IonCol>
+                                                    <IonButton fill='clear' size='small' className='home-action-button'>
+                                                        <IonIcon icon={chatbubbleOutline} slot='start' />
+                                                        <IonText>12</IonText>
+                                                    </IonButton>
+                                                </IonCol>
+                                                <IonCol>
+                                                    <IonButton fill='clear' size='small' className='home-action-button'>
+                                                        <IonIcon icon={shareSocialOutline} slot='start' />
+                                                        <IonText>Share</IonText>
+                                                    </IonButton>
+                                                </IonCol>
+                                            </IonRow>
+                                        </IonGrid>
+                                    </IonCardContent>
+                                </IonCard>
+                            )
+                        })
+                    )
+                }
+                
 
             </IonContent>
+
+
+            <ViewThread
+                isOpen={showViewModal}
+                onDidDismiss={() => {
+                    setShowViewModal(false)
+                    setSelectedThreadId(null)
+                }}
+                threadId={selectedThreadId}
+                onThreadDeleted={fetchAllThreadPost}
+                onThreadUpdated={fetchAllThreadPost}
+            />
 
         </>
     )
