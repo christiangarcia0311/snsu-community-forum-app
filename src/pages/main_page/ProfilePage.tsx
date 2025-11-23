@@ -256,7 +256,7 @@ const ProfilePage = () => {
       {/* MENU PROFILE CONTENT */}
       <IonMenu contentId="main-content">
         <IonHeader>
-          <IonToolbar>
+          <IonToolbar className='home-header-bg'>
             <IonTitle>Settings and Activity</IonTitle>
           </IonToolbar>
         </IonHeader>
