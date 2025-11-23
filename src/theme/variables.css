@@ -85,6 +85,11 @@ http://ionicframework.com/docs/theming/ */
     color: var(--light-shade);
 }
 
+.home-post-name:hover {
+    color: var(--secondary-shade);
+    text-decoration: underline;
+}
+
 .home-post-date {
     font-size: 12px;
     color: var(--tertiary-shade);
@@ -307,6 +312,10 @@ http://ionicframework.com/docs/theming/ */
 }
 
 .thread-title-click {
+    cursor: pointer;
+}
+
+.thread-profile-click {
     cursor: pointer;
 }
 

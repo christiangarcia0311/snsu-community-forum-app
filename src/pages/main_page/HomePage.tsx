@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'  
+import { useHistory } from 'react-router'
 
 import {
     IonContent,
@@ -37,8 +38,13 @@ import photoDefault from '../../assets/images/profile.png'
 // forms
 import ViewThread from '../../components/profile/thread_post/ViewThread'
 
+// addons
+import UserProfileSheet from '../../components/addons/ProfileSheet'
+import UserProfileView from '../../hooks/UserProfileView'
+
 // services
 import { getAllThreadPost } from '../../services/ThreadService'
+import { getUserProfile } from '../../services/AuthService'
 
 interface ThreadData {
     id: number 
@@ -53,10 +59,16 @@ interface ThreadData {
 
 const HomePage = () => {
 
+    const history = useHistory()
+
     const [threads, setThreads] = useState<ThreadData[]>([])
     const [loading, setLoading] = useState(true)
     const [showViewModal, setShowViewModal] = useState(false)
     const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null)
+
+    const [showUserProfileSheet, setShowUserProfileSheet] = useState(false)
+    const [showUserProfileView, setShowUserProfileView] = useState(false)
+    const [selectedUserProfile, setSelectedUserProfile] = useState<any>(null)
 
     useEffect(() => {
         fetchAllThreadPost()
@@ -79,6 +91,29 @@ const HomePage = () => {
     const handleViewThreadPost = (threadId: number) => {
         setSelectedThreadId(threadId)
         setShowViewModal(true)
+    }
+
+    const handleViewUserProfile = async (userProfile: any) => {
+        try {
+            const currentUser = await getUserProfile()
+            
+            if (currentUser.username === userProfile.username) {
+                history.push('/tabs/profile')
+            } else {
+                setSelectedUserProfile(userProfile)
+                setShowUserProfileSheet(true)
+            }
+        } catch (error) {
+            console.error('Failed to check user profile:', error)
+            
+            setSelectedUserProfile(userProfile)
+            setShowUserProfileSheet(true)
+        }
+    }
+
+    const handleOpenFullProfile = () => {
+        setShowUserProfileSheet(false)
+        setShowUserProfileView(true)
     }
 
     const formatDate = (dateString: string) => {
@@ -201,12 +236,16 @@ const HomePage = () => {
                                                         <img 
                                                             src={profilePicture}
                                                             alt="profile" 
-                                                            className='home-post-photo'
+                                                            className='home-post-photo thread-profile-click'
+                                                            onClick={() => handleViewUserProfile(thread.author_profile)}
                                                         />
                                                     </IonAvatar>
                                                 </IonCol>
                                                 <IonCol>
-                                                    <IonText>
+                                                    <IonText
+                                                        className='thread-profile-click'
+                                                        onClick={() => handleViewUserProfile(thread.author_profile)}
+                                                    >
                                                         <h2 className="home-post-name">{authorName}</h2>
                                                     </IonText>
                                                     <IonText>
@@ -293,6 +332,22 @@ const HomePage = () => {
                 threadId={selectedThreadId}
                 onThreadDeleted={fetchAllThreadPost}
                 onThreadUpdated={fetchAllThreadPost}
+            />
+
+            <UserProfileSheet
+                isOpen={showUserProfileSheet}
+                onDidDismiss={() => setShowUserProfileSheet(false)}
+                onViewProfile={handleOpenFullProfile}
+                userProfile={selectedUserProfile}
+            />
+
+            <UserProfileView
+                isOpen={showUserProfileView}
+                onDidDismiss={() => {
+                    setShowUserProfileView(false)
+                    setSelectedUserProfile(null)
+                }}
+                userProfile={selectedUserProfile}
             />
 
         </>

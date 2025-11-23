@@ -51,12 +51,13 @@ import {
 // image
 import Profile from '../../assets/images/profile.png'
 
-// auth service
+// services
 import {
   logoutUser,
   getUserProfile,
   updateProfileImage,
 } from '../../services/AuthService'
+import { getUserThreadPost } from '../../services/ThreadService'
 
 // -- COMPONENTS --
 import AboutProfile from '../../components/profile/AboutProfile'
@@ -99,13 +100,16 @@ const ProfilePage = () => {
 
   const [userProfile, setUserProfile] = useState<UserProfileData | null>(null)
   const [profileImage, setProfileImage] = useState<string>(Profile)
-
+  
+  // -- STATS --
+  const [threadCount, setThreadCount] = useState(0)
 
   // -- USER PROFILE MENU --
   const [showAccountSettings, setShowAccountSettings] = useState(false)
 
   useEffect(() => {
-    fetchUserProfile();
+    fetchUserProfile()
+    fetchThreadPostCount()
   }, []);
 
   // -- FETCH USER DETAILS --
@@ -127,7 +131,17 @@ const ProfilePage = () => {
       setToastMessage("Failed to load profile");
       setShowToast(true);
     }
-  };
+  }
+
+  const fetchThreadPostCount = async () => {
+    try {
+      const threads = await getUserThreadPost()
+      setThreadCount(threads.length)
+    } catch (error) {
+      console.error(`Failed to fetch thread count: ${error}`)
+      setThreadCount(0)
+    }
+  }
 
   // -- IMAGE PROFILE UPLOAD --
   const handleImageUpload = async (
@@ -517,19 +531,19 @@ const ProfilePage = () => {
 
             <IonRow className="ion-margin-top">
               <IonCol>
-                <IonText>20</IonText>
+                <IonText>{threadCount}</IonText>
                 <br />
                 <IonText>Threads</IonText>
               </IonCol>
 
               <IonCol>
-                <IonText>18</IonText>
+                <IonText>0</IonText>
                 <br />
                 <IonText>Followers</IonText>
               </IonCol>
 
               <IonCol>
-                <IonText>100</IonText>
+                <IonText>0</IonText>
                 <br />
                 <IonText>Following</IonText>
               </IonCol>
