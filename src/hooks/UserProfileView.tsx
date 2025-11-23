@@ -70,6 +70,7 @@ interface UserProfileViewProps {
         following_count?: number
         is_following?: boolean
     } | null
+    onViewProfile?: (userProfile: any) => void
 }
 
 interface ThreadData {
@@ -86,7 +87,8 @@ interface ThreadData {
 const UserProfileView: React.FC<UserProfileViewProps> = ({
     isOpen,
     onDidDismiss,
-    userProfile
+    userProfile,
+    onViewProfile
 }) => {
 
     const [selectedSegment, setSelectedSegment] = useState<string>('threads')
@@ -158,6 +160,12 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
     const handleViewThreadPost = (threadId: number) => {
         setSelectedThreadId(threadId)
         setShowViewModal(true)
+    }
+
+    const handleViewUserProfile = (profile: any) => {
+        if (onViewProfile) {
+            onViewProfile(profile)
+        }
     }
 
     const formatDate = (dateString?: string) => {
@@ -526,19 +534,14 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                 isOpen={showFollowersModal}
                 onDidDismiss={() => setShowFollowersModal(false)}
                 username={userProfile?.username || ''}
-                onViewProfile={(profile) => {
-                    setShowFollowersModal(false)
-                    // You can add additional logic here if needed
-                }}
+                onViewProfile={handleViewUserProfile}
             />
 
             <UserFollowing
                 isOpen={showFollowingModal}
                 onDidDismiss={() => setShowFollowingModal(false)}
                 username={userProfile?.username || ''}
-                onViewProfile={(profile) => {
-                    setShowFollowingModal(false)
-                }}
+                onViewProfile={handleViewUserProfile}
             />
         </>
     )

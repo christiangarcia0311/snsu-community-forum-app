@@ -694,6 +694,7 @@ const ProfilePage = () => {
           setSelectedUserProfile(null)
         }}
         userProfile={selectedUserProfile}
+        onViewProfile={handleViewUserProfile}
       />
     </>
   )

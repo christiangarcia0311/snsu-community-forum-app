@@ -118,6 +118,24 @@ const HomePage = () => {
         }
     }
 
+    const handleViewOtherUserProfile = async (userProfile: any) => {
+        try {
+            const currentUser = await getUserProfile()
+            
+            if (currentUser.username === userProfile.username) {
+                history.push('/tabs/profile')
+            } else {
+                setSelectedUserProfile(userProfile)
+                setShowUserProfileSheet(false)
+            }
+        } catch (error) {
+            console.error('Failed to check user profile:', error)
+            
+            setSelectedUserProfile(userProfile)
+            setShowUserProfileSheet(false)
+        }
+    }
+
     const handleOpenFullProfile = () => {
         setShowUserProfileSheet(false)
         setShowUserProfileView(true)
@@ -364,6 +382,7 @@ const HomePage = () => {
                     setSelectedUserProfile(null)
                 }}
                 userProfile={selectedUserProfile}
+                onViewProfile={handleViewOtherUserProfile}
             />
 
         </>
