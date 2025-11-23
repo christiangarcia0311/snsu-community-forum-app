@@ -19,7 +19,9 @@ import {
     IonCardContent,
     IonImg,
     IonBadge,
-    IonSpinner
+    IonSpinner,
+    IonRefresher,
+    IonRefresherContent
 } from '@ionic/react'
 
 
@@ -73,6 +75,11 @@ const HomePage = () => {
     useEffect(() => {
         fetchAllThreadPost()
     }, [])
+
+    const handleRefresh = async (event: CustomEvent) => {
+        await fetchAllThreadPost()
+        event.detail.complete()
+    }
 
     const fetchAllThreadPost = async () => {
 
@@ -179,6 +186,15 @@ const HomePage = () => {
             </IonHeader>
 
             <IonContent>
+
+                <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                    <IonRefresherContent
+                        pullingIcon="chevron-down-circle-outline"
+                        pullingText="Pull to refresh"
+                        refreshingSpinner="circles"
+                        refreshingText="Refreshing..."
+                    />
+                </IonRefresher>
 
                 <IonGrid>
                     <IonRow>

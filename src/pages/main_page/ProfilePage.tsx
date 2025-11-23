@@ -25,7 +25,8 @@ import {
   IonLoading,
   IonActionSheet,
   IonToast,
-  IonSegmentView,
+  IonRefresher,
+  IonRefresherContent
 } from '@ionic/react'
 
 // icons
@@ -125,6 +126,14 @@ const ProfilePage = () => {
     fetchUserProfile()
     fetchThreadPostCount()
   }, []);
+
+  const handleRefresh = async (event: CustomEvent) => {
+    await Promise.all([
+      fetchUserProfile(),
+      fetchThreadPostCount()
+    ])
+    event.detail.complete()
+  }
 
   // -- FETCH USER DETAILS --
   const fetchUserProfile = async () => {
@@ -516,6 +525,16 @@ const ProfilePage = () => {
         </IonHeader>
 
         <IonContent>
+
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent
+              pullingIcon="chevron-down-circle-outline"
+              pullingText="Pull to refresh"
+              refreshingSpinner="circles"
+              refreshingText="Refreshing..."
+            />
+          </IonRefresher>
+          
           <IonGrid className="ion-text-center ion-padding">
             <IonRow>
               <IonCol>
