@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import UserProfile
+from .models import UserProfile, UserFollow
 
 import json
 
@@ -121,6 +121,10 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     can_update_profile = serializers.SerializerMethodField()
     days_until_next_update = serializers.SerializerMethodField()
     
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    
     class Meta:
         model = UserProfile
         fields = [
@@ -141,7 +145,10 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             'profile_image_url',
             'created_at',
             'can_update_profile',
-            'days_until_next_update'
+            'days_until_next_update',
+            'followers_count',
+            'following_count',
+            'is_following'
         ]
         
     def get_profile_image_url(self, obj):
@@ -165,6 +172,43 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
         '''CALCULATE DAYS UNTIL NEXT UPDATE'''
         
         return obj.days_until_next_update()
+    
+    def get_followers_count(self, obj):
+        return obj.user.followers.count()
+    
+    def get_following_count(self, obj):
+        return obj.user.following.count()
+    
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            if request.user == obj.user:
+                return None  # Can't follow yourself
+            return UserFollow.objects.filter(
+                follower=request.user,
+                following=obj.user
+            ).exists()
+        return False
+    
+class UserFollowSerializer(serializers.ModelSerializer):
+    follower_username = serializers.CharField(source='follower.username', read_only=True)
+    following_username = serializers.CharField(source='following.username', read_only=True)
+    follower_profile = UserProfileDetailSerializer(source='follower.profile', read_only=True)
+    following_profile = UserProfileDetailSerializer(source='following.profile', read_only=True)
+    
+    class Meta:
+        model = UserFollow
+        fields = [
+            'id',
+            'follower',
+            'follower_username',
+            'follower_profile',
+            'following',
+            'following_username',
+            'following_profile',
+            'created_at'
+        ]
+        read_only_fields = ['follower', 'created_at']
     
 class UpdateProfileDetailsSerializer(serializers.ModelSerializer):
     

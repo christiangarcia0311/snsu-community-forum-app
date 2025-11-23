@@ -118,3 +118,61 @@ export const updateProfileImage = async (imageFile: File) => {
         throw error.response?.data || { error: 'Something went wrong' }
     }
 }
+
+// -- FOLLOW MANAGEMENT -- 
+export const followUser = async (username: string) => {
+    try {
+        const response = await axios.post(
+            `${API_BASE_URL}follow/${username}/`,
+            {},
+            {
+                headers: getAuthHeader()
+            }
+        )
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to follow user' }
+    }
+}
+
+export const unfollowUser = async (username: string) => {
+    try {
+        const response = await axios.delete(
+            `${API_BASE_URL}follow/${username}/`,
+            {
+                headers: getAuthHeader()
+            }
+        )
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to unfollow user' }
+    }
+}
+
+export const getUserFollowers = async (username: string) => {
+    try {
+        const response = await axios.get(
+            `${API_BASE_URL}followers/${username}/`,
+            {
+                headers: getAuthHeader()
+            }
+        )
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to fetch followers' }
+    }
+}
+
+export const getUserFollowing = async (username: string) => {
+    try {
+        const response = await axios.get(
+            `${API_BASE_URL}following/${username}/`,
+            {
+                headers: getAuthHeader()
+            }
+        )
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to fetch following' }
+    }
+}

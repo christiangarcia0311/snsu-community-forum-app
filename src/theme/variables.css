@@ -209,6 +209,10 @@ http://ionicframework.com/docs/theming/ */
     color: var(--tertiary-shade);
 }
 
+.profile-follow-click {
+    cursor: pointer;
+}
+
 /* AUTH SIGN UP */
 .auth-title {
     font-family: var(--font-header);
@@ -294,6 +298,17 @@ http://ionicframework.com/docs/theming/ */
     width: 100%;
     font-size: 14px;
     margin: 20px 0px;
+}
+
+/* FOLLOW USER*/
+.follow-header {
+    color: var(--tertiary-shade);
+    font-size: 16px;
+}
+
+.follow-sub-header {
+    color: var(--tertiary-shade);
+    font-size: 14px;
 }
 
 /* THREAD POST */

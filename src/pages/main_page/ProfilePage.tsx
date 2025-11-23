@@ -63,6 +63,12 @@ import { getUserThreadPost } from '../../services/ThreadService'
 import AboutProfile from '../../components/profile/AboutProfile'
 import ThreadPost from '../../components/profile/ThreadPost'
 
+
+// -- FOLLOW --
+import UserFollowers from '../../hooks/UserFollowers'
+import UserFollowing from '../../hooks/UserFollowing'
+import UserProfileView from '../../hooks/UserProfileView'
+
 // -- MODAL COMPONENTS --
 import AccountSettings from '../../components/profile/profile_menu/AccountSettings'
 
@@ -85,6 +91,8 @@ interface UserProfileData {
   created_at: string
   can_update_profile?: boolean
   days_until_next_update?: number
+  followers_count?: number
+  following_count?: number
 }
 
 const ProfilePage = () => {
@@ -103,6 +111,12 @@ const ProfilePage = () => {
   
   // -- STATS --
   const [threadCount, setThreadCount] = useState(0)
+
+  // -- FOLLOW USER LIST --
+  const [showFollowersModal, setShowFollowersModal] = useState(false)
+  const [showFollowingModal, setShowFollowingModal] = useState(false)
+  const [showUserProfileView, setShowUserProfileView] = useState(false)
+  const [selectedUserProfile, setSelectedUserProfile] = useState<any>(null)
 
   // -- USER PROFILE MENU --
   const [showAccountSettings, setShowAccountSettings] = useState(false)
@@ -212,6 +226,11 @@ const ProfilePage = () => {
     setShowToast(true);
     setShowActionSheet(false);
   };
+
+  const handleViewUserProfile = (userProfile: any) => {
+    setSelectedUserProfile(userProfile)
+    setShowUserProfileView(true)
+  }
 
   // -- LOGOUT USER --
   const handleLogout = () => {
@@ -536,14 +555,20 @@ const ProfilePage = () => {
                 <IonText>Threads</IonText>
               </IonCol>
 
-              <IonCol>
-                <IonText>0</IonText>
+              <IonCol
+                onClick={() => setShowFollowersModal(true)}
+                className='profile-follow-click'
+              >
+                <IonText>{userProfile?.followers_count || 0}</IonText>
                 <br />
                 <IonText>Followers</IonText>
               </IonCol>
 
-              <IonCol>
-                <IonText>0</IonText>
+              <IonCol
+                onClick={() => setShowFollowingModal(true)}
+                className='profile-follow-click'
+              >
+                <IonText>{userProfile?.following_count || 0}</IonText>
                 <br />
                 <IonText>Following</IonText>
               </IonCol>
@@ -627,6 +652,30 @@ const ProfilePage = () => {
             position='bottom'
         />
       </IonPage>
+
+      {/* FOLLOW USER */}
+      <UserFollowers
+        isOpen={showFollowersModal}
+        onDidDismiss={() => setShowFollowersModal(false)}
+        username={userProfile?.username || ''}
+        onViewProfile={handleViewUserProfile}
+      />
+
+      <UserFollowing
+        isOpen={showFollowingModal}
+        onDidDismiss={() => setShowFollowingModal(false)}
+        username={userProfile?.username || ''}
+        onViewProfile={handleViewUserProfile}
+      />
+
+      <UserProfileView
+        isOpen={showUserProfileView}
+        onDidDismiss={() => {
+          setShowUserProfileView(false)
+          setSelectedUserProfile(null)
+        }}
+        userProfile={selectedUserProfile}
+      />
     </>
   )
 }

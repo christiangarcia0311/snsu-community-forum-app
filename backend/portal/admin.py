@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile
+from .models import UserProfile, UserFollow
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -26,3 +26,16 @@ class UserProfileAdmin(admin.ModelAdmin):
     def email_display(self, obj):
         return obj.user.email
     email_display.short_description = 'Email'
+
+@admin.register(UserFollow)
+class UserFollowAdmin(admin.ModelAdmin):
+    list_display = ['follower', 'following', 'created_at']
+    search_fields = ['follower__username', 'following__username']
+    list_filter = ['created_at']
+    readonly_fields = ['created_at']
+    
+    fieldsets = (
+        ('User Follow Information', {
+            'fields': ('follower__username', 'follower', 'following', 'created_at')
+        }),
+    )

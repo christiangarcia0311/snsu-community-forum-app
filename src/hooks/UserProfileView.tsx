@@ -37,8 +37,13 @@ import {
 // default image
 import photoDefault from '../assets/images/profile.png'
 
+// follow user
+import UserFollowers from './UserFollowers'
+import UserFollowing from './UserFollowing'
+
 // services
 import { getAllThreadPost } from '../services/ThreadService'
+import { followUser, unfollowUser } from '../services/AuthService'
 
 // components
 import ViewThread from '../components/profile/thread_post/ViewThread'
@@ -61,6 +66,9 @@ interface UserProfileViewProps {
         birth_date?: string
         profile_image_url?: string | null
         created_at?: string
+        followers_count?: number
+        following_count?: number
+        is_following?: boolean
     } | null
 }
 
@@ -84,15 +92,22 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
     const [selectedSegment, setSelectedSegment] = useState<string>('threads')
     const [threads, setThreads] = useState<ThreadData[]>([])
     const [loading, setLoading] = useState(false)
+    const [followersCount, setFollowersCount] = useState(0)
     const [isFollowing, setIsFollowing] = useState(false)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState('')
     const [showViewModal, setShowViewModal] = useState(false)
     const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null)
+    const [followLoading, setFollowLoading] = useState(false)
+
+    const [showFollowersModal, setShowFollowersModal] = useState(false)
+    const [showFollowingModal, setShowFollowingModal] = useState(false)
 
     useEffect(() => {
         if (isOpen && userProfile) {
             fetchUserThreads()
+            setIsFollowing(userProfile.is_following || false)
+            setFollowersCount(userProfile.followers_count || 0)
         }
     }, [isOpen, userProfile])
 
@@ -102,6 +117,7 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
         setLoading(true)
         try {
             const allThreads = await getAllThreadPost()
+
             // Filter threads by this user's username
             const userThreads = allThreads.filter(
                 thread => thread.author_username === userProfile.username
@@ -114,10 +130,29 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
         }
     }
 
-    const handleFollow = () => {
-        setIsFollowing(!isFollowing)
-        setToastMessage(isFollowing ? 'Unfollowed' : 'Following')
-        setShowToast(true)
+    const handleFollow = async () => {
+        if (!userProfile || followLoading) return
+        
+        setFollowLoading(true)
+        try {
+            if (isFollowing) {
+                const response = await unfollowUser(userProfile.username)
+                setIsFollowing(false)
+                setFollowersCount(response.followers_count)
+                setToastMessage(`Unfollowed ${userProfile.firstname}`)
+            } else {
+                const response = await followUser(userProfile.username)
+                setIsFollowing(true)
+                setFollowersCount(response.followers_count)
+                setToastMessage(`Following ${userProfile.firstname}`)
+            }
+            setShowToast(true)
+        } catch (error: any) {
+            setToastMessage(error.error || 'Failed to update follow status')
+            setShowToast(true)
+        } finally {
+            setFollowLoading(false)
+        }
     }
 
     const handleViewThreadPost = (threadId: number) => {
@@ -223,11 +258,17 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                     onClick={handleFollow}
                                     color={isFollowing ? 'medium' : 'primary'}
                                 >
-                                    <IonIcon 
-                                        icon={isFollowing ? checkmarkCircleOutline : personAddOutline} 
-                                        slot='start' 
-                                    />
-                                    {isFollowing ? 'Following' : 'Follow'}
+                                    {followLoading ? (
+                                        <IonSpinner name="dots" />
+                                    ) : (
+                                        <>
+                                            <IonIcon 
+                                                icon={isFollowing ? checkmarkCircleOutline : personAddOutline} 
+                                                slot='start' 
+                                            />
+                                            {isFollowing ? 'Following' : 'Follow'}
+                                        </>
+                                    )}
                                 </IonButton>
                             </IonCol>
                         </IonRow>
@@ -252,13 +293,19 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                 <br />
                                 <IonText>Threads</IonText>
                             </IonCol>
-                            <IonCol>
-                                <IonText>0</IonText>
+                            <IonCol
+                                onClick={() => setShowFollowersModal(true)}
+                                className='profile-follow-click'
+                            >
+                                <IonText>{followersCount}</IonText>
                                 <br />
                                 <IonText>Followers</IonText>
                             </IonCol>
-                            <IonCol>
-                                <IonText>0</IonText>
+                            <IonCol
+                                onClick={() => setShowFollowingModal(true)}
+                                className='profile-follow-click'
+                            >
+                                <IonText>{userProfile.following_count || 0}</IonText>
                                 <br />
                                 <IonText>Following</IonText>
                             </IonCol>
@@ -473,6 +520,25 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                 message={toastMessage}
                 duration={2000}
                 position='top'
+            />
+
+            <UserFollowers
+                isOpen={showFollowersModal}
+                onDidDismiss={() => setShowFollowersModal(false)}
+                username={userProfile?.username || ''}
+                onViewProfile={(profile) => {
+                    setShowFollowersModal(false)
+                    // You can add additional logic here if needed
+                }}
+            />
+
+            <UserFollowing
+                isOpen={showFollowingModal}
+                onDidDismiss={() => setShowFollowingModal(false)}
+                username={userProfile?.username || ''}
+                onViewProfile={(profile) => {
+                    setShowFollowingModal(false)
+                }}
             />
         </>
     )
