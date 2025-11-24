@@ -106,7 +106,8 @@ const ViewThread: React.FC<ViewThreadProps> = ({
     const [loadingComments, setLoadingComments] = useState(false)
     const [submittingComment, setSubmittingComment] = useState(false)
 
-    const [likingInProgress, setLikingInProgress] = useState(false)
+    const [likingThread, setLikingThread] = useState(false)
+    
 
     useEffect(() => {
         if (isOpen && threadId) {
@@ -114,6 +115,32 @@ const ViewThread: React.FC<ViewThreadProps> = ({
             fetchThreadComments()
         }
     }, [isOpen, threadId])
+
+    const handleLikeThreadPost = async () => {
+        if (!threadId || likingThread) return
+
+        setLikingThread(true)
+
+        try {
+            const response = await likeThreadPost(threadId)
+            
+            // Update the thread state with new like data
+            setThread(prevThread => {
+                if (!prevThread) return null
+                return {
+                    ...prevThread,
+                    likes_count: response.likes_count,
+                    is_liked: !prevThread.is_liked
+                }
+            })
+        } catch (error: any) {
+            console.error('Failed to like thread:', error)
+            setToastMessage(error.error || 'Failed to like thread')
+            setShowToast(true)
+        } finally {
+            setLikingThread(false)
+        }
+    }
 
     const fetchUserThreadPost = async () => {
         
@@ -186,30 +213,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
         }
     }
 
-    const handleLikeThreadPost = async () => {
-        if (!threadId || !thread || likingInProgress) return
-
-        setLikingInProgress(true)
-
-        try {
-            const response = await likeThreadPost(threadId)
-            
-            // Update the single thread object
-            setThread(prevThread => 
-                prevThread ? {
-                    ...prevThread,
-                    likes_count: response.likes_count,
-                    is_liked: !prevThread.is_liked
-                } : null
-            )
-        } catch (error: any) {
-            console.error('Failed to like thread:', error)
-            setToastMessage('Failed to like thread')
-            setShowToast(true)
-        } finally {
-            setLikingInProgress(false)
-        }
-    }
+    
 
     const handleDeleteThreadPost = async () => {
         if (!threadId) return 
@@ -417,7 +421,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                             size='small' 
                                                             className='home-action-button'
                                                             onClick={handleLikeThreadPost}
-                                                            disabled={likingInProgress}
+                                                            disabled={likingThread}
                                                         >
                                                             <IonIcon 
                                                                 icon={thread.is_liked ? heart : heartOutline} 
@@ -430,7 +434,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                     <IonCol>
                                                         <IonButton expand='full' fill='clear' size='small' className='home-action-button' disabled>
                                                             <IonIcon icon={chatbubbleOutline} slot='start' />
-                                                            <IonText>{thread.comments_count || 0}</IonText>
+                                                            <IonText>{comments.length}</IonText>
                                                         </IonButton>
                                                     </IonCol>
                                                     <IonCol>
