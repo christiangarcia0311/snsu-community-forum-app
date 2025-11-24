@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ThreadPost
+from .models import ThreadPost, ThreadComment, ThreadLike
 from portal.serializers import UserProfileDetailSerializer
 
 class ThreadPostSerializer(serializers.ModelSerializer):
@@ -42,4 +42,37 @@ class ThreadPostCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Content must be at least 20 character length')
     
         return value
+
+class ThreadCommentSerializer(serializers.ModelSerializer):
+    author_profile = UserProfileDetailSerializer(source='author.profile', read_only=True)
+    author_username = serializers.CharField(source='author.username', read_only=True)
     
+    class Meta:
+        model = ThreadComment
+        fields = [
+            'id', 
+            'thread', 
+            'author', 
+            'author_username', 
+            'author_profile', 
+            'content', 
+            'created_at'
+        ]
+        
+        read_only_fields = ['author', 'created_at']
+        
+class ThreadLikeSerializer(serializers.ModelSerializer):
+    user_username = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = ThreadLike
+        fields = [
+            'id', 
+            'thread', 
+            'user', 
+            'user_username', 
+            'created_at'
+        ]
+        
+        read_only_fields = ['user', 'created_at']
+        

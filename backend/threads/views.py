@@ -4,8 +4,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from .models import ThreadPost
-from .serializers import ThreadPostSerializer, ThreadPostCreateSerializer
+from .models import ThreadPost, ThreadComment, ThreadLike
+from .serializers import (
+    ThreadPostSerializer, 
+    ThreadPostCreateSerializer, 
+    ThreadCommentSerializer,
+    ThreadLikeSerializer
+)
 
 class ThreadPostListView(APIView):
     
@@ -118,3 +123,45 @@ class UserThreadPostsView(APIView):
         threads = ThreadPost.objects.filter(author=request.user)
         serializer = ThreadPostSerializer(threads, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ThreadCommentListCreateView(APIView):
+    
+    '''API endpoint for retrieving and create comment'''
+    
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        comments = ThreadComment.objects.filter(thread_id=pk)
+        serializer = ThreadCommentSerializer(comments, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, pk):
+        try:
+            thread = ThreadPost.objects.get(pk=pk)
+        except ThreadPost.DoesNotExist:
+            return Response({'error': 'Thread not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ThreadCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user, thread=thread)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ThreadLikeToggleView(APIView):
+    
+    '''API endpoint to click like and view user who like'''
+    
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            thread = ThreadPost.objects.get(pk=pk)
+        except ThreadPost.DoesNotExist:
+            return Response({'error': 'Thread not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        like, created = ThreadLike.objects.get_or_create(thread=thread, user=request.user)
+        if created:
+            return Response({'message': 'Liked', 'likes_count': thread.likes.count()}, status=status.HTTP_201_CREATED)
+        else:
+            like.delete()
+            return Response({'message': 'Unliked', 'likes_count': thread.likes.count()}, status=status.HTTP_200_OK)
