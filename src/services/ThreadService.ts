@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const API_BASE_URL = 'http://localhost:8000/api/threads/'
+const API_BASE_URL = 'http://localhost:8000/api/v1/threads/'
 
 const getAuthToken = () => {
     return localStorage.getItem('access_token')
