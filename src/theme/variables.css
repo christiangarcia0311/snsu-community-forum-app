@@ -127,6 +127,24 @@ http://ionicframework.com/docs/theming/ */
     font-size: 20px;
 }
 
+/* COMMENT */
+.comment-avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: var(--tertiary-shade);
+    margin-top: 4px;
+}
+
+.comment-content {
+    margin-top: 8px;
+    color: var(--dark-shade);
+    line-height: 1.4;
+}
+
 /* PROFILE PAGE*/
 .txt-highlight {
     color: var(--tertiary-shade);

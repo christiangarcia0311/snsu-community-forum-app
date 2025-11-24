@@ -166,7 +166,7 @@ export const getThreadComments =  async (threadId: number) => {
 export const createComment = async (threadId: number, content: string) => {
     try {
         const token = getAuthToken()
-        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/comments/`, { content }, {
+        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/comments/`, { content, thread: threadId }, {
             headers: { 
                 'Authorization': `Bearer ${token}` 
             },

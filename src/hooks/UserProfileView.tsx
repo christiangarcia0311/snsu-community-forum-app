@@ -31,7 +31,8 @@ import {
     chatbubbleOutline,
     shareSocialOutline,
     personAddOutline,
-    checkmarkCircleOutline
+    checkmarkCircleOutline,
+    heart
 } from 'ionicons/icons'
 
 // default image
@@ -42,7 +43,7 @@ import UserFollowers from './UserFollowers'
 import UserFollowing from './UserFollowing'
 
 // services
-import { getAllThreadPost } from '../services/ThreadService'
+import { getAllThreadPost, likeThreadPost } from '../services/ThreadService'
 import { followUser, unfollowUser } from '../services/AuthService'
 
 // components
@@ -82,6 +83,9 @@ interface ThreadData {
     updated_at: string
     author_username?: string
     author_profile?: any
+    likes_count?: number
+    comments_count?: number
+    is_liked?: boolean
 }
 
 const UserProfileView: React.FC<UserProfileViewProps> = ({
@@ -105,6 +109,8 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
     const [showFollowersModal, setShowFollowersModal] = useState(false)
     const [showFollowingModal, setShowFollowingModal] = useState(false)
 
+    const [likingThreads, setLikingThreads] = useState<{ [key: number]: boolean }>({})
+
     useEffect(() => {
         if (isOpen && userProfile) {
             fetchUserThreads()
@@ -112,6 +118,32 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
             setFollowersCount(userProfile.followers_count || 0)
         }
     }, [isOpen, userProfile])
+
+    const handleLikeThreadPost = async (threadId: number) => {
+        if (likingThreads[threadId]) return
+
+        setLikingThreads(prev => ({ ...prev, [threadId]: true }))
+
+        try {
+            const response = await likeThreadPost(threadId)
+            
+            setThreads(prevThreads => 
+                prevThreads.map(thread => 
+                    thread.id === threadId 
+                        ? {
+                            ...thread,
+                            likes_count: response.likes_count,
+                            is_liked: !thread.is_liked
+                        }
+                        : thread
+                )
+            )
+        } catch (error: any) {
+            console.error('Failed to like thread:', error)
+        } finally {
+            setLikingThreads(prev => ({ ...prev, [threadId]: false }))
+        }
+    }
 
     const fetchUserThreads = async () => {
         if (!userProfile) return
@@ -482,15 +514,30 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                                             {/* Actions */}
                                                             <IonRow className='ion-margin-top home-thread-actions'>
                                                                 <IonCol>
-                                                                    <IonButton fill='clear' size='small' className='home-action-button'>
-                                                                        <IonIcon icon={heartOutline} slot='start' />
-                                                                        <IonText>24</IonText>
+                                                                    <IonButton 
+                                                                        fill='clear' 
+                                                                        size='small' 
+                                                                        className='home-action-button'
+                                                                        onClick={() => handleLikeThreadPost(thread.id)}
+                                                                        disabled={likingThreads[thread.id]}
+                                                                    >
+                                                                        <IonIcon 
+                                                                            icon={thread.is_liked ? heart : heartOutline} 
+                                                                            slot='start'
+                                                                            color={thread.is_liked ? 'danger' : 'dark'}
+                                                                        />
+                                                                        <IonText>{thread.likes_count || 0}</IonText>
                                                                     </IonButton>
                                                                 </IonCol>
                                                                 <IonCol>
-                                                                    <IonButton fill='clear' size='small' className='home-action-button'>
+                                                                    <IonButton 
+                                                                        fill='clear' 
+                                                                        size='small' 
+                                                                        className='home-action-button'
+                                                                        onClick={() => handleViewThreadPost(thread.id)}
+                                                                    >
                                                                         <IonIcon icon={chatbubbleOutline} slot='start' />
-                                                                        <IonText>12</IonText>
+                                                                        <IonText>{thread.comments_count || 0}</IonText>
                                                                     </IonButton>
                                                                 </IonCol>
                                                                 <IonCol>

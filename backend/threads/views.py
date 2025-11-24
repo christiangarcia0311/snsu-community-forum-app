@@ -49,6 +49,7 @@ class ThreadPostDetailView(APIView):
     
     '''API endpoint for retrieving, updating and deleting a thread post'''
     
+    
     def get_object(self, pk):
         try:
             return ThreadPost.objects.get(pk=pk)

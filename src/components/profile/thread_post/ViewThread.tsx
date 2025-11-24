@@ -19,7 +19,10 @@ import {
     IonSpinner,
     IonAlert,
     IonToast,
-    IonLoading
+    IonLoading,
+    IonItem,
+    IonLabel,
+    IonTextarea
 } from '@ionic/react'
 
 // icons
@@ -29,7 +32,9 @@ import {
     chatbubbleOutline,
     shareSocialOutline,
     createOutline,
-    trashOutline
+    trashOutline,
+    send,
+    heart
 } from 'ionicons/icons'
 
 // image default
@@ -39,7 +44,13 @@ import photoDefault from '../../../assets/images/profile.png'
 import UpdateThread from './UpdateThread'
 
 // services
-import { getThreadPostById, deleteThreadPost } from '../../../services/ThreadService'
+import { 
+    getThreadPostById, 
+    deleteThreadPost,
+    getThreadComments,
+    createComment,
+    likeThreadPost
+} from '../../../services/ThreadService'
 import { getUserProfile } from '../../../services/AuthService'
 
 interface ViewThreadProps {
@@ -60,6 +71,19 @@ interface ThreadData {
     author: number
     author_username?: string
     author_profile?: any
+    likes_count?: number
+    comments_count?: number
+    is_liked?: boolean
+}
+
+interface CommentData {
+    id: number
+    thread: number
+    author: number
+    author_username: string
+    author_profile: any
+    content: string
+    created_at: string
 }
 
 const ViewThread: React.FC<ViewThreadProps> = ({
@@ -77,9 +101,17 @@ const ViewThread: React.FC<ViewThreadProps> = ({
     const [toastMessage, setToastMessage] = useState('')
     const [isOwner, setIsOwner] = useState(false)
 
+    const [comments, setComments] = useState<CommentData[]>([])
+    const [newComment, setNewComment] = useState('')
+    const [loadingComments, setLoadingComments] = useState(false)
+    const [submittingComment, setSubmittingComment] = useState(false)
+
+    const [likingInProgress, setLikingInProgress] = useState(false)
+
     useEffect(() => {
         if (isOpen && threadId) {
             fetchUserThreadPost()
+            fetchThreadComments()
         }
     }, [isOpen, threadId])
 
@@ -108,6 +140,75 @@ const ViewThread: React.FC<ViewThreadProps> = ({
             setLoading(false)
         }
 
+    }
+
+    const fetchThreadComments = async () => {
+        if (!threadId) return 
+
+        setLoadingComments(true)
+
+        try {
+            const data = await getThreadComments(threadId)
+            setComments(data)
+        } catch (error: any) {
+            setToastMessage(`Failed to load comments ${error}`)
+            setShowToast(true)
+        } finally {
+            setLoadingComments(false)
+        }
+    }
+
+    const handleSubmitThreadComment = async () => {
+        
+        // VALIDATION
+        if (!threadId || !newComment.trim()) {
+            setToastMessage('Please enter a comment')
+            setShowToast(true)
+            return
+        }
+
+        setSubmittingComment(true)
+        try {
+            await createComment(threadId, newComment.trim())
+            setNewComment('')
+            setToastMessage('Comment added')
+            setShowToast(true)
+            
+    
+            await fetchThreadComments()
+
+        } catch (error: any) {
+            console.error('Failed to submit comment:', error)
+            setToastMessage(error.error || 'Failed to add comment')
+            setShowToast(true)
+        } finally {
+            setSubmittingComment(false)
+        }
+    }
+
+    const handleLikeThreadPost = async () => {
+        if (!threadId || !thread || likingInProgress) return
+
+        setLikingInProgress(true)
+
+        try {
+            const response = await likeThreadPost(threadId)
+            
+            // Update the single thread object
+            setThread(prevThread => 
+                prevThread ? {
+                    ...prevThread,
+                    likes_count: response.likes_count,
+                    is_liked: !prevThread.is_liked
+                } : null
+            )
+        } catch (error: any) {
+            console.error('Failed to like thread:', error)
+            setToastMessage('Failed to like thread')
+            setShowToast(true)
+        } finally {
+            setLikingInProgress(false)
+        }
     }
 
     const handleDeleteThreadPost = async () => {
@@ -310,15 +411,26 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                 {/* ACTIONS */}
                                                 <IonRow className='ion-margin-top home-thread-actions ion-text-center'>
                                                     <IonCol>
-                                                        <IonButton expand='full' fill='clear' size='small' className='home-action-button'>
-                                                            <IonIcon icon={heartOutline} slot='start' />
-                                                            <IonText>24</IonText>
+                                                        <IonButton 
+                                                            expand='full' 
+                                                            fill='clear' 
+                                                            size='small' 
+                                                            className='home-action-button'
+                                                            onClick={handleLikeThreadPost}
+                                                            disabled={likingInProgress}
+                                                        >
+                                                            <IonIcon 
+                                                                icon={thread.is_liked ? heart : heartOutline} 
+                                                                slot='start'
+                                                                color={thread.is_liked ? 'danger' : undefined}
+                                                            />
+                                                            <IonText>{thread.likes_count || 0}</IonText>
                                                         </IonButton>
                                                     </IonCol>
                                                     <IonCol>
-                                                        <IonButton expand='full' fill='clear' size='small' className='home-action-button'>
+                                                        <IonButton expand='full' fill='clear' size='small' className='home-action-button' disabled>
                                                             <IonIcon icon={chatbubbleOutline} slot='start' />
-                                                            <IonText>12</IonText>
+                                                            <IonText>{thread.comments_count || 0}</IonText>
                                                         </IonButton>
                                                     </IonCol>
                                                     <IonCol>
@@ -333,11 +445,85 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                 <IonRow className='ion-margin-top'>
                                                     <IonCol>
                                                         <IonText>
-                                                            <h2>Comments</h2>
+                                                            <h2>Comments ({comments.length})</h2>
                                                         </IonText>
-                                                        <IonText>
-                                                            <p className='ion-text-center ion-padding'>No comments yet. Be the first to comment!</p>
-                                                        </IonText>
+                                                    </IonCol>
+                                                </IonRow>
+
+                                                {/* COMMENTS INPUT */}
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonItem lines="none" className='adjust-background'>
+                                                            <IonTextarea
+                                                                placeholder='Write a comment...'
+                                                                fill='outline'
+                                                                value={newComment}
+                                                                onIonInput={(e) => setNewComment(e.detail.value!)}
+                                                                rows={1}
+                                                                autoGrow={true}
+                                                            />
+                                                            <IonButton
+                                                                slot='end'
+                                                                fill='clear'
+                                                                onClick={handleSubmitThreadComment}
+                                                                disabled={submittingComment || !newComment.trim()}
+                                                            >
+                                                                {
+                                                                    submittingComment ? (
+                                                                        <IonSpinner name='dots' />
+                                                                    ) : (
+                                                                        <IonIcon icon={send} />
+                                                                    )
+                                                                }
+                                                            </IonButton>
+                                                        </IonItem>
+                                                    </IonCol>
+                                                </IonRow>
+                                            
+
+                                                {/* COMMENT LIST */}
+                                                <IonRow>
+                                                    <IonCol>
+                                                        {
+                                                            loadingComments ? (
+                                                                <div className='ion-text-center ion-padding'>
+                                                                    <IonSpinner />
+                                                                    <p>Loading comments...</p>
+                                                                </div>
+                                                            ) : comments.length === 0 ? (
+                                                                <IonText>
+                                                                    <p className='ion-text-center ion-padding'>No comments yet. Be the first to comment!</p>
+                                                                </IonText>
+                                                            ) : (
+                                                               <>
+                                                                    {
+                                                                        comments.map((comment) => {
+                                                                            const commentAuthorPic = comment.author_profile?.profile_image_url || photoDefault
+                                                                            const commentAuthorName = comment.author_profile
+                                                                                ? `${comment.author_profile.firstname} ${comment.author_profile.lastname}`
+                                                                                : comment.author_username
+
+                                                                            return (
+                                                                                <IonItem key={comment.id} lines='none' className='adjust-background'>
+                                                                                    <IonAvatar slot='start' className='comment-avatar'>
+                                                                                        <img src={commentAuthorPic} alt="Profile Picture" />
+                                                                                    </IonAvatar>
+                                                                                    <IonLabel className='ion-text-wrap'>
+                                                                                        <h3>
+                                                                                            <strong>{commentAuthorName}</strong>
+                                                                                        </h3>
+                                                                                        <p className='comment-date'>
+                                                                                            <small>{formatDate(comment.created_at)}</small>
+                                                                                        </p>
+                                                                                        <p className="comment-content">{comment.content}</p>
+                                                                                    </IonLabel>
+                                                                                </IonItem>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                               </>
+                                                            )
+                                                        }
                                                     </IonCol>
                                                 </IonRow>
 

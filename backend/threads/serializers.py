@@ -6,6 +6,9 @@ from portal.serializers import UserProfileDetailSerializer
 class ThreadPostSerializer(serializers.ModelSerializer):
     author_profile = UserProfileDetailSerializer(source='author.profile', read_only=True)
     author_username = serializers.CharField(source='author.username', read_only=True)
+    likes_count = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
     
     class Meta:
         model = ThreadPost 
@@ -19,10 +22,25 @@ class ThreadPostSerializer(serializers.ModelSerializer):
             'content',
             'image',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'likes_count',
+            'is_liked',
+            'comments_count'
         ]
         
         read_only_fields = ['author', 'created_at']
+        
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_comments_count(self, obj):
+        return obj.comments.count()
+    
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return ThreadLike.objects.filter(thread=obj, user=request.user).exists()
+        return False
         
         
 class ThreadPostCreateSerializer(serializers.ModelSerializer):
