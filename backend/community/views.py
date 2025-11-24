@@ -198,7 +198,7 @@ class CommunityMembershipView(APIView):
             'message': f'Successfully left {community.name}'
         }, status=status.HTTP_200_OK)
         
-class MembersListView(APIView):
+class CommunityMembersListView(APIView):
     
     '''API endpoint for listing community members'''
     

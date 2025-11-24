@@ -137,7 +137,7 @@ class CommunityPostSerializer(serializers.ModelSerializer):
         return False
     
     
-class CommunityPostCreate(serializers.ModelSerializer):
+class CommunityPostCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CommunityPost
