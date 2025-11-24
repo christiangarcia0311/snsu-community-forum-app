@@ -6,6 +6,7 @@ http://ionicframework.com/docs/theming/ */
     --secondary-shade: #ffac10;
     --tertiary-shade: #a6a6a6;
     --dark-shade: #737373;
+    --darker-shade: #1a1a1a;
     --light-shade: #eeeeee;
     --red-shade: #c50f0fe3;
     --light-red-shade: #e71c1ce3;
@@ -39,7 +40,7 @@ http://ionicframework.com/docs/theming/ */
 
 /* HOME PAGE */
 .home-header-bg {
-    --background: transparent
+    --background: transparent;
 }
 
 .home-header {
@@ -82,7 +83,7 @@ http://ionicframework.com/docs/theming/ */
 .home-post-name {
     font-size: 16px;
     font-weight: bold;
-    color: var(--light-shade);
+    color: var(--ion-color-primary);
 }
 
 .home-post-name:hover {
@@ -211,6 +212,11 @@ http://ionicframework.com/docs/theming/ */
 
 .profile-follow-click {
     cursor: pointer;
+}
+
+/* TAB BUTTON*/
+.tab-bottom-bg {
+    font-size: 14px;
 }
 
 /* AUTH SIGN UP */

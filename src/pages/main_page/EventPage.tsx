@@ -1,17 +1,23 @@
 import React from 'react'  
 
 import {
-    IonContent
+    IonContent,
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle
 } from '@ionic/react'
 
 
 const EventPage = () => {
     return (
-        <IonContent>
-            <div className="center-display">
-                Event Page
-            </div>
-        </IonContent>
+        <>
+            <IonHeader>
+                <IonToolbar className='home-header-bg'>
+                    <IonTitle>Annoncements & Events</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+        </>
     )
 }
 

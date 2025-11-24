@@ -1,16 +1,25 @@
 import React from 'react'  
 
 import {
-    IonContent
+    IonContent,
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonIcon
 } from '@ionic/react'
 
 const CommunityPage = () => {
     return (
-        <IonContent>
-            <div className="center-display">
-                Community Page
-            </div>
-        </IonContent>
+        <>
+            <IonHeader>
+                <IonToolbar className='home-header-bg'>
+                    <IonTitle>
+                        Community
+                    </IonTitle>
+                </IonToolbar>
+            </IonHeader>
+        </>
     )
 }
 

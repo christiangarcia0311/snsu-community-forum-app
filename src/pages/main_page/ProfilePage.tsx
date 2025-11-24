@@ -516,7 +516,7 @@ const ProfilePage = () => {
       {/* PROFILE PAGE CONTENT */}
       <IonPage id="main-content">
         <IonHeader>
-          <IonToolbar>
+          <IonToolbar className='home-header-bg'>
             <IonButtons slot="end">
               <IonMenuButton></IonMenuButton>
             </IonButtons>

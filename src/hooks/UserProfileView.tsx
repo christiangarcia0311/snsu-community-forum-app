@@ -399,14 +399,16 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                         </div>
                                     ) : threads.length === 0 ? (
                                         <div className='profile-thread-center ion-text-center ion-padding'>
-                                            <IonText>
-                                                <h2 className='profile-thread-header'>No Threads Yet</h2>
-                                            </IonText>
-                                            <IonText>
-                                                <p className='profile-thread-sub'>
-                                                    This user hasn't posted any threads yet.
-                                                </p>
-                                            </IonText>
+                                            <div>
+                                                <IonText>
+                                                    <h2 className='profile-thread-header'>No Threads Yet</h2>
+                                                </IonText>
+                                                <IonText>
+                                                    <p className='profile-thread-sub'>
+                                                        This user hasn't posted any threads yet.
+                                                    </p>
+                                                </IonText> 
+                                            </div>
                                         </div>
                                     ) : (
                                         threads.map((thread) => {

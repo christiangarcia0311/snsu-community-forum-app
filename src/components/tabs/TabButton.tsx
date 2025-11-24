@@ -4,7 +4,8 @@ import {
     IonTabBar, 
     IonTabButton, 
     IonIcon, 
-    IonLabel 
+    IonLabel,
+    IonFooter,
 } from '@ionic/react'
 
 /* Icons */
@@ -18,29 +19,32 @@ import {
 
 const TabButtons = () => {
     return (
-        <IonTabBar slot="bottom">
+        <>
+            <IonFooter slot='bottom'>
+                <IonTabBar className='tab-bottom-bg'>
+                    <IonTabButton tab='home' href='/tabs/home'>
+                        <IonIcon icon={home} />           
+                    </IonTabButton>
 
-            <IonTabButton tab='home' href='/tabs/home'>
-                <IonIcon icon={home} />           
-            </IonTabButton>
+                    <IonTabButton tab='forum' href='/tabs/forum'>
+                        <IonIcon icon={chatbubbles} />           
+                    </IonTabButton>
 
-            <IonTabButton tab='forum' href='/tabs/forum'>
-                <IonIcon icon={chatbubbles} />           
-            </IonTabButton>
+                    <IonTabButton tab='community' href='/tabs/community'>
+                        <IonIcon icon={people} />           
+                    </IonTabButton>
 
-            <IonTabButton tab='community' href='/tabs/community'>
-                <IonIcon icon={people} />           
-            </IonTabButton>
+                    <IonTabButton tab='events' href='/tabs/events'>
+                        <IonIcon icon={calendar} />           
+                    </IonTabButton>
 
-            <IonTabButton tab='events' href='/tabs/events'>
-                <IonIcon icon={calendar} />           
-            </IonTabButton>
+                    <IonTabButton tab='profile' href='/tabs/profile'>
+                        <IonIcon icon={person} />           
+                    </IonTabButton>
 
-            <IonTabButton tab='profile' href='/tabs/profile'>
-                <IonIcon icon={person} />           
-            </IonTabButton>
-
-        </IonTabBar>
+                </IonTabBar>
+        </IonFooter>
+        </>
     )
 }
 
