@@ -146,3 +146,48 @@ export const deleteThreadPost = async (id: number): Promise<any> => {
     }
 
 }
+
+// COMMENT AND LIKE
+export const getThreadComments =  async (threadId: number) => {
+    try {
+        const token = getAuthToken()
+        const response = await axios.get(`${API_BASE_URL}posts/${threadId}/comments/`, {
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            },
+        })
+
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to fetch comments' }
+    }
+}
+
+export const createComment = async (threadId: number, content: string) => {
+    try {
+        const token = getAuthToken()
+        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/comments/`, { content }, {
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            },
+        })
+
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to create comment' }
+    }
+}
+
+export const likeThreadPost = async (threadId: number) => {
+    try {
+        const token = getAuthToken()
+        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/like/`, {}, {
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            },
+        })
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to like thread post' }
+    }
+}
