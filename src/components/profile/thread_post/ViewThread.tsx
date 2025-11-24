@@ -22,7 +22,9 @@ import {
     IonLoading,
     IonItem,
     IonLabel,
-    IonTextarea
+    IonTextarea,
+    IonRefresher,
+    IonRefresherContent
 } from '@ionic/react'
 
 // icons
@@ -116,27 +118,31 @@ const ViewThread: React.FC<ViewThreadProps> = ({
         }
     }, [isOpen, threadId])
 
-    const handleLikeThreadPost = async () => {
-        if (!threadId || likingThread) return
+    const handleRefresh = async (event: CustomEvent) => {
+        await Promise.all([
+            fetchUserThreadPost(),
+            fetchThreadComments()
+        ])
+        event.detail.complete()
+    }
+
+    const handleLikeThreadPost = async (threadId: number) => {
+        if (likingThread) return
 
         setLikingThread(true)
 
         try {
             const response = await likeThreadPost(threadId)
             
-            // Update the thread state with new like data
-            setThread(prevThread => {
-                if (!prevThread) return null
-                return {
-                    ...prevThread,
+            if (thread && thread.id === threadId) {
+                setThread({
+                    ...thread,
                     likes_count: response.likes_count,
-                    is_liked: !prevThread.is_liked
-                }
-            })
+                    is_liked: !thread.is_liked
+                })
+            }
         } catch (error: any) {
             console.error('Failed to like thread:', error)
-            setToastMessage(error.error || 'Failed to like thread')
-            setShowToast(true)
         } finally {
             setLikingThread(false)
         }
@@ -318,6 +324,15 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                 </IonHeader>
 
                 <IonContent>
+
+                    <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingText="Pull to refresh"
+                            refreshingSpinner="circles"
+                            refreshingText="Refreshing..."
+                        />
+                    </IonRefresher>
+
                     {
                         loading ? (
                             <div className='ion-text-center'>
@@ -420,8 +435,8 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                             fill='clear' 
                                                             size='small' 
                                                             className='home-action-button'
-                                                            onClick={handleLikeThreadPost}
-                                                            disabled={likingThread}
+                                                            onClick={() => handleLikeThreadPost(thread.id)}
+                                                            disabled={likingThread}          
                                                         >
                                                             <IonIcon 
                                                                 icon={thread.is_liked ? heart : heartOutline} 

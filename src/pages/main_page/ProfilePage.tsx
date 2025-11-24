@@ -528,7 +528,6 @@ const ProfilePage = () => {
 
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent
-              pullingIcon="chevron-down-circle-outline"
               pullingText="Pull to refresh"
               refreshingSpinner="circles"
               refreshingText="Refreshing..."

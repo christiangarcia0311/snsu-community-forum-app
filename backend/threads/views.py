@@ -162,7 +162,7 @@ class ThreadLikeToggleView(APIView):
 
         like, created = ThreadLike.objects.get_or_create(thread=thread, user=request.user)
         if created:
-            return Response({'message': 'Liked', 'likes_count': thread.likes.count()}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Liked', 'likes_count': thread.likes.count(), 'is_liked': True}, status=status.HTTP_201_CREATED)
         else:
             like.delete()
-            return Response({'message': 'Unliked', 'likes_count': thread.likes.count()}, status=status.HTTP_200_OK)
+            return Response({'message': 'Unliked', 'likes_count': thread.likes.count(), 'is_liked': False}, status=status.HTTP_200_OK)
