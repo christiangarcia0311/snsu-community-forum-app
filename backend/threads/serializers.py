@@ -9,6 +9,7 @@ class ThreadPostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
+    is_author_admin = serializers.SerializerMethodField()
     
     class Meta:
         model = ThreadPost 
@@ -25,7 +26,8 @@ class ThreadPostSerializer(serializers.ModelSerializer):
             'updated_at',
             'likes_count',
             'is_liked',
-            'comments_count'
+            'comments_count',
+            'is_author_admin'
         ]
         
         read_only_fields = ['author', 'created_at']
@@ -41,6 +43,9 @@ class ThreadPostSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return ThreadLike.objects.filter(thread=obj, user=request.user).exists()
         return False
+    
+    def get_is_author_admin(self, obj):
+        return obj.author.is_superuser
         
         
 class ThreadPostCreateSerializer(serializers.ModelSerializer):

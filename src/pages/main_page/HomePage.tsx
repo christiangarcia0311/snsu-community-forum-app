@@ -21,7 +21,7 @@ import {
     IonBadge,
     IonSpinner,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
 } from '@ionic/react'
 
 
@@ -61,6 +61,7 @@ interface ThreadData {
     likes_count?: number
     comments_count?: number
     is_liked?: boolean
+    is_author_admin?: boolean
 }
 
 const HomePage = () => {
@@ -228,7 +229,7 @@ const HomePage = () => {
                     </IonTitle>
                     <IonButton slot='end' fill='clear'>
                         <IonIcon icon={notificationsOutline} className='home-icon' />
-                        <IonBadge color="danger" shape='round'>7</IonBadge>
+                        <IonBadge color="danger">7</IonBadge>
                     </IonButton>
                     <IonButton slot='end' fill='clear'>
                         <IonIcon icon={personAddOutline} className='home-icon'  />
@@ -312,7 +313,14 @@ const HomePage = () => {
                                                         className='thread-profile-click'
                                                         onClick={() => handleViewUserProfile(thread.author_profile)}
                                                     >
-                                                        <h2 className="home-post-name">{authorName}</h2>
+                                                        <h2 className="home-post-name">
+                                                            {authorName}
+                                                            {
+                                                                thread.is_author_admin && (
+                                                                    <IonBadge color="light" className="ion-margin-start" style={{ fontSize: '10px', verticalAlign: 'middle' }}>Admin</IonBadge>
+                                                                )
+                                                            }
+                                                        </h2>
                                                     </IonText>
                                                     <IonText>
                                                         <p className="home-post-date">
