@@ -304,20 +304,20 @@ const HomePage = () => {
                                                             src={profilePicture}
                                                             alt="profile" 
                                                             className='home-post-photo thread-profile-click'
-                                                            onClick={() => handleViewUserProfile(thread.author_profile)}
+                                                            onClick={() => !thread.is_author_admin && handleViewUserProfile(thread.author_profile)}
                                                         />
                                                     </IonAvatar>
                                                 </IonCol>
                                                 <IonCol>
                                                     <IonText
                                                         className='thread-profile-click'
-                                                        onClick={() => handleViewUserProfile(thread.author_profile)}
+                                                        onClick={() => !thread.is_author_admin && handleViewUserProfile(thread.author_profile)}
                                                     >
                                                         <h2 className="home-post-name">
                                                             {authorName}
                                                             {
                                                                 thread.is_author_admin && (
-                                                                    <IonBadge color="light" className="ion-margin-start" style={{ fontSize: '10px', verticalAlign: 'middle' }}>Admin</IonBadge>
+                                                                    <IonBadge color="light" className="ion-margin-start profile-admin-badge">Admin</IonBadge>
                                                                 )
                                                             }
                                                         </h2>
@@ -331,23 +331,23 @@ const HomePage = () => {
                                             </IonRow>
                 
                                             {/* CONTENTS */}
-                                            <IonRow>
-                                                <IonCol>
-                                                    <IonText
-                                                        onClick={() => handleViewThreadPost(thread.id)}
-                                                        className='thread-title-click'
-                                                    >
-                                                        <h2 className="home-thread-title">{thread.title}</h2>
-                                                    </IonText>
-                                                </IonCol>
-                                            </IonRow>
-                                            <IonRow>
-                                                <IonCol>
-                                                    <IonText>
-                                                        <p className="ion-margin-top home-thread-content">{filterContentLength}</p>
-                                                    </IonText>
-                                                </IonCol>
-                                            </IonRow>
+                                            <div onClick={() => handleViewThreadPost(thread.id)}>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonText className='thread-title-click'>
+                                                            <h2 className="home-thread-title">{thread.title}</h2>
+                                                        </IonText>
+                                                    </IonCol>
+                                                </IonRow>
+                                                <IonRow>
+                                                    <IonCol>
+                                                        <IonText>
+                                                            <p className="ion-margin-top home-thread-content">{filterContentLength}</p>
+                                                        </IonText>
+                                                    </IonCol>
+                                                </IonRow>
+                                            </div>
+                                            
                 
                                             {/* POST WITH IMAGE */}
     

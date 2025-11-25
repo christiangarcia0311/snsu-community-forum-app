@@ -19,7 +19,7 @@ import {
     IonSpinner,
     IonAlert,
     IonToast,
-    IonLoading,
+    IonBadge,
     IonItem,
     IonLabel,
     IonTextarea,
@@ -76,6 +76,7 @@ interface ThreadData {
     likes_count?: number
     comments_count?: number
     is_liked?: boolean
+    is_author_admin?: boolean
 }
 
 interface CommentData {
@@ -304,7 +305,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
         ? `${thread.author_profile.firstname} ${thread.author_profile.lastname}`
         : thread?.author_username || 'Unknown User'
 
-    const headerName = thread?.author_profile.firstname
+    const headerName = thread?.author_profile?.firstname || thread?.author_username
 
     return (
         <>
@@ -386,7 +387,14 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                     </IonCol>
                                                     <IonCol>
                                                         <IonText>
-                                                            <h2 className="home-post-name">{authorName}</h2>
+                                                            <h2 className="home-post-name">
+                                                                {authorName}
+                                                                {
+                                                                    thread.is_author_admin && (
+                                                                        <IonBadge color="light" className="ion-margin-start profile-admin-badge">Admin</IonBadge>
+                                                                    )
+                                                                }
+                                                            </h2>
                                                         </IonText>
                                                         <IonText>
                                                             <p className="home-post-date">
