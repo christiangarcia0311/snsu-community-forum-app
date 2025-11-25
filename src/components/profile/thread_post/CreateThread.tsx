@@ -17,7 +17,9 @@ import {
     IonInput,
     IonTextarea,
     IonLoading,
-    IonToast
+    IonToast,
+    IonSelect,
+    IonSelectOption
 } from '@ionic/react'
 
 // icons
@@ -44,6 +46,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({
 
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
+    const [threadType, setThreadType] = useState('general')
     const [image, setImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
@@ -75,13 +78,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({
 
         // create post 
         try {
-            await createThreadPost(title, content, image || undefined)
+            await createThreadPost(title, content, threadType, image || undefined)
             setToastMessage('Thread post created')
             setShowToast(true)
 
             // reset form after
             setTitle('')
             setContent('')
+            setThreadType('general')
             setImage(null)
             setImagePreview(null)
 
@@ -113,6 +117,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({
     const handleCancelThreadPost = () => {
         setTitle('')
         setContent('')
+        setThreadType('general')
         setImage(null)
         setImagePreview(null)
         onDidDismiss()
@@ -170,6 +175,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                     <IonRow>
                         <IonCol>
                                 <IonInput
+                                    fill='outline'
                                     type='text'
                                     label='Title'
                                     labelPlacement='floating'
@@ -182,9 +188,29 @@ const CreateThread: React.FC<CreateThreadProps> = ({
                         </IonCol>
                     </IonRow>
 
+                    <IonRow className='ion-margin-top'> 
+                        <IonCol>
+                            <IonSelect 
+                                label="Thread Type" 
+                                labelPlacement="floating" 
+                                fill="outline"
+                                value={threadType}
+                                onIonChange={(e) => setThreadType(e.detail.value)}
+                            >
+                                <IonSelectOption value="general">General</IonSelectOption>
+                                <IonSelectOption value="discussion">Discussion</IonSelectOption>
+                                <IonSelectOption value="question">Question</IonSelectOption>
+                                <IonSelectOption value="guide">Guide</IonSelectOption>
+                                <IonSelectOption value="announcement">Announcement</IonSelectOption>
+                                <IonSelectOption value="accomplishment">Accomplishment</IonSelectOption>
+                            </IonSelect>
+                        </IonCol>
+                    </IonRow>
+
                     <IonRow className='ion-margin-top'>
                         <IonCol>
                                 <IonTextarea
+                                    fill='outline'
                                     label='Content'
                                     labelPlacement='floating'
                                     placeholder='Write your thread content here...'

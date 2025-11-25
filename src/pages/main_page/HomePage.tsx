@@ -13,7 +13,6 @@ import {
     IonRow,
     IonCol,
     IonText,
-    IonChip,
     IonAvatar,
     IonCard,
     IonCardContent,
@@ -53,6 +52,7 @@ interface ThreadData {
     id: number 
     title: string
     content: string 
+    thread_type: string
     image: string | null 
     created_at: string 
     updated_at: string
@@ -121,7 +121,8 @@ const HomePage = () => {
 
         try {
             const data = await getAllThreadPost()
-            setThreads(data)
+            const shuffledData = [...data].sort(() => Math.random() - 0.5)
+            setThreads(shuffledData)
         } catch (error: any) {
             console.log('Failed to fetch thread post')
         } finally {
@@ -257,15 +258,6 @@ const HomePage = () => {
                             />
                         </IonCol>
                     </IonRow>
-                    <IonRow>
-                        <IonCol className='ion-text-center'>
-                            <IonChip className='home-chip'>All</IonChip>
-                            <IonChip className='home-chip'>Discussions</IonChip>
-                            <IonChip className='home-chip'>Questions</IonChip>
-                            <IonChip className='home-chip'>Guide</IonChip>
-                        </IonCol>
-                        
-                    </IonRow>
                 </IonGrid>
                 
                 {/* THREAD POST */}
@@ -281,130 +273,143 @@ const HomePage = () => {
                             <p>No threads available.</p>
                         </div>
                     ) : (
-                        threads.map((thread) => {
+                        <div className="home-thread-bottom">
+                            {    
+                                threads.map((thread) => {
 
-                            const profilePicture = thread.author_profile?.profile_image_url || photoDefault
-                            const authorName = thread.author_profile 
-                                ? `${thread.author_profile.firstname} ${thread.author_profile.lastname}` 
-                                : thread.author_username || 'Unknown User'
+                                const profilePicture = thread.author_profile?.profile_image_url || photoDefault
+                                const authorName = thread.author_profile 
+                                    ? `${thread.author_profile.firstname} ${thread.author_profile.lastname}` 
+                                    : thread.author_username || 'Unknown User'
 
-                            const filterContentLength = thread.content.length > 100
-                                ? thread.content.substring(0, 100) + '...' 
-                                : thread.content
+                                const filterContentLength = thread.content.length > 100
+                                    ? thread.content.substring(0, 100) + '...' 
+                                    : thread.content
 
-                            return (
-                                <IonCard key={thread.id} className='home-thread-post ion-text-left ion-padding'>
-                                    <IonCardContent>
-                                        <IonGrid>
-                                            {/* USER INFO POST */}
-                                            <IonRow className='ion-align-items-center'>
-                                                <IonCol size='auto'>
-                                                    <IonAvatar className='home-post-avatar'>
-                                                        <img 
-                                                            src={profilePicture}
-                                                            alt="profile" 
-                                                            className='home-post-photo thread-profile-click'
+                                return (
+                                    <IonCard key={thread.id} className='home-thread-post ion-text-left ion-padding'>
+                                        <IonCardContent>
+                                            <IonGrid>
+                                                {/* USER INFO POST */}
+                                                <IonRow className='ion-align-items-center'>
+                                                    <IonCol size='auto'>
+                                                        <IonAvatar className='home-post-avatar'>
+                                                            <img 
+                                                                src={profilePicture}
+                                                                alt="profile" 
+                                                                className='home-post-photo thread-profile-click'
+                                                                onClick={() => !thread.is_author_admin && handleViewUserProfile(thread.author_profile)}
+                                                            />
+                                                        </IonAvatar>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonText
+                                                            className='thread-profile-click'
                                                             onClick={() => !thread.is_author_admin && handleViewUserProfile(thread.author_profile)}
-                                                        />
-                                                    </IonAvatar>
-                                                </IonCol>
-                                                <IonCol>
-                                                    <IonText
-                                                        className='thread-profile-click'
-                                                        onClick={() => !thread.is_author_admin && handleViewUserProfile(thread.author_profile)}
-                                                    >
-                                                        <h2 className="home-post-name">
-                                                            {authorName}
-                                                            {
-                                                                thread.is_author_admin && (
-                                                                    <IonBadge color="light" className="ion-margin-start profile-admin-badge">Admin</IonBadge>
-                                                                )
-                                                            }
-                                                        </h2>
-                                                    </IonText>
-                                                    <IonText>
-                                                        <p className="home-post-date">
-                                                            <small>{formatDate(thread.created_at)}</small>
-                                                        </p>
-                                                    </IonText>
-                                                </IonCol>
-                                            </IonRow>
-                
-                                            {/* CONTENTS */}
-                                            <div onClick={() => handleViewThreadPost(thread.id)}>
-                                                <IonRow>
-                                                    <IonCol>
-                                                        <IonText className='thread-title-click'>
-                                                            <h2 className="home-thread-title">{thread.title}</h2>
+                                                        >
+                                                            <h2 className="home-post-name">
+                                                                {authorName}
+                                                                {
+                                                                    thread.is_author_admin ? (
+                                                                        <IonBadge color="light" className="ion-margin-start profile-admin-badge">Admin</IonBadge>
+                                                                    ) : (
+                                                                        thread.author_profile?.role && (
+                                                                            <IonBadge className="ion-margin-start profile-user-badge">
+                                                                                {thread.author_profile.role}
+                                                                            </IonBadge>
+                                                                        )
+                                                                    )
+                                                                }
+                                                                <IonBadge className='thread-post-badge'>{thread.thread_type}</IonBadge>
+                                                            </h2>
                                                         </IonText>
-                                                    </IonCol>
-                                                </IonRow>
-                                                <IonRow>
-                                                    <IonCol>
                                                         <IonText>
-                                                            <p className="ion-margin-top home-thread-content">{filterContentLength}</p>
+                                                            <p className="home-post-date">
+                                                                <small>{formatDate(thread.created_at)}</small>
+                                                            </p>
                                                         </IonText>
                                                     </IonCol>
                                                 </IonRow>
-                                            </div>
-                                            
-                
-                                            {/* POST WITH IMAGE */}
-    
-                                            {thread.image && (
-                                                <IonRow className='ion-margin-top'>
+                    
+                                                {/* CONTENTS */}
+                                                <div onClick={() => handleViewThreadPost(thread.id)}>
+                                                    <IonRow>
+                                                        <IonCol>
+                                                            <IonText className='thread-title-click'>
+                                                                <h2 className="home-thread-title">
+                                                                    {thread.title}
+                                                                </h2>
+                                                            </IonText>
+                                                        </IonCol>
+                                                    </IonRow>
+                                                    <IonRow>
+                                                        <IonCol>
+                                                            <IonText>
+                                                                <p className="ion-margin-top home-thread-content">{filterContentLength}<small className='home-all-view'>(View full)</small></p>
+                                                            </IonText>
+                                                        </IonCol>
+                                                    </IonRow>
+                                                </div>
+                                                
+                    
+                                                {/* POST WITH IMAGE */}
+
+                                                {thread.image && (
+                                                    <IonRow className='ion-margin-top'>
+                                                        <IonCol>
+                                                            <IonImg 
+                                                                src={thread.image}
+                                                                alt="Thread post image"
+                                                                className='home-thread-image'
+                                                            />
+                                                        </IonCol>
+                                                    </IonRow>
+                                                )}
+                                                
+                    
+                                                {/* ACTIONS */}
+                                                <IonRow className='ion-margin-top home-thread-actions'>
                                                     <IonCol>
-                                                        <IonImg 
-                                                            src={thread.image}
-                                                            alt="Thread post image"
-                                                            className='home-thread-image'
-                                                        />
+                                                        <IonButton 
+                                                            fill='clear' 
+                                                            size='small' 
+                                                            className='home-action-button'
+                                                            onClick={() => handleLikeThreadPost(thread.id)}
+                                                            disabled={likingThreads[thread.id]}
+                                                        >
+                                                            <IonIcon 
+                                                                icon={thread.is_liked ? heart : heartOutline} 
+                                                                slot='start'
+                                                                color={thread.is_liked ? 'danger' : undefined}
+                                                            />
+                                                            <IonText>{thread.likes_count || 0}</IonText>
+                                                        </IonButton>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonButton 
+                                                            fill='clear' 
+                                                            size='small' 
+                                                            className='home-action-button'
+                                                            onClick={() => handleViewThreadPost(thread.id)}
+                                                        >
+                                                            <IonIcon icon={chatbubbleOutline} slot='start' />
+                                                            <IonText>{thread.comments_count || 0}</IonText>
+                                                        </IonButton>
+                                                    </IonCol>
+                                                    <IonCol>
+                                                        <IonButton fill='clear' size='small' className='home-action-button'>
+                                                            <IonIcon icon={shareSocialOutline} slot='start' />
+                                                            <IonText>Share</IonText>
+                                                        </IonButton>
                                                     </IonCol>
                                                 </IonRow>
-                                            )}
-                                            
-                
-                                            {/* ACTIONS */}
-                                            <IonRow className='ion-margin-top home-thread-actions'>
-                                                <IonCol>
-                                                    <IonButton 
-                                                        fill='clear' 
-                                                        size='small' 
-                                                        className='home-action-button'
-                                                        onClick={() => handleLikeThreadPost(thread.id)}
-                                                        disabled={likingThreads[thread.id]}
-                                                    >
-                                                        <IonIcon 
-                                                            icon={thread.is_liked ? heart : heartOutline} 
-                                                            slot='start'
-                                                            color={thread.is_liked ? 'danger' : undefined}
-                                                        />
-                                                        <IonText>{thread.likes_count || 0}</IonText>
-                                                    </IonButton>
-                                                </IonCol>
-                                                <IonCol>
-                                                    <IonButton 
-                                                        fill='clear' 
-                                                        size='small' 
-                                                        className='home-action-button'
-                                                        onClick={() => handleViewThreadPost(thread.id)}
-                                                    >
-                                                        <IonIcon icon={chatbubbleOutline} slot='start' />
-                                                        <IonText>{thread.comments_count || 0}</IonText>
-                                                    </IonButton>
-                                                </IonCol>
-                                                <IonCol>
-                                                    <IonButton fill='clear' size='small' className='home-action-button'>
-                                                        <IonIcon icon={shareSocialOutline} slot='start' />
-                                                        <IonText>Share</IonText>
-                                                    </IonButton>
-                                                </IonCol>
-                                            </IonRow>
-                                        </IonGrid>
-                                    </IonCardContent>
-                                </IonCard>
-                            )
-                        })
+                                            </IonGrid>
+                                        </IonCardContent>
+                                    </IonCard>
+                                )
+                            })
+                        }
+                        </div>
                     )
                 }
                 

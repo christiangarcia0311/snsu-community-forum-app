@@ -67,6 +67,7 @@ interface ThreadData {
     id: number
     title: string
     content: string
+    thread_type: string
     image: string | null
     created_at: string
     updated_at: string
@@ -390,10 +391,17 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                             <h2 className="home-post-name">
                                                                 {authorName}
                                                                 {
-                                                                    thread.is_author_admin && (
-                                                                        <IonBadge color="light" className="ion-margin-start profile-admin-badge">Admin</IonBadge>
+                                                                    thread.is_author_admin ? (
+                                                                        <IonBadge className="ion-margin-start profile-admin-badge">Admin</IonBadge>
+                                                                    ) : (
+                                                                        thread.author_profile?.role && (
+                                                                            <IonBadge className="ion-margin-start profile-user-badge">
+                                                                                {thread.author_profile.role_display || thread.author_profile.role}
+                                                                            </IonBadge>
+                                                                        )
                                                                     )
                                                                 }
+                                                                <IonBadge className='thread-post-badge'>{thread.thread_type}</IonBadge>
                                                             </h2>
                                                         </IonText>
                                                         <IonText>
@@ -408,7 +416,9 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                 <IonRow>
                                                     <IonCol>
                                                         <IonText>
-                                                            <h2 className="home-thread-title">{thread.title}</h2>
+                                                            <h2 className="home-thread-title">
+                                                                {thread.title}
+                                                            </h2>
                                                         </IonText>
                                                     </IonCol>
                                                 </IonRow>

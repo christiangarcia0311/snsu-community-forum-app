@@ -22,6 +22,7 @@ class ThreadPostSerializer(serializers.ModelSerializer):
             'title',
             'content',
             'image',
+            'thread_type',
             'created_at',
             'updated_at',
             'likes_count',
@@ -52,7 +53,7 @@ class ThreadPostCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model =  ThreadPost
-        fields = ['title', 'content', 'image']
+        fields = ['title', 'content', 'image', 'thread_type']
         
     def validate_title(self, value):
         if len(value.strip()) < 10:

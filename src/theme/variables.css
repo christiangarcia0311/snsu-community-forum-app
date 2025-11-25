@@ -10,6 +10,7 @@ http://ionicframework.com/docs/theming/ */
     --light-shade: #eeeeee;
     --red-shade: #c50f0fe3;
     --light-red-shade: #e71c1ce3;
+    --purple-shade: #a020f0;
 
     --highlight-primary: #013220;
     --highlight-neon: #0FFF50;
@@ -69,6 +70,10 @@ http://ionicframework.com/docs/theming/ */
     margin-left: 0;
     margin-right: 0;
     --background: var(--ion-background-color);
+    white-space: pre-wrap;
+    text-align: left;
+    box-shadow: none;
+    --ion-padding: none;
 }
 
 .home-post-avatar {
@@ -110,6 +115,8 @@ http://ionicframework.com/docs/theming/ */
     color: var(--dark-shade);
     line-height: 1.5;
     margin: 0;
+    white-space: pre-wrap;
+    text-align: left;
 }
 
 .home-thread-actions {
@@ -117,10 +124,18 @@ http://ionicframework.com/docs/theming/ */
     padding-top: 10px;
 }
 
+.home-thread-bottom {
+    margin-bottom: 60px;
+}
+
 .home-action-button {
     --color: var(--tertiary-shade);
     text-transform: none;
     font-size: 14px;
+}
+
+.home-all-view {
+    color: var(--secondary-shade);
 }
 
 .action-button ion-icon {
@@ -236,7 +251,21 @@ http://ionicframework.com/docs/theming/ */
     font-size: 10px;
     vertical-align: middle;
     padding: 5px 5px;
+    color: var(--light-red-shade);
+    background-color: transparent;
+    border: 1px solid var(--light-red-shade);
 }
+
+.profile-user-badge {
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 5px 5px;
+    color: var(--dark-shade);
+    background-color: transparent;
+    border: 1px solid var(--dark-shade);
+}
+
+
 
 /* TAB BUTTON*/
 .tab-bottom-bg {
@@ -362,6 +391,16 @@ http://ionicframework.com/docs/theming/ */
 
 .thread-profile-click {
     cursor: pointer;
+}
+
+.thread-post-badge {
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 5px 5px;
+    margin-left: 8px;
+    color: var(--purple-shade);
+    background-color: transparent;
+    border: 1px solid var(--purple-shade);
 }
 
 /* Align items in center */

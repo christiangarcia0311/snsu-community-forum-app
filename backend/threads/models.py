@@ -3,10 +3,21 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 class ThreadPost(models.Model):
+    
+    THREAD_TYPES = [
+        ('general', 'General'),
+        ('discussion', 'Discussion'),
+        ('question', 'Question'),
+        ('guide', 'Guide'),
+        ('announcement', 'Announcement'),
+        ('accomplishment', 'Accomplishment')
+    ]
+    
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='thread_posts')
     title = models.CharField(max_length=255)
     content = models.TextField()
     image = models.ImageField(upload_to='thread_images/', null=True, blank=True)
+    thread_type = models.CharField(max_length=50, choices=THREAD_TYPES, default='General')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

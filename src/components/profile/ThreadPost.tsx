@@ -11,7 +11,8 @@ import {
     IonIcon,
     IonSpinner,
     IonImg,
-    IonAvatar
+    IonAvatar,
+    IonBadge
 } from '@ionic/react'
 
 // icons
@@ -38,6 +39,7 @@ interface ThreadData {
     id: number 
     title: string
     content: string 
+    thread_type: string
     image: string | null 
     created_at: string 
     updated_at: string
@@ -222,11 +224,11 @@ const ThreadPost: React.FC = () => {
                             : thread.author_username || 'Unknown User'
 
                         const filterContentLength = thread.content.length > 100
-                            ? thread.content.substring(0, 40) + '...' 
+                            ? thread.content.substring(0, 100) + '...' 
                             : thread.content
 
                         return (
-                            <IonCard key={thread.id} className='home-thread-post ion-text-left'>
+                            <IonCard key={thread.id} className='home-thread-post'>
                                 <IonCardContent>
                                     <IonGrid>
                                         {/* USER INFO POST */}
@@ -242,7 +244,17 @@ const ThreadPost: React.FC = () => {
                                             </IonCol>
                                             <IonCol>
                                                 <IonText>
-                                                    <h2 className="home-post-name">{authorName}</h2>
+                                                    <h2 className="home-post-name">
+                                                        {authorName}
+                                                        {
+                                                            thread.author_profile?.role && (
+                                                                <IonBadge className="ion-margin-start profile-user-badge">
+                                                                    {thread.author_profile.role}
+                                                                </IonBadge>
+                                                            )
+                                                        }
+                                                        <IonBadge className='thread-post-badge'>{thread.thread_type}</IonBadge>
+                                                    </h2>
                                                 </IonText>
                                                 <IonText>
                                                     <p className="home-post-date">
@@ -253,23 +265,22 @@ const ThreadPost: React.FC = () => {
                                         </IonRow>
             
                                         {/* CONTENTS */}
-                                        <IonRow>
-                                            <IonCol>
-                                                <IonText
-                                                    onClick={() => handleViewThreadPost(thread.id)}
-                                                    className='thread-title-click'
-                                                >
-                                                    <h2 className="home-thread-title">{thread.title}</h2>
-                                                </IonText>
-                                            </IonCol>
-                                        </IonRow>
-                                        <IonRow>
-                                            <IonCol>
-                                                <IonText>
-                                                    <p className="ion-margin-top home-thread-content">{filterContentLength}</p>
-                                                </IonText>
-                                            </IonCol>
-                                        </IonRow>
+                                        <div onClick={() => handleViewThreadPost(thread.id)}>
+                                            <IonRow>
+                                                <IonCol>
+                                                    <IonText className='thread-title-click'>
+                                                        <h2 className="home-thread-title">{thread.title}</h2>
+                                                    </IonText>
+                                                </IonCol>
+                                            </IonRow>
+                                            <IonRow>
+                                                <IonCol>
+                                                    <IonText>
+                                                        <p className="ion-margin-top home-thread-content">{filterContentLength}<small className='home-all-view'>(View full)</small></p>
+                                                    </IonText>
+                                                </IonCol>
+                                            </IonRow>
+                                        </div>
             
                                         {/* POST WITH IMAGE */}
 

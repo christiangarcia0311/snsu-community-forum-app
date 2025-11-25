@@ -28,6 +28,11 @@ const AppRoute = () => {
       {/* Tabs */}
       <ProtectedRoute path='/tabs' component={Tabs} />
 
+      {/* Redirect /tabs to /tabs/home as default */}
+      <Route exact path='/tabs'>
+        <Redirect to='/tabs/home' />
+      </Route>
+
     </>
   )
 }

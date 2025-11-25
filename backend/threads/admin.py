@@ -9,7 +9,7 @@ class ThreadPostAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Thread Post', {
-            'fields': ('title', 'content', 'image')
+            'fields': ('title', 'content', 'image', 'thread_type')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at')

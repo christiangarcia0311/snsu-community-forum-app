@@ -15,6 +15,7 @@ interface ThreadPostData {
     title: string
     content: string 
     image: string | null 
+    thread_type: string
     created_at: string 
     updated_at: string 
 }
@@ -68,6 +69,7 @@ export const getThreadPostById =  async (id: number): Promise<ThreadPostData[]> 
 export const createThreadPost = async (
     title: string,
     content: string,
+    thread_type: string,
     image?: File
 ): Promise<any> => {
     
@@ -77,6 +79,7 @@ export const createThreadPost = async (
 
         formData.append('title', title)
         formData.append('content', content)
+        formData.append('thread_type', thread_type)
 
         if (image) {
             formData.append('image', image)
@@ -101,6 +104,7 @@ export const updateThreadPost = async (
     id: number,
     title: string,
     content: string,
+    thread_type: string,
     image?: File
 ): Promise<any> => {
 
@@ -110,6 +114,7 @@ export const updateThreadPost = async (
 
         formData.append('title', title)
         formData.append('content', content)
+        formData.append('thread_type', thread_type)
 
         if (image) {
             formData.append('image', image)

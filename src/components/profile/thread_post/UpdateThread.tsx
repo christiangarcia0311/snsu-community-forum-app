@@ -15,7 +15,9 @@ import {
     IonInput,
     IonTextarea,
     IonLoading,
-    IonToast
+    IonToast,
+    IonSelect,
+    IonSelectOption
 } from '@ionic/react'
 
 // icons
@@ -44,6 +46,7 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
 
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
+    const [threadType, setThreadType] = useState('general')
     const [image, setImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [existingImage, setExistingImage] = useState<string | null>(null)
@@ -67,7 +70,8 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
             const data: any = await getThreadPostById(threadId)
             setTitle(data.title)
             setContent(data.content)
-            
+            setThreadType(data.thread_type || 'general')
+
             if (data.image) {
                 setExistingImage(data.image)
             }
@@ -106,13 +110,14 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
         setLoading(true)
 
         try {
-            await updateThreadPost(threadId, title, content, image || undefined)
+            await updateThreadPost(threadId, title, content, threadType, image || undefined)
             setToastMessage('Thread post updated successfully')
             setShowToast(true)
 
             // reset form
             setTitle('')
             setContent('')
+            setThreadType('general')
             setImage(null)
             setImagePreview(null)
             setExistingImage(null)
@@ -143,6 +148,7 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
     const handleCancelUpdate = () => {
         setTitle('')
         setContent('')
+        setThreadType('general')
         setImage(null)
         setImagePreview(null)
         setExistingImage(null)
@@ -257,6 +263,26 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
                                 className='thread-image-input'
                                 onChange={handleImageSelect}
                             />
+                        </IonCol>
+                    </IonRow>
+
+                    <IonRow>
+                        <IonCol>
+                            <IonSelect 
+                                label="Thread Type" 
+                                labelPlacement="floating" 
+                                fill="outline"
+                                value={threadType}
+                                onIonChange={(e) => setThreadType(e.detail.value)}
+                                disabled={loadingData}
+                            >
+                                <IonSelectOption value="general">General</IonSelectOption>
+                                <IonSelectOption value="discussion">Discussion</IonSelectOption>
+                                <IonSelectOption value="question">Question</IonSelectOption>
+                                <IonSelectOption value="guide">Guide</IonSelectOption>
+                                <IonSelectOption value="announcement">Announcement</IonSelectOption>
+                                <IonSelectOption value="accomplishment">Accomplishment</IonSelectOption>
+                            </IonSelect>
                         </IonCol>
                     </IonRow>
 
