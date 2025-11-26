@@ -200,6 +200,15 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
         }
     }
 
+    const currentUser = React.useMemo(() => {
+        try {
+            const user = localStorage.getItem('currentUser')
+            return user ? JSON.parse(user) : null
+        } catch {
+            return null
+        }
+    }, [])
+
     const formatDate = (dateString?: string) => {
         if (!dateString) return 'N/A'
         const date = new Date(dateString)
@@ -291,25 +300,29 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                 </IonAvatar>
                                 <br />
                                 {/* Follow Button */}
-                                <IonButton
-                                    size='small'
-                                    shape='round'
-                                    fill='clear'
-                                    onClick={handleFollow}
-                                    color={isFollowing ? 'medium' : 'primary'}
-                                >
-                                    {followLoading ? (
-                                        <IonSpinner name="dots" />
-                                    ) : (
-                                        <>
-                                            <IonIcon 
-                                                icon={isFollowing ? checkmarkCircleOutline : personAddOutline} 
-                                                slot='start' 
-                                            />
-                                            {isFollowing ? 'Following' : 'Follow'}
-                                        </>
-                                    )}
-                                </IonButton>
+                                {
+                                    userProfile.username !== currentUser?.username && (
+                                        <IonButton
+                                            size='small'
+                                            shape='round'
+                                            fill='clear'
+                                            onClick={handleFollow}
+                                            color={isFollowing ? 'medium' : 'primary'}
+                                        >
+                                            {followLoading ? (
+                                                <IonSpinner name="dots" />
+                                            ) : (
+                                                <>
+                                                    <IonIcon 
+                                                        icon={isFollowing ? checkmarkCircleOutline : personAddOutline} 
+                                                        slot='start' 
+                                                    />
+                                                    {isFollowing ? 'Following' : 'Follow'}
+                                                </>
+                                            )}
+                                        </IonButton>
+                                    )
+                                }
                             </IonCol>
                         </IonRow>
 

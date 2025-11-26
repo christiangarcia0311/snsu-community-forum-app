@@ -121,6 +121,9 @@ const UserFollowers: React.FC<UserFollowersProps> = ({
         }
     }
 
+    const currentUser = localStorage.getItem('currentUser')
+    const currentUsername = currentUser ? JSON.parse(currentUser).username : null
+
     return (
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
@@ -172,25 +175,27 @@ const UserFollowers: React.FC<UserFollowersProps> = ({
                                             </h2>
                                             <p>{follower.follower_profile.email}</p>
                                         </IonLabel>
-                                        <IonButton
-                                            slot='end'
-                                            size='small'
-                                            fill='clear'
-                                            onClick={() => handleFollowToggle(follower.follower_username)}
-                                            color={isFollowing ? 'medium' : 'primary'}
-                                        >
-                                            {isFollowLoading ? (
-                                                <IonSpinner name='dots' />
-                                            ) : (
-                                                <>
-                                                    <IonIcon
-                                                        icon={isFollowing ? checkmarkCircleOutline : personAddOutline}
-                                                        slot='start'
-                                                    />
-                                                    {isFollowing ? 'Following' : 'Follow'}
-                                                </>
-                                            )}
-                                        </IonButton>
+                                        {follower.follower_username !== currentUsername && (
+                                            <IonButton
+                                                slot='end'
+                                                size='small'
+                                                fill='clear'
+                                                onClick={() => handleFollowToggle(follower.follower_username)}
+                                                color={isFollowing ? 'medium' : 'primary'}
+                                            >
+                                                {isFollowLoading ? (
+                                                    <IonSpinner name='dots' />
+                                                ) : (
+                                                    <>
+                                                        <IonIcon
+                                                            icon={isFollowing ? checkmarkCircleOutline : personAddOutline}
+                                                            slot='start'
+                                                        />
+                                                        {isFollowing ? 'Following' : 'Follow'}
+                                                    </>
+                                                )}
+                                            </IonButton>
+                                        )}
                                     </IonItem>
                                 )
                             })}

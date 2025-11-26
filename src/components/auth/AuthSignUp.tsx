@@ -111,10 +111,6 @@ const AuthSignUp = () => {
                 course
             }
 
-            console.log('Profile data:', profileData)
-            console.log('Email:', email)
-            console.log('Username:', username)
-
             formData.append('profile', JSON.stringify(profileData))
 
        
