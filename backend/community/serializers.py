@@ -56,9 +56,18 @@ class CommunityGroupCreateSerializer(serializers.ModelSerializer):
         fields = ['name', 'description', 'image', 'is_private']
     
     def validate_name(self, value):
-        if len(value.strip()) < 20:
-            raise serializers.ValidationError('Community name must be at least 20 characters')
+        if len(value.strip()) < 5:
+            raise serializers.ValidationError('Community name must be at least 5 characters')
+        
+        if len(value.strip()) > 100:
+            raise serializers.ValidationError('Community name cannot exceed 100 characters')
 
+        return value
+    
+    def validate_description(self, value):
+        if len(value.strip()) < 10:
+            raise serializers.ValidationError('Description must be at least 10 characters')
+        
         return value
     
 class CommunityMembershipSerializer(serializers.ModelSerializer):

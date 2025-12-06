@@ -176,3 +176,17 @@ export const getUserFollowing = async (username: string) => {
         throw error.response?.data || { error: 'Failed to fetch following' }
     }
 }
+
+export const getAllUsers = async () => {
+    try {
+        const response = await axios.get(
+            `${API_BASE_URL}users/`,
+            {
+                headers: getAuthHeader()
+            }
+        )
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || { error: 'Failed to fetch users' }
+    }
+}

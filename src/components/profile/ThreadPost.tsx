@@ -35,6 +35,9 @@ import { likeThreadPost } from '../../services/ThreadService'
 import CreateThread from '../threads/CreateThread'
 import ViewThread from '../threads/ViewThread'
 
+// utilities
+import { linkifyText } from '../../utils/linkify'
+
 interface ThreadData {
     id: number 
     title: string
@@ -276,7 +279,7 @@ const ThreadPost: React.FC = () => {
                                             <IonRow>
                                                 <IonCol>
                                                     <IonText>
-                                                        <p className="ion-margin-top home-thread-content">{filterContentLength}<small className='home-all-view'>(View full)</small></p>
+                                                        <p className="ion-margin-top home-thread-content">{linkifyText(filterContentLength)}<small className='home-all-view'>(View full)</small></p>
                                                     </IonText>
                                                 </IonCol>
                                             </IonRow>

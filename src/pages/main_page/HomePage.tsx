@@ -34,6 +34,10 @@ import {
     heart
 } from 'ionicons/icons'
 
+
+// component 
+import NotificationList from '../../components/notifications/Notifications'
+
 // image default
 import photoDefault from '../../assets/images/profile.png'
 
@@ -47,6 +51,11 @@ import UserProfileView from '../../hooks/UserProfileView'
 // services
 import { getAllThreadPost, likeThreadPost } from '../../services/ThreadService'
 import { getUserProfile } from '../../services/AuthService'
+import { getNotifications, NotificationData } from '../../services/NotificationService'
+
+// utilities
+import { linkifyText } from '../../utils/linkify'
+
 
 interface ThreadData {
     id: number 
@@ -79,8 +88,12 @@ const HomePage = () => {
     const [showUserProfileView, setShowUserProfileView] = useState(false)
     const [selectedUserProfile, setSelectedUserProfile] = useState<any>(null)
 
+    const [showNotifications, setShowNotifications] = useState(false)
+    const [notificationCount, setNotificationCount] = useState(0)
+
     useEffect(() => {
         fetchAllThreadPost()
+        fetchNotificationCount()
     }, [])
 
     const handleRefresh = async (event: CustomEvent) => {
@@ -95,8 +108,7 @@ const HomePage = () => {
 
         try {
             const response = await likeThreadPost(threadId)
-            
-            // Update the thread in the list
+
             setThreads(prevThreads => 
                 prevThreads.map(thread => 
                     thread.id === threadId 
@@ -176,6 +188,24 @@ const HomePage = () => {
         setShowUserProfileView(true)
     }
 
+    const fetchNotificationCount = async () => {
+        try {
+            const data = await getNotifications()
+            setNotificationCount(data.unread_count)
+        } catch (error) {
+            console.error('Failed to fetch notification count:', error)
+        }
+    }
+
+    const handleNotificationClick = (notification: NotificationData) => {
+        setShowNotifications(false)
+        
+        if (notification.thread) {
+            setSelectedThreadId(notification.thread.id)
+            setShowViewModal(true)
+        }
+    }
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString)
         const now = new Date()
@@ -184,33 +214,27 @@ const HomePage = () => {
         const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
         const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
 
-        // Just now (less than 1 minute)
         if (diffInMinutes < 1) {
             return 'just now'
         }
 
-        // Minutes ago (1-59 minutes)
         if (diffInMinutes < 60) {
             return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`
         }
 
-        // Hours ago (1-23 hours)
         if (diffInHours < 24) {
             return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`
         }
 
-        // Days ago (1-6 days)
         if (diffInDays < 7) {
             return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`
         }
 
-        // Weeks ago (7-13 days)
         if (diffInDays < 14) {
             const weeks = Math.floor(diffInDays / 7)
             return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
         }
 
-        // Full date format (14+ days)
         return date.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -228,11 +252,23 @@ const HomePage = () => {
                     <IonTitle>
                         <h2 className='home-header'>stream</h2>
                     </IonTitle>
-                    <IonButton slot='end' fill='clear'>
+                    <IonButton 
+                        slot='end' 
+                        fill='clear'
+                        onClick={() => setShowNotifications(true)}
+                    >
                         <IonIcon icon={notificationsOutline} className='home-icon' />
-                        <IonBadge color="danger">7</IonBadge>
+                        {
+                            notificationCount > 0 && (
+                                <IonBadge color="danger">{notificationCount}</IonBadge>
+                            )
+                        }
                     </IonButton>
-                    <IonButton slot='end' fill='clear'>
+                    <IonButton 
+                        slot='end' 
+                        fill='clear'
+                        onClick={() => history.push('/tabs/all-users')}
+                    >
                         <IonIcon icon={personAddOutline} className='home-icon'  />
                     </IonButton>
                 </IonToolbar>
@@ -345,7 +381,7 @@ const HomePage = () => {
                                                     <IonRow>
                                                         <IonCol>
                                                             <IonText>
-                                                                <p className="ion-margin-top home-thread-content">{filterContentLength}<small className='home-all-view'>(View full)</small></p>
+                                                                <p className="ion-margin-top home-thread-content">{linkifyText(filterContentLength)}<small className='home-all-view'>(View full)</small></p>
                                                             </IonText>
                                                         </IonCol>
                                                     </IonRow>
@@ -416,6 +452,14 @@ const HomePage = () => {
 
             </IonContent>
 
+            <NotificationList
+                isOpen={showNotifications}
+                onDidDismiss={() => {
+                    setShowNotifications(false)
+                    fetchNotificationCount()
+                }}
+                onNotificationClick={handleNotificationClick}
+            />
 
             <ViewThread
                 isOpen={showViewModal}

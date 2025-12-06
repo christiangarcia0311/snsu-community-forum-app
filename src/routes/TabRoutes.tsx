@@ -9,6 +9,7 @@ import EventPage from '../pages/main_page/EventPage'
 import ForumPage from '../pages/main_page/ForumPage'
 import CommunityPage from '../pages/main_page/CommunityPage'
 import ProfilePage from '../pages/main_page/ProfilePage'
+import AllUsersPage from '../pages/main_page/AllUsersPage'
 
 const TabRoutes = () => (
     <>
@@ -17,6 +18,7 @@ const TabRoutes = () => (
         <ProtectedRoute path='/tabs/forum' component={ForumPage} exact={true} />
         <ProtectedRoute path='/tabs/community' component={CommunityPage} exact={true} />
         <ProtectedRoute path='/tabs/profile' component={ProfilePage} exact={true} />
+        <ProtectedRoute path='/tabs/all-users' component={AllUsersPage} exact={true} />
     </>
 )
 

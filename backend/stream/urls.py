@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/v1/auth/', include('portal.urls')),
     path('api/v1/threads/', include('threads.urls')),
     path('api/v1/community/', include('community.urls')),
+    path('api/v1/notifications/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:

@@ -12,6 +12,12 @@ from .serializers import (
     ThreadLikeSerializer
 )
 
+from notifications.utils import (
+    create_like_notification,
+    create_comment_notification,
+    create_new_post_notification
+)
+
 class ThreadPostListView(APIView):
     
     '''API endpoint for listing all thread posts'''
@@ -35,6 +41,8 @@ class ThreadPostCreateView(APIView):
         
         if serializer.is_valid():
             thread = serializer.save(author=request.user)
+    
+            create_new_post_notification(thread, request.user)
             
             response_serializer = ThreadPostSerializer(thread, context={'request': request}) 
             
@@ -144,7 +152,10 @@ class ThreadCommentListCreateView(APIView):
 
         serializer = ThreadCommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user, thread=thread)
+            comment = serializer.save(author=request.user, thread=thread)
+            
+            create_comment_notification(comment, thread, request.user)
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -162,6 +173,9 @@ class ThreadLikeToggleView(APIView):
 
         like, created = ThreadLike.objects.get_or_create(thread=thread, user=request.user)
         if created:
+   
+            create_like_notification(thread, request.user)
+            
             return Response({'message': 'Liked', 'likes_count': thread.likes.count(), 'is_liked': True}, status=status.HTTP_201_CREATED)
         else:
             like.delete()

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'portal',
     'threads',
     'community',
+    'notifications',
 ]
 
 MIDDLEWARE = [

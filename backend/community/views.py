@@ -27,12 +27,18 @@ class CommunityGroupListView(APIView):
     
 class CommunityGroupCreateView(APIView):
     
-    '''API endpoint for creating community group'''
+    '''API endpoint for creating community group - Only admins can create'''
     
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
     
     def post(self, request):
+        # Check if user is admin/staff
+        if not request.user.is_staff and not request.user.is_superuser:
+            return Response({
+                'error': 'Only administrators can create community groups'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
         serializer = CommunityGroupCreateSerializer(data=request.data)
         
         if serializer.is_valid():

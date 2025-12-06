@@ -142,6 +142,22 @@ http://ionicframework.com/docs/theming/ */
     font-size: 20px;
 }
 
+/* NOTIFICATION */
+.notification-unread {
+    --background: var(--ion-color-light);
+}
+
+.notification-unread ion-label h2 {
+    font-weight: bold;
+}
+
+.notification-note {
+    color: var(--secondary-shade);
+    font-weight: bold;
+    font-size: 11px;
+}
+
+
 /* COMMENT */
 .comment-avatar {
     width: 42px;
@@ -543,3 +559,5 @@ http://ionicframework.com/docs/theming/ */
 .links-checks {
     color: var(--secondary-shade);
 }
+
+

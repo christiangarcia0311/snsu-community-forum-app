@@ -49,6 +49,9 @@ import { followUser, unfollowUser } from '../services/AuthService'
 // components
 import ViewThread from '../components/threads/ViewThread'
 
+// utilities
+import { linkifyText } from '../utils/linkify'
+
 interface UserProfileViewProps {
     isOpen: boolean
     onDidDismiss: () => void
@@ -505,7 +508,7 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
                                                                 <IonCol>
                                                                     <IonText>
                                                                         <p className='ion-margin-top home-thread-content'>
-                                                                            {filterContentLength}
+                                                                            {linkifyText(filterContentLength)}
                                                                         </p>
                                                                     </IonText>
                                                                 </IonCol>

@@ -16,6 +16,9 @@ from .models import UserProfile, UserFollow
 from django.utils import timezone
 
 
+from notifications.utils import create_follow_notification
+
+
 class SignUpView(generics.CreateAPIView):
     
     '''API endpoint for user registration'''
@@ -67,6 +70,16 @@ class UserProfileView(generics.RetrieveAPIView):
     
     def get_object(self):
         return self.request.user.profile
+    
+    def get(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.get_serializer(profile)
+        data = serializer.data
+        
+        # Add admin status to response
+        data['is_admin'] = request.user.is_staff or request.user.is_superuser
+        
+        return Response(data)
     
 class UpdateProfileDetailsView(APIView):
     
@@ -169,6 +182,8 @@ class FollowUserView(APIView):
                 follower=request.user,
                 following=user_to_follow
             )
+ 
+            create_follow_notification(request.user, user_to_follow)
             
             return Response({
                 'message': f'You are now following {username}',
@@ -253,3 +268,50 @@ class UserFollowingListView(APIView):
             return Response({
                 'error': 'User not found'
             }, status=status.HTTP_404_NOT_FOUND)
+
+class AllUsersListView(APIView):
+    
+    '''API endpoint to get all users to follow'''
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            # Get all users except superusers and the current user
+            users = User.objects.filter(is_superuser=False).exclude(id=request.user.id)
+            
+            # Get list of users current user is following
+            following_ids = UserFollow.objects.filter(
+                follower=request.user
+            ).values_list('following_id', flat=True)
+            
+            users_data = []
+            for user in users:
+                if hasattr(user, 'profile'):
+                    profile = user.profile
+                    profile_image_url = None
+                    if profile.profile_image:
+                        profile_image_url = request.build_absolute_uri(profile.profile_image.url)
+                    
+                    users_data.append({
+                        'username': user.username,
+                        'email': user.email,
+                        'firstname': profile.firstname,
+                        'lastname': profile.lastname,
+                        'profile_image_url': profile_image_url,
+                        'role': profile.role,
+                        'department': profile.department,
+                        'is_following': user.id in following_ids,
+                        'followers_count': user.followers.count(),
+                        'following_count': user.following.count()
+                    })
+            
+            return Response({
+                'count': len(users_data),
+                'users': users_data
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

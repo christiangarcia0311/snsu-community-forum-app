@@ -40,7 +40,7 @@ import {
 } from 'ionicons/icons'
 
 // image default
-import photoDefault from '../../../assets/images/profile.png'
+import photoDefault from '../../assets/images/profile.png'
 
 // update form
 import UpdateThread from './UpdateThread'
@@ -54,6 +54,9 @@ import {
     likeThreadPost
 } from '../../services/ThreadService'
 import { getUserProfile } from '../../services/AuthService'
+
+// utilities
+import { linkifyText } from '../../utils/linkify'
 
 interface ViewThreadProps {
     isOpen: boolean
@@ -425,7 +428,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                 <IonRow>
                                                     <IonCol>
                                                         <IonText>
-                                                            <p className="ion-margin-top home-thread-content">{thread.content}</p>
+                                                            <p className="ion-margin-top home-thread-content">{linkifyText(thread.content)}</p>
                                                         </IonText>
                                                     </IonCol>
                                                 </IonRow>
@@ -552,7 +555,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
                                                                                         <p className='comment-date'>
                                                                                             <small>{formatDate(comment.created_at)}</small>
                                                                                         </p>
-                                                                                        <p className="comment-content">{comment.content}</p>
+                                                                                        <p className="comment-content">{linkifyText(comment.content)}</p>
                                                                                     </IonLabel>
                                                                                 </IonItem>
                                                                             )

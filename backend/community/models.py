@@ -16,7 +16,7 @@ class CommunityGroup(models.Model):
     member_count = models.IntegerField(default=0)
     
     def __str__(self):
-        return self.group_name
+        return self.name
     
     class Meta:
         ordering = ['-created_at']
