@@ -30,7 +30,7 @@ import {
 } from 'ionicons/icons'
 
 // services 
-import { createThreadPost } from '../../../services/ThreadService'
+import { createThreadPost } from '../../services/ThreadService'
 
 interface CreateThreadProps {
     isOpen: boolean 

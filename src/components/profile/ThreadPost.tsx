@@ -32,8 +32,8 @@ import { getUserThreadPost } from '../../services/ThreadService'
 import { likeThreadPost } from '../../services/ThreadService'
 
 // thread form 
-import CreateThread from './thread_post/CreateThread'
-import ViewThread from './thread_post/ViewThread'
+import CreateThread from '../threads/CreateThread'
+import ViewThread from '../threads/ViewThread'
 
 interface ThreadData {
     id: number 

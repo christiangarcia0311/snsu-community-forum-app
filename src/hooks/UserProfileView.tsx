@@ -47,7 +47,7 @@ import { getAllThreadPost, likeThreadPost } from '../services/ThreadService'
 import { followUser, unfollowUser } from '../services/AuthService'
 
 // components
-import ViewThread from '../components/profile/thread_post/ViewThread'
+import ViewThread from '../components/threads/ViewThread'
 
 interface UserProfileViewProps {
     isOpen: boolean

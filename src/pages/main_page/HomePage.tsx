@@ -38,7 +38,7 @@ import {
 import photoDefault from '../../assets/images/profile.png'
 
 // forms
-import ViewThread from '../../components/profile/thread_post/ViewThread'
+import ViewThread from '../../components/threads/ViewThread'
 
 // addons
 import UserProfileSheet from '../../components/addons/ProfileSheet'

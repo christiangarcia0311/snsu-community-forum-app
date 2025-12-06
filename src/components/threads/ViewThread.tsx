@@ -52,8 +52,8 @@ import {
     getThreadComments,
     createComment,
     likeThreadPost
-} from '../../../services/ThreadService'
-import { getUserProfile } from '../../../services/AuthService'
+} from '../../services/ThreadService'
+import { getUserProfile } from '../../services/AuthService'
 
 interface ViewThreadProps {
     isOpen: boolean

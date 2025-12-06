@@ -28,7 +28,7 @@ import {
 } from 'ionicons/icons'
 
 // services 
-import { updateThreadPost, getThreadPostById } from '../../../services/ThreadService'
+import { updateThreadPost, getThreadPostById } from '../../services/ThreadService'
 
 interface UpdateThreadProps {
     isOpen: boolean 
