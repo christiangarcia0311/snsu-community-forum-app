@@ -197,7 +197,7 @@ const ThreadPostList: React.FC<ThreadPostListProps> = ({
                                 )}
 
                                 {/* ACTIONS */}
-                                <IonRow className='ion-margin-top home-thread-actions'>
+                                <IonRow className='ion-margin-top home-thread-actions ion-text-center'>
                                     <IonCol>
                                         <IonButton 
                                             fill='clear' 
