@@ -49,7 +49,7 @@ http://ionicframework.com/docs/theming/ */
     font-family: var(--font-header);
 }
 
-.home-icon {
+.home-icon, .community-icon {
     font-size: 26px;
     color: var(--light-shade);
 }
@@ -155,6 +155,66 @@ http://ionicframework.com/docs/theming/ */
     color: var(--secondary-shade);
     font-weight: bold;
     font-size: 11px;
+}
+
+/* COMMUNITY */
+.community-banner-image {
+    height: 150px;
+    object-fit: cover;
+}
+
+.community-empty-icon {
+    font-size: 64px;
+}
+
+.community-private-icon {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.community-member-badge {
+    margin-left: 8px;
+}
+
+.community-lists {
+    box-shadow: none;
+}
+
+/* SEARCH */
+.search-result-count {
+    color: var(--ion-color-medium);
+    font-size: 12px;
+}
+
+.search-threads-container {
+    padding-bottom: 60px;
+}
+
+.search-thread-card {
+    margin: 8px 16px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.search-thread-card:hover {
+    transform: translateY(-2px);
+}
+
+.search-thread-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--secondary-shade);
+    margin: 8px 0 0 0;
+    line-height: 1.4;
+}
+
+.search-end-message {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.search-end-message p {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 

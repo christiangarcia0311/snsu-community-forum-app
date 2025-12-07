@@ -157,7 +157,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({
         <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
             
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className='home-header-bg'>
                     <IonTitle>Create Thread</IonTitle>
                     <IonButton
                         slot='end'

@@ -24,10 +24,6 @@ const TabButtons = () => {
                     <IonIcon icon={home} />           
                 </IonTabButton>
 
-                <IonTabButton tab='forum' href='/tabs/forum'>
-                    <IonIcon icon={chatbubbles} />           
-                </IonTabButton>
-
                 <IonTabButton tab='community' href='/tabs/community'>
                     <IonIcon icon={people} />           
                 </IonTabButton>

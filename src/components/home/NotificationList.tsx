@@ -8,14 +8,12 @@ import {
     IonButton,
     IonIcon,
     IonContent,
-    IonList,
     IonItem,
     IonAvatar,
     IonLabel,
     IonText,
     IonSpinner,
     IonToast,
-    IonBadge,
     IonRefresher,
     IonRefresherContent,
     IonItemSliding,
@@ -23,7 +21,6 @@ import {
     IonItemOption
 } from '@ionic/react'
 
-// icons
 import {
     arrowForwardOutline,
     checkmarkDoneOutline,
@@ -34,17 +31,14 @@ import {
     documentTextOutline
 } from 'ionicons/icons'
 
-// default image
-import photoDefault from '../../assets/images/profile.png'
-
-// services
-import {
-    getNotifications,
+import { 
+    getNotifications ,
     markNotificationAsRead,
     markAllNotificationsAsRead,
     deleteNotification,
     NotificationData
 } from '../../services/NotificationService'
+
 
 interface NotificationListProps {
     isOpen: boolean
@@ -176,14 +170,9 @@ const NotificationList: React.FC<NotificationListProps> = ({
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>
                             Notifications
-                            {unreadCount > 0 && (
-                                <IonBadge color="danger" className="ion-margin-start">
-                                    {unreadCount}
-                                </IonBadge>
-                            )}
                         </IonTitle>
                         <IonButton
                             slot='end'
@@ -192,15 +181,6 @@ const NotificationList: React.FC<NotificationListProps> = ({
                         >
                             <IonIcon size='large' icon={arrowForwardOutline} />
                         </IonButton>
-                        {unreadCount > 0 && (
-                            <IonButton
-                                slot='end'
-                                fill='clear'
-                                onClick={handleMarkAllAsRead}
-                            >
-                                <IonIcon icon={checkmarkDoneOutline} />
-                            </IonButton>
-                        )}
                     </IonToolbar>
                 </IonHeader>
 
@@ -228,7 +208,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
                     ) : (
                         <div>
                             {notifications.map((notification) => {
-                                const profilePicture = notification.sender.profile_image_url || photoDefault
+                                const profilePicture = notification.sender.profile_image_url
                                 const senderName = `${notification.sender.firstname} ${notification.sender.lastname}`
 
                                 return (
@@ -237,7 +217,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
                                             button
                                             lines='none'
                                             onClick={() => handleNotificationClick(notification)}
-                                            className={!notification.is_read ? 'notification-unread adjust-background' : ''}
+                                            className={!notification.is_read ? '' : 'adjust-background'}
                                         >
                                             <IonAvatar slot='start'>
                                                 <img src={profilePicture} alt={senderName} />
@@ -286,6 +266,8 @@ const NotificationList: React.FC<NotificationListProps> = ({
             />
         </>
     )
+
 }
 
 export default NotificationList
+

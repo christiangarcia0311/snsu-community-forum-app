@@ -196,7 +196,7 @@ const UpdateThread: React.FC<UpdateThreadProps> = ({
         <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
             
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className='home-header-bg'>
                     <IonTitle>Update Thread</IonTitle>
                     <IonButton
                         slot='end'

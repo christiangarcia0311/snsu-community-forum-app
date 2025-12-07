@@ -71,16 +71,6 @@ class UserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user.profile
     
-    def get(self, request, *args, **kwargs):
-        profile = self.get_object()
-        serializer = self.get_serializer(profile)
-        data = serializer.data
-        
-        # Add admin status to response
-        data['is_admin'] = request.user.is_staff or request.user.is_superuser
-        
-        return Response(data)
-    
 class UpdateProfileDetailsView(APIView):
     
     '''API endpoint to update user profile details'''
@@ -271,16 +261,14 @@ class UserFollowingListView(APIView):
 
 class AllUsersListView(APIView):
     
-    '''API endpoint to get all users to follow'''
+    '''API endpoint to get all users'''
     
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
         try:
-            # Get all users except superusers and the current user
             users = User.objects.filter(is_superuser=False).exclude(id=request.user.id)
-            
-            # Get list of users current user is following
+
             following_ids = UserFollow.objects.filter(
                 follower=request.user
             ).values_list('following_id', flat=True)

@@ -19,13 +19,12 @@ import {
     IonLoading,
     IonAlert
 } from '@ionic/react'
-
-// icons 
+ 
 import {
     logoGoogle
 } from 'ionicons/icons'
 
-// auth service
+/* -- SERVICES -- */
 import { signupUser } from '../../services/AuthService'
 
 
@@ -53,10 +52,8 @@ const AuthSignUp = () => {
     const [message, setMessage] = useState('')
     const [showMessage, setShowMessage] = useState(false)
 
-    // -- SIGN UP USER --
     const handleSignUp = async () => {
 
-        // -- VALIDATE REQUIRED FEILDS -- 
         if (!firstname.trim() || !lastname.trim() || !username.trim() || 
             !email.trim() || !password.trim() || !confirmPassword.trim() ||
             !birthDate || !gender || !role || !department || !course) {
@@ -66,7 +63,6 @@ const AuthSignUp = () => {
             return
         }
 
-        // -- VALIDATE PASSWORD MATCH --
         if (password !== confirmPassword) {
             setMessage('Passwords do not match')
             setShowMessage(true)
@@ -74,7 +70,6 @@ const AuthSignUp = () => {
             return
         }
 
-        // -- VALIDATE PASSWORD LENGTH --
         if (password.length < 8) {
             setMessage('Password must be at least 8 characters long')
             setShowMessage(true)
@@ -82,7 +77,6 @@ const AuthSignUp = () => {
             return
         }
 
-        // -- VALIDATE EMAIL DOMAIN --
         if (!email.endsWith('@ssct.edu.ph')) {
             setMessage('Email must be from ssct.edu.ph domain')
             setShowMessage(true)
@@ -93,14 +87,14 @@ const AuthSignUp = () => {
         setLoading(true)
 
         try {
-            // -- PREPARE DATA TO BE INSERT IN DATABASE --
+
             const formData = new FormData()
             formData.append('username', username)
             formData.append('email', email)
             formData.append('password', password)
             formData.append('confirm_password', confirmPassword)
 
-            // -- PROFILE DATA IN JSON STRING --
+
             const profileData = {
                 firstname,
                 lastname,
@@ -113,9 +107,6 @@ const AuthSignUp = () => {
 
             formData.append('profile', JSON.stringify(profileData))
 
-       
-
-            // -- SIGN UP USER --
             await signupUser(formData)
 
             setMessage('Account created successfully!')
@@ -129,8 +120,7 @@ const AuthSignUp = () => {
 
         } catch (error: any) {
             setLoading(false)
-        
-            // -- VALIDATION ERROR FROM BACKEND --
+
             if (error.username) {
                 setMessage(error.username[0])
             } else if (error.email) {
@@ -161,7 +151,7 @@ const AuthSignUp = () => {
     return (
         <>
             <IonPage>
-                {/* SIGN UP PAGE CONTENT */}
+
                 <IonContent className='ion-padding'>
                     <IonGrid>
 
@@ -412,8 +402,7 @@ const AuthSignUp = () => {
                     </IonGrid>
                     
                 </IonContent>
-
-                {/* FOOTER */}
+                
                 <IonFooter>
                     <IonToolbar className='txt-container-footer'>
                         <IonTitle>

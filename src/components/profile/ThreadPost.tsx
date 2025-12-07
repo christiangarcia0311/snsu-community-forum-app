@@ -120,33 +120,24 @@ const ThreadPost: React.FC = () => {
         const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
         const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
 
-        // Just now (less than 1 minute)
         if (diffInMinutes < 1) {
-            return 'just now'
+            return 'now'
         }
-
-        // Minutes ago (1-59 minutes)
         if (diffInMinutes < 60) {
             return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`
         }
-
-        // Hours ago (1-23 hours)
         if (diffInHours < 24) {
             return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`
         }
-
-        // Days ago (1-6 days)
         if (diffInDays < 7) {
             return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`
         }
 
-        // Weeks ago (7-13 days)
         if (diffInDays < 14) {
             const weeks = Math.floor(diffInDays / 7)
             return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`
         }
 
-        // Full date format (14+ days)
         return date.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
@@ -232,7 +223,7 @@ const ThreadPost: React.FC = () => {
 
                         return (
                             <IonCard key={thread.id} className='home-thread-post'>
-                                <IonCardContent>
+                                <IonCardContent className='ion-no-padding'>
                                     <IonGrid>
                                         {/* USER INFO POST */}
                                         <IonRow className='ion-align-items-center'>

@@ -18,12 +18,11 @@ import {
     IonToast
 } from '@ionic/react'
 
-// icons 
 import {
     logoGoogle
 } from 'ionicons/icons'
 
-// sign in service
+/* -- SERVICES -- */
 import { signinUser } from '../../services/AuthService'
 
 
@@ -34,12 +33,9 @@ const AuthSignIn = () => {
     const currentYear = new Date().getFullYear()
     const appName = 'Stream'
 
-
-    // -- handle Sign in state --
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    // -- handle Sign in message --
     const [message, setMessage] =  useState('')
     const [showMessage, setShowMessage] = useState(false)
 
@@ -179,37 +175,37 @@ const AuthSignIn = () => {
 
                     <br /><br />
                     <IonRow className='ion-margin-top ion-text-center'>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>Stream</a>
-                                </IonText>
-                            </IonCol>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>About</a>
-                                </IonText>
-                            </IonCol>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>Privacy</a>
-                                </IonText>
-                            </IonCol>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>Terms</a>
-                                </IonText>
-                            </IonCol>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>Threads</a>
-                                </IonText>
-                            </IonCol>
-                            <IonCol>
-                                <IonText>
-                                    <a href="" className='auth-sponsor'>API</a>
-                                </IonText>
-                            </IonCol>
-                        </IonRow>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>Stream</a>
+                            </IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>About</a>
+                            </IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>Privacy</a>
+                            </IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>Terms</a>
+                            </IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>Threads</a>
+                            </IonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonText>
+                                <a href="" className='auth-sponsor'>API</a>
+                            </IonText>
+                        </IonCol>
+                    </IonRow>
                 </IonGrid>
                 
             </IonContent>
