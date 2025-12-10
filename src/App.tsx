@@ -1,7 +1,8 @@
 import { IonApp, setupIonicReact } from "@ionic/react";
 import { IonRouterOutlet } from "@ionic/react";
 import { useEffect } from "react";
-import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
+import { IonReactRouter } from "@ionic/react-router";
+
 
 /* prevent overlap android */
 import { StatusBar } from "@capacitor/status-bar";
@@ -54,11 +55,11 @@ const App: React.FC = () => {
   
   return (
     <IonApp>
-      <IonReactHashRouter>
+      <IonReactRouter>
         <IonRouterOutlet>
           <AppRoute />
         </IonRouterOutlet>
-      </IonReactHashRouter>   
+      </IonReactRouter>   
     </IonApp>
   );
 };
