@@ -220,7 +220,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
                                             className={!notification.is_read ? '' : 'adjust-background'}
                                         >
                                             <IonAvatar slot='start'>
-                                                <img src={profilePicture} alt={senderName} />
+                                                <img src={profilePicture ?? undefined} alt={senderName} />
                                             </IonAvatar>
                                             <IonLabel>
                                                 <small>

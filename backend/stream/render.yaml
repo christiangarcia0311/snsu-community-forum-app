@@ -1,0 +1,22 @@
+databases:
+  - name: stream-app
+    plan: free
+    databaseName: stream_db_pgsi
+    user: stream_db_pgsi_user
+
+services:
+  - type: web
+    plan: free
+    name: stream-app-api
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'python -m gunicorn stream.asgi:application -k uvicorn.workers.UvicornWorker'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stream-app
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4

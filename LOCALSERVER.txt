@@ -1,0 +1,12 @@
+RUN BACKEND
+
+- python manage.py runserver 0.0.0.0:8000
+
+RUN FRONTEND
+
+- npm run dev
+
+FIREWALL CHECK
+
+- sudo ufw allow 8000/tcp
+- sudo ufw allow 8100/tcp

@@ -135,7 +135,7 @@ const UserFollowing: React.FC<UserFollowingProps> = ({
                             </IonText>
                         </div>
                     ) : (
-                        <div classsName='ion-padding'>
+                        <div className='ion-padding'>
                             {following.map((follow) => {
                                 const profilePicture = follow.following_profile.profile_image_url || photoDefault
                                 const isUnfollowLoading = unfollowLoadingStates[follow.following_username]

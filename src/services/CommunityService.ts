@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8000/api/v1/community/'
+import { API_COMMUNITY_URL } from './api'
 
 const getAuthToken = () => {
     return localStorage.getItem('access_token')
@@ -11,7 +11,7 @@ const getAuthToken = () => {
 export const getAllCommunityGroup = async () => {
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}groups/`, {
+    const response = await axios.get(`${API_COMMUNITY_URL}groups/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -26,7 +26,7 @@ export const getAllCommunityGroup = async () => {
 export const getUserCommunityGroup = async () => {
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}groups/my-communities/`, {
+    const response = await axios.get(`${API_COMMUNITY_URL}groups/my-communities/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -41,7 +41,7 @@ export const getUserCommunityGroup = async () => {
 export const getCommunityGroupById = async (id: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}groups/${id}/`, {
+    const response = await axios.get(`${API_COMMUNITY_URL}groups/${id}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -71,7 +71,7 @@ export const createCommunityGroup = async (
             formData.append('image', image)
         }
         
-        const response = await axios.post(`${API_BASE_URL}groups/create/`, formData, {
+    const response = await axios.post(`${API_COMMUNITY_URL}groups/create/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -88,7 +88,7 @@ export const createCommunityGroup = async (
 export const joinCommunityGroup = async (communityId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.post(`${API_BASE_URL}groups/${communityId}/join/`, {}, {
+    const response = await axios.post(`${API_COMMUNITY_URL}groups/${communityId}/join/`, {}, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -103,7 +103,7 @@ export const joinCommunityGroup = async (communityId: number) => {
 export const leaveCommunityGroup = async (communityId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.delete(`${API_BASE_URL}groups/${communityId}/join/`, {
+    const response = await axios.delete(`${API_COMMUNITY_URL}groups/${communityId}/join/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -118,7 +118,7 @@ export const leaveCommunityGroup = async (communityId: number) => {
 export const getCommunityGroupMembers = async (communityId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.post(`${API_BASE_URL}groups/${communityId}/members/`, {
+    const response = await axios.post(`${API_COMMUNITY_URL}groups/${communityId}/members/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -135,7 +135,7 @@ export const getCommunityGroupMembers = async (communityId: number) => {
 export const getCommunityGroupPosts = async (communityId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}groups/${communityId}/posts/`, {
+    const response = await axios.get(`${API_COMMUNITY_URL}groups/${communityId}/posts/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -165,7 +165,7 @@ export const createCommunityGroupPost = async (
             formData.append('image', image)
         }
         
-        const response = await axios.post(`${API_BASE_URL}posts/create/`, formData, {
+    const response = await axios.post(`${API_COMMUNITY_URL}posts/create/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -195,7 +195,7 @@ export const updateCommunityGroupPost = async (
             formData.append('image', image)
         }
         
-        const response = await axios.put(`${API_BASE_URL}posts/${postId}/`, formData, {
+    const response = await axios.put(`${API_COMMUNITY_URL}posts/${postId}/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -210,7 +210,7 @@ export const updateCommunityGroupPost = async (
 export const deleteCommunityGroupPost = async (postId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.delete(`${API_BASE_URL}posts/${postId}/`, {
+    const response = await axios.delete(`${API_COMMUNITY_URL}posts/${postId}/`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
         return response.data

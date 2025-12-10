@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const API_BASE_URL = 'http://localhost:8000/api/v1/threads/'
+import { API_THREAD_URL } from './api'
 
 const getAuthToken = () => {
     return localStorage.getItem('access_token')
@@ -24,7 +24,7 @@ export const getAllThreadPost = async (): Promise<ThreadPostData[]> => {
     
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}posts/`,{
+    const response = await axios.get(`${API_THREAD_URL}posts/`,{
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -41,7 +41,7 @@ export const getUserThreadPost = async (): Promise<ThreadPostData[]> => {
     
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}my-posts/`, {
+    const response = await axios.get(`${API_THREAD_URL}my-posts/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -57,7 +57,7 @@ export const getUserThreadPost = async (): Promise<ThreadPostData[]> => {
 export const getThreadPostById =  async (id: number): Promise<ThreadPostData[]> => {
 
     try {
-        const response = await axios.get(`${API_BASE_URL}posts/${id}/`)
+    const response = await axios.get(`${API_THREAD_URL}posts/${id}/`)
         return response.data
     } catch (error: any) {
         throw error.response?.data || { error: 'Failed to fetch thread post' }
@@ -85,7 +85,7 @@ export const createThreadPost = async (
             formData.append('image', image)
         }
 
-        const response =  await axios.post(`${API_BASE_URL}create/`, formData, {
+    const response =  await axios.post(`${API_THREAD_URL}create/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -120,7 +120,7 @@ export const updateThreadPost = async (
             formData.append('image', image)
         }
 
-        const response = await axios.put(`${API_BASE_URL}posts/${id}/`, formData, {
+    const response = await axios.put(`${API_THREAD_URL}posts/${id}/`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -139,7 +139,7 @@ export const deleteThreadPost = async (id: number): Promise<any> => {
 
     try {
         const token = getAuthToken()
-        const response = await axios.delete(`${API_BASE_URL}posts/${id}/`, {
+    const response = await axios.delete(`${API_THREAD_URL}posts/${id}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -156,7 +156,7 @@ export const deleteThreadPost = async (id: number): Promise<any> => {
 export const getThreadComments =  async (threadId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.get(`${API_BASE_URL}posts/${threadId}/comments/`, {
+    const response = await axios.get(`${API_THREAD_URL}posts/${threadId}/comments/`, {
             headers: { 
                 'Authorization': `Bearer ${token}` 
             },
@@ -171,7 +171,7 @@ export const getThreadComments =  async (threadId: number) => {
 export const createComment = async (threadId: number, content: string) => {
     try {
         const token = getAuthToken()
-        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/comments/`, { content, thread: threadId }, {
+    const response = await axios.post(`${API_THREAD_URL}posts/${threadId}/comments/`, { content, thread: threadId }, {
             headers: { 
                 'Authorization': `Bearer ${token}` 
             },
@@ -186,7 +186,7 @@ export const createComment = async (threadId: number, content: string) => {
 export const likeThreadPost = async (threadId: number) => {
     try {
         const token = getAuthToken()
-        const response = await axios.post(`${API_BASE_URL}posts/${threadId}/like/`, {}, {
+    const response = await axios.post(`${API_THREAD_URL}posts/${threadId}/like/`, {}, {
             headers: { 
                 'Authorization': `Bearer ${token}` 
             },

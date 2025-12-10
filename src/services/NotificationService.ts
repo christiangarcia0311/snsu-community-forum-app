@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8000/api/v1/notifications/'
+import { API_NOTIFICATION_URL } from './api'
 
 const getAuthToken = () => localStorage.getItem('access_token')
 const getAuthHeader = () => ({
@@ -33,7 +33,7 @@ export interface NotificationResponse {
 // -- GET ALL NOTIFICATION --
 export const getNotifications = async (): Promise<NotificationResponse> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}content/`, {
+    const response = await axios.get(`${API_NOTIFICATION_URL}content/`, {
             headers: getAuthHeader()
         })
         
@@ -68,7 +68,7 @@ export const getNotifications = async (): Promise<NotificationResponse> => {
 // -- MARK READ NOTIFICATION --
 export const markNotificationAsRead = async (id: number): Promise<NotificationData> => {
     try {
-        const response = await axios.patch(`${API_BASE_URL}content/${id}/read/`, {}, {
+    const response = await axios.patch(`${API_NOTIFICATION_URL}content/${id}/read/`, {}, {
             headers: getAuthHeader()
         })
         
@@ -99,7 +99,7 @@ export const markNotificationAsRead = async (id: number): Promise<NotificationDa
 // -- MARK ALL AS READ NOTIFICATION --
 export const markAllNotificationsAsRead = async (): Promise<any> => {
     try {
-        const response = await axios.patch(`${API_BASE_URL}content/read-all/`, {}, {
+    const response = await axios.patch(`${API_NOTIFICATION_URL}content/read-all/`, {}, {
             headers: getAuthHeader()
         })
         return response.data
@@ -111,7 +111,7 @@ export const markAllNotificationsAsRead = async (): Promise<any> => {
 // -- DELETE NOTIFICATION --
 export const deleteNotification = async (id: number): Promise<any> => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}content/${id}/delete`, {
+    const response = await axios.delete(`${API_NOTIFICATION_URL}content/${id}/delete`, {
             headers: getAuthHeader()
         })
         return response.data

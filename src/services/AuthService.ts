@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api/v1/auth/'
+import { API_AUTH_URL } from './api'
 
 export const signupUser = async (formData: FormData) => {
     
     try {
-        const response = await axios.post(`${API_BASE_URL}signup/`, formData, {
+        const response = await axios.post(`${API_AUTH_URL}signup/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -25,7 +25,7 @@ export const signupUser = async (formData: FormData) => {
 export const signinUser = async (username: string, password: string) => {
 
     try {
-        const response = await axios.post(`${API_BASE_URL}signin/`, {
+    const response = await axios.post(`${API_AUTH_URL}signin/`, {
             username,
             password
         })
@@ -61,7 +61,7 @@ export const getAuthHeader = () => {
 export const getUserProfile = async () => {
     try {
 
-        const response = await axios.get(`${API_BASE_URL}profile/`, {
+        const response = await axios.get(`${API_AUTH_URL}profile/`, {
             headers: getAuthHeader()
         })
 
@@ -83,7 +83,7 @@ export const updateProfileDetails = async (profileData: {
 }) => {
     try {
         const response = await axios.patch(
-            `${API_BASE_URL}profile/details/`,
+            `${API_AUTH_URL}profile/details/`,
             profileData,
             {
                 headers: getAuthHeader()
@@ -103,7 +103,7 @@ export const updateProfileImage = async (imageFile: File) => {
         formData.append('profile_image', imageFile)
 
         const response = await axios.patch(
-            `${API_BASE_URL}profile/image/`,
+            `${API_AUTH_URL}profile/image/`,
             formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -123,7 +123,7 @@ export const updateProfileImage = async (imageFile: File) => {
 export const followUser = async (username: string) => {
     try {
         const response = await axios.post(
-            `${API_BASE_URL}follow/${username}/`,
+            `${API_AUTH_URL}follow/${username}/`,
             {},
             {
                 headers: getAuthHeader()
@@ -138,7 +138,7 @@ export const followUser = async (username: string) => {
 export const unfollowUser = async (username: string) => {
     try {
         const response = await axios.delete(
-            `${API_BASE_URL}follow/${username}/`,
+            `${API_AUTH_URL}follow/${username}/`,
             {
                 headers: getAuthHeader()
             }
@@ -152,7 +152,7 @@ export const unfollowUser = async (username: string) => {
 export const getUserFollowers = async (username: string) => {
     try {
         const response = await axios.get(
-            `${API_BASE_URL}followers/${username}/`,
+            `${API_AUTH_URL}followers/${username}/`,
             {
                 headers: getAuthHeader()
             }
@@ -166,7 +166,7 @@ export const getUserFollowers = async (username: string) => {
 export const getUserFollowing = async (username: string) => {
     try {
         const response = await axios.get(
-            `${API_BASE_URL}following/${username}/`,
+            `${API_AUTH_URL}following/${username}/`,
             {
                 headers: getAuthHeader()
             }
@@ -180,7 +180,7 @@ export const getUserFollowing = async (username: string) => {
 export const getAllUsers = async () => {
     try {
         const response = await axios.get(
-            `${API_BASE_URL}users/`,
+            `${API_AUTH_URL}users/`,
             {
                 headers: getAuthHeader()
             }
