@@ -68,9 +68,9 @@ const ThreadPostList: React.FC<ThreadPostListProps> = ({
         const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
 
         if (diffInMinutes < 1) return 'now'
-        if (diffInMinutes < 60) return `${diffInMinutes} ${diffInMinutes === 1 ? 'm' : 'ms'} ago`
-        if (diffInHours < 24) return `${diffInHours} ${diffInHours === 1 ? 'h' : 'h'} ago`
-        if (diffInDays < 7) return `${diffInDays} ${diffInDays === 1 ? 'd' : 'd'} ago`
+        if (diffInMinutes < 60) return `${diffInMinutes}${diffInMinutes === 1 ? 'm' : 'ms'} ago`
+        if (diffInHours < 24) return `${diffInHours}h ago`
+        if (diffInDays < 7) return `${diffInDays}d ago`
 
         if (diffInDays < 14) {
             const weeks = Math.floor(diffInDays / 7)

@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--#se&fb_-#!g6(y53*u%0ywgmj!($6#9ij03xbcvfpb9md#gxx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -88,7 +88,6 @@ WSGI_APPLICATION = 'stream.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -96,15 +95,13 @@ DATABASES = {
     }
 }
 '''
-
 DATABASES = {
         'default': dj_database_url.config(
             default=os.getenv('DATABASE_URL'),
             conn_max_age=600
         )
 }
-
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -177,7 +174,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8100",
     "http://localhost:5000",
-    "http://127.0.0.1:8100",
+    "http://127.0.0.1:8000",
     "https://snsu-community-forum-app.vercel.app",
 ]
 

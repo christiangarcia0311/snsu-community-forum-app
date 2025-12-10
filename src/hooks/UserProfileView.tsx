@@ -250,7 +250,7 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
         return (
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>Profile</IonTitle>
                         <IonButton
                             slot='end'
@@ -277,7 +277,7 @@ const UserProfileView: React.FC<UserProfileViewProps> = ({
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>{userProfile.firstname}'s Profile</IonTitle>
                         <IonButton
                             slot='end'

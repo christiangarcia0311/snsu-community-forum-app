@@ -111,7 +111,7 @@ export const markAllNotificationsAsRead = async (): Promise<any> => {
 // -- DELETE NOTIFICATION --
 export const deleteNotification = async (id: number): Promise<any> => {
     try {
-    const response = await axios.delete(`${API_NOTIFICATION_URL}content/${id}/delete`, {
+    const response = await axios.delete(`${API_NOTIFICATION_URL}content/${id}/delete/`, {
             headers: getAuthHeader()
         })
         return response.data

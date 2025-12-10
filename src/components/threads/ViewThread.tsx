@@ -316,7 +316,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
 
                 <IonHeader>
-                    <IonToolbar className='home-header-bg'>
+                    <IonToolbar className='home-header-bg' >
                         <IonTitle>{headerName}'s post</IonTitle>
                         <IonButton
                             slot='end'

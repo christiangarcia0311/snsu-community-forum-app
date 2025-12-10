@@ -166,7 +166,7 @@ const UsersList: React.FC<UsersListProps> = ({
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>Discover People</IonTitle>
                         <IonButton
                             slot='end'

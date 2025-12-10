@@ -39,6 +39,8 @@ import {
     NotificationData
 } from '../../services/NotificationService'
 
+import ProfilePhoto from '../../assets/images/profile.png'
+
 
 interface NotificationListProps {
     isOpen: boolean
@@ -208,7 +210,7 @@ const NotificationList: React.FC<NotificationListProps> = ({
                     ) : (
                         <div>
                             {notifications.map((notification) => {
-                                const profilePicture = notification.sender.profile_image_url
+                                const profilePicture = notification.sender.profile_image_url || ProfilePhoto
                                 const senderName = `${notification.sender.firstname} ${notification.sender.lastname}`
 
                                 return (

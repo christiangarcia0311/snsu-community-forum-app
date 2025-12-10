@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     ]
     
     DEPARTMENT_CHOICES = [
-        ('ccis', 'College of Computer and Information Sciences'),
+        ('ccis', 'College of Computing and Information Sciences'),
         ('coe', 'College of Engineering'),
         ('cbt', 'College of Business and Technology'),
         ('cas', 'College of Arts and Sciences'),
@@ -28,10 +28,47 @@ class UserProfile(models.Model):
     ]
     
     COURSE_CHOICES = [
-        ('bscs', 'BS in Computer Science'),
-        ('bsit', 'BS in Information Technology'),
-        ('bsis', 'BS in Information Systems'),
-        ('bscpe', 'BS in Computer Engineering'),
+        # CCIS
+        ('bscs', 'Bachelor of Science in Computer Science'),
+        ('bsit', 'Bachelor of Science in Information Technology'),
+        ('bsis', 'Bachelor of Science in Information Systems'),
+
+        # COE
+        ('bsce', 'Bachelor of Science in Civil Engineering'),
+        ('bsee', 'Bachelor of Science in Electrical Engineering'),
+        ('bsece', 'Bachelor of Science in Electronics and Engineering'),
+        ('bscpe', 'Bachelor of Science in Computer Engineering'),
+
+        # CBT
+        ('bet', 'Bachelor of Engineering Technology'),
+        ('baet', 'Bachelor of Automotive Engineering Technology'),
+        ('beet', 'Bachelor of Electrical Engineering Technology')
+        ('bexet', 'Bachelor of Electronics Engineering Technology'),
+        ('bmet', 'Bachelor of Mechanical Engineering Technology'),
+        ('bmet-mt', 'BMET - Mechanical Technology'),
+        ('bmet-ract', 'BMET - Refrigeration and Air-conditioning Technology'),
+        ('bmet-waft', 'BMET - Welding and Fabrication Technology'),
+        ('bit', 'Bachelor in Industrial Technology '),
+        ('bit-adt', 'Architectural Drafting'),
+        ('bit-at', 'Automotive Technology'),
+        ('bit-elt', 'Electrical Technology'),
+        ('bit-elex', 'Electronics Technology'),
+        ('bit-mt', 'Mechanical Technology'),
+        ('bit-hvacr', 'Heating, Ventilating & Air-Conditioning technology'),
+        ('bit-waft', 'Welding & Fabrication Technology'),
+        ('bshm', 'Bachelor of Science in Hospitality Management'),
+        ('bsmt', 'Bachelor of Science in Tourism Management'),
+        
+        # CAS
+        ('bsm', 'Bachelor of Science in Mathematics'),
+        ('bses', 'Bachelor of Science in Environmental Science'),
+        ('bael', 'Bachelor of Arts in English Language'),
+        
+        # CTE
+        ('beed', 'Bachelor of Elementary Education'),
+        ('bsed', 'Bachelor of Secondary Education'),
+        ('bped', 'Bachelor of Physical Education'),
+        ('btvted', 'Bachelor of Technical-Vocational Teacher Education'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
