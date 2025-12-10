@@ -9,10 +9,6 @@ import {
     IonIcon,
     IonItem,
     IonLabel,
-    IonText,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonModal
 } from '@ionic/react'
 
@@ -44,7 +40,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>Account Settings</IonTitle>
                         <IonButton
                             slot='end'

@@ -19,7 +19,6 @@ import {
 
 import {
     lockClosedOutline,
-    peopleOutline,
 } from 'ionicons/icons'
 
 import Banner from '../../assets/images/banner.jpeg'
@@ -80,7 +79,6 @@ const ListGroup: React.FC<ListGroupProps> = ({ onViewGroup }) => {
     if (communities.length === 0) {
         return (
             <div className='ion-text-center ion-padding'>
-                <IonIcon icon={peopleOutline} className='community-empty-icon' color='medium' />
                 <IonText>
                     <h2>No Communities Yet</h2>
                     <p>Be the first to create a community!</p>

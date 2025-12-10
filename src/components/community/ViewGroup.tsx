@@ -189,7 +189,7 @@ const ViewGroup: React.FC<ViewGroupProps> = ({
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>{community?.name || 'Community'}</IonTitle>
                         <IonButton
                             slot='end'

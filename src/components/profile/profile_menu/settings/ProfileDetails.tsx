@@ -177,12 +177,58 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
         }
     }
 
+    const departmentCourses: Record<string, { value: string; label: string }[]> = {
+        ccis: [
+            { value: 'bscs', label: 'BS in Computer Science' },
+            { value: 'bsit', label: 'BS in Information Technology' },
+            { value: 'bsis', label: 'BS in Information Systems' },
+            { value: 'bscpe', label: 'BS in Computer Engineering' },
+        ],
+        coe: [
+            { value: 'bsce', label: 'BS in Civil Engineering' },
+            { value: 'bsee', label: 'BS in Electrical Engineering' },
+            { value: 'bsece', label: 'BS in Electronics and Engineering' },
+            { value: 'bscpe', label: 'BS in Computer Engineering' },
+        ],
+        cbt: [
+            { value: 'bet', label: 'Bachelor of Engineering Technology' },
+            { value: 'baet', label: 'Bachelor of Automotive Engineering Technology' },
+            { value: 'beet', label: 'Bachelor of Electrical Engineering Technology' },
+            { value: 'bexet', label: 'Bachelor of Electronics Engineering Technology' },
+            { value: 'bmet', label: 'Bachelor of Mechanical Engineering Technology' },
+            { value: 'bmet-mt', label: 'BMET - Mechanical Technology' },
+            { value: 'bmet-ract', label: 'BMET - Refrigeration and Air-conditioning Technology' },
+            { value: 'bmet-waft', label: 'BMET - Welding and Fabrication Technology' },
+            { value: 'bit', label: 'Bachelor in Industrial Technology' },
+            { value: 'bit-adt', label: 'Architectural Drafting' },
+            { value: 'bit-at', label: 'Automotive Technology' },
+            { value: 'bit-elt', label: 'Electrical Technology' },
+            { value: 'bit-elex', label: 'Electronics Technology' },
+            { value: 'bit-mt', label: 'Mechanical Technology' },
+            { value: 'bit-hvacr', label: 'Heating, Ventilating & Air-Conditioning technology' },
+            { value: 'bit-waft', label: 'Welding & Fabrication Technology' },
+            { value: 'bshm', label: 'Bachelor of Science in Hospitality Management' },
+            { value: 'bsmt', label: 'Bachelor of Science in Tourism Management' },
+        ],
+        cas: [
+            { value: 'bsm', label: 'Bachelor of Science in Mathematics' },
+            { value: 'bses', label: 'Bachelor of Science in Environmental Science' },
+            { value: 'bael', label: 'Bachelor of Arts in English Language' },
+        ],
+        cte: [
+            { value: 'beed', label: 'Bachelor of Elementary Education' },
+            { value: 'bsed', label: 'Bachelor of Secondary Education' },
+            { value: 'bped', label: 'Bachelor of Physical Education' },
+            { value: 'btvted', label: 'Bachelor of Technical-Vocational Teacher Education' },
+        ],
+    }
+
     return (
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
 
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>Profile Details</IonTitle>
                         <IonButton 
                             slot='end'
@@ -322,7 +368,10 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     label='Department' 
                                     labelPlacement='floating'
                                     value={department}
-                                    onIonChange={(e) => setDepartment(e.detail.value!)}
+                                    onIonChange={(e) => {
+                                        setDepartment(e.detail.value!)
+                                        setCourse('') 
+                                    }}
                                     disabled={!canUpdateProfile}
                                 >
                                     <IonSelectOption value='ccis'>CCIS</IonSelectOption>
@@ -341,12 +390,11 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     labelPlacement='floating'
                                     value={course}
                                     onIonChange={(e) => setCourse(e.detail.value!)}
-                                    disabled={!canUpdateProfile}
+                                    disabled={!canUpdateProfile || !department}
                                 >
-                                    <IonSelectOption value='bscs'>BS in Computer Science</IonSelectOption>
-                                    <IonSelectOption value='bsit'>BS in Information Technology</IonSelectOption>
-                                    <IonSelectOption value='bsis'>BS in Information Systems</IonSelectOption>
-                                    <IonSelectOption value='bscpe'>BS in Computer Engineering</IonSelectOption>
+                                    {department && departmentCourses[department]?.map((c) => (
+                                        <IonSelectOption key={c.value} value={c.value}>{c.label}</IonSelectOption>
+                                    ))}
                                 </IonSelect>
                             </IonCol>
                         </IonRow>
@@ -358,7 +406,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
                                     onClick={handleUpdateProfile}
                                     disabled={loading || loadingData || !canUpdateProfile}
                                 >
-                                    <IonIcon icon={saveOutline} slot='start' />
                                     Save Changes
                                 </IonButton>
                             </IonCol>

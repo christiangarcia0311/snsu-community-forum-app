@@ -42,7 +42,7 @@ class UserProfile(models.Model):
         # CBT
         ('bet', 'Bachelor of Engineering Technology'),
         ('baet', 'Bachelor of Automotive Engineering Technology'),
-        ('beet', 'Bachelor of Electrical Engineering Technology')
+        ('beet', 'Bachelor of Electrical Engineering Technology'),
         ('bexet', 'Bachelor of Electronics Engineering Technology'),
         ('bmet', 'Bachelor of Mechanical Engineering Technology'),
         ('bmet-mt', 'BMET - Mechanical Technology'),
