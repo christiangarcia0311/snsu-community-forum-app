@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import {
+    IonPage,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     IonButton,
-    IonSearchbar,
     IonIcon,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonBadge,
     IonRefresher,
     IonRefresherContent
@@ -193,65 +190,67 @@ const HomePage = () => {
 
     return (
         <>
-            <IonHeader>
-                <IonToolbar className='home-header-bg'>
-                    <IonTitle>
-                        <h2 className='home-header'>stream</h2>
-                    </IonTitle>
-                    <IonButton
-                        slot='end'
-                        fill='clear'
-                        onClick={() => setShowCreateThread(true)}
-                    >
-                        <IonIcon icon={addOutline} className='home-icon' />
-                    </IonButton>
-                    <IonButton
-                        slot='end'
-                        fill='clear'
-                        onClick={() => setShowSearchModal(true)}
-                    >
-                        <IonIcon icon={searchOutline} className='home-icon' />
-                    </IonButton>
-                    <IonButton 
-                        slot='end' 
-                        fill='clear'
-                        onClick={() => setShowNotifications(true)}
-                    >
-                        <IonIcon icon={notificationsOutline} className='home-icon' />
-                        {
-                            notificationCount > 0 && (
-                                <IonBadge color="danger">{notificationCount}</IonBadge>
-                            )
-                        }
-                    </IonButton>
-                    <IonButton 
-                        slot='end' 
-                        fill='clear'
-                        onClick={() => setShowUsersList(true)}
-                    >
-                        <IonIcon icon={personAddOutline} className='home-icon'  />
-                    </IonButton>
-                </IonToolbar>
-            </IonHeader>
+            <IonPage>
+                <IonHeader>
+                    <IonToolbar className='home-header-bg'>
+                        <IonTitle>
+                            <h2 className='home-header'>stream</h2>
+                        </IonTitle>
+                        <IonButton
+                            slot='end'
+                            fill='clear'
+                            onClick={() => setShowCreateThread(true)}
+                        >
+                            <IonIcon icon={addOutline} className='home-icon' />
+                        </IonButton>
+                        <IonButton
+                            slot='end'
+                            fill='clear'
+                            onClick={() => setShowSearchModal(true)}
+                        >
+                            <IonIcon icon={searchOutline} className='home-icon' />
+                        </IonButton>
+                        <IonButton 
+                            slot='end' 
+                            fill='clear'
+                            onClick={() => setShowNotifications(true)}
+                        >
+                            <IonIcon icon={notificationsOutline} className='home-icon' />
+                            {
+                                notificationCount > 0 && (
+                                    <IonBadge color="danger">{notificationCount}</IonBadge>
+                                )
+                            }
+                        </IonButton>
+                        <IonButton 
+                            slot='end' 
+                            fill='clear'
+                            onClick={() => setShowUsersList(true)}
+                        >
+                            <IonIcon icon={personAddOutline} className='home-icon'  />
+                        </IonButton>
+                    </IonToolbar>
+                </IonHeader>
 
-            <IonContent>
-                <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-                    <IonRefresherContent
-                        pullingText="Pull to refresh"
-                        refreshingSpinner="circles"
-                        refreshingText="Refreshing..."
+                <IonContent>
+                    <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                        <IonRefresherContent
+                            pullingText="Pull to refresh"
+                            refreshingSpinner="circles"
+                            refreshingText="Refreshing..."
+                        />
+                    </IonRefresher>
+                    
+                    <ThreadPostList
+                        threads={threads}
+                        loading={loading}
+                        likingThreads={likingThreads}
+                        onLikeThread={handleLikeThreadPost}
+                        onViewThread={handleViewThreadPost}
+                        onViewUserProfile={handleViewUserProfile}
                     />
-                </IonRefresher>
-                
-                <ThreadPostList
-                    threads={threads}
-                    loading={loading}
-                    likingThreads={likingThreads}
-                    onLikeThread={handleLikeThreadPost}
-                    onViewThread={handleViewThreadPost}
-                    onViewUserProfile={handleViewUserProfile}
-                />
-            </IonContent>
+                </IonContent>
+            </IonPage>
 
             <SearchList
                 isOpen={showSearchModal}
