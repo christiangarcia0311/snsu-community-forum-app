@@ -176,6 +176,7 @@ SIMPLE_JWT = {
 # -- CORS CONFIGURATION --
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8100",
+    "http://localhost:5000",
     "http://127.0.0.1:8100",
     "https://snsu-community-forum-app.vercel.app",
 ]
