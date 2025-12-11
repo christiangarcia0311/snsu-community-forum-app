@@ -15,10 +15,42 @@ export const signupUser = async (formData: FormData) => {
         //console.log('Signup successful:', response.data)
         return response.data
 
-    } catch (error: any) {
-        // for debugging
-        // console.error('Signup error:', error.response?.data || error)
-        throw error.response?.data || { error: 'Something went wrong' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Something went wrong' }
+    }
+}
+
+export const verifyOTP = async (username: string, otp_code: string) => {
+    try {
+        const response = await axios.post(`${API_AUTH_URL}signup/verify/`, {
+            username,
+            otp_code
+        })
+
+        return response.data
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to verify code' }
+    }
+}
+
+export const resendOTP = async (username: string) => {
+    try {
+        const response = await axios.post(`${API_AUTH_URL}signup/resend/`, {
+            username
+        })
+
+        return response.data
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to resend code' }
     }
 }
 
@@ -38,8 +70,11 @@ export const signinUser = async (username: string, password: string) => {
 
         return response.data
 
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Something went wrong' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Something went wrong' }
     }
 }
 
@@ -66,8 +101,11 @@ export const getUserProfile = async () => {
         })
 
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to fetch profile' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to fetch profile' }
     }
 }
 
@@ -92,8 +130,11 @@ export const updateProfileDetails = async (profileData: {
 
         return response.data
         
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to update profile' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to update profile' }
     }
 }
 
@@ -114,8 +155,11 @@ export const updateProfileImage = async (imageFile: File) => {
 
         return response.data
 
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Something went wrong' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Something went wrong' }
     }
 }
 
@@ -130,8 +174,11 @@ export const followUser = async (username: string) => {
             }
         )
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to follow user' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to follow user' }
     }
 }
 
@@ -144,8 +191,11 @@ export const unfollowUser = async (username: string) => {
             }
         )
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to unfollow user' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to unfollow user' }
     }
 }
 
@@ -158,8 +208,11 @@ export const getUserFollowers = async (username: string) => {
             }
         )
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to fetch followers' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to fetch followers' }
     }
 }
 
@@ -172,8 +225,11 @@ export const getUserFollowing = async (username: string) => {
             }
         )
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to fetch following' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to fetch following' }
     }
 }
 
@@ -186,7 +242,10 @@ export const getAllUsers = async () => {
             }
         )
         return response.data
-    } catch (error: any) {
-        throw error.response?.data || { error: 'Failed to fetch users' }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to fetch users' }
     }
 }

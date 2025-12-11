@@ -115,24 +115,27 @@ const AuthSignUp = () => {
             setTimeout(() => {
                 setShowMessage(false)
                 setLoading(false)
-                history.push('/auth/signin')
+                // Save username to prefill verification screen and navigate there
+                try { localStorage.setItem('pending_verification_username', username) } catch { void 0 }
+                history.push({ pathname: '/auth/verify', state: { username } })
             }, 2000)
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             setLoading(false)
+            const err = error as Record<string, unknown>
 
-            if (error.username) {
-                setMessage(error.username[0])
-            } else if (error.email) {
-                setMessage(error.email[0])
-            } else if (error.password) {
-                setMessage(error.password[0])
-            } else if (error.confirm_password) {
-                setMessage(error.confirm_password[0])
+            if (Array.isArray(err['username'])) {
+                setMessage((err['username'] as string[])[0])
+            } else if (Array.isArray(err['email'])) {
+                setMessage((err['email'] as string[])[0])
+            } else if (Array.isArray(err['password'])) {
+                setMessage((err['password'] as string[])[0])
+            } else if (Array.isArray(err['confirm_password'])) {
+                setMessage((err['confirm_password'] as string[])[0])
             } else {
-                setMessage(error.error || 'Signup failed. Please try again.')
+                setMessage((err['error'] as string) || 'Signup failed. Please try again.')
             }
-        
+
             setShowMessage(true)
             setTimeout(() => setShowMessage(false), 3000)
         }

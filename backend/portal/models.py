@@ -134,3 +134,16 @@ class UserFollow(models.Model):
     def clean(self):
         if self.follower == self.following:
             raise ValidationError('Users cannot follow themselves')
+
+class UserOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
+    # secret used by pyotp (base32)
+    secret = models.CharField(max_length=128, blank=True, null=True)
+    # optional last generated code (not required for TOTP verification)
+    otp_code = models.CharField(max_length=6, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_verified = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f'OTP for {self.user.username} (verified={self.is_verified})'

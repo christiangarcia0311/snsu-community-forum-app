@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .models import UserProfile, UserFollow
+from .utils import create_send_otp_verification_code
 
 import json
 
@@ -86,7 +87,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         
-        '''create student/faculty user'''
+        '''create student/faculty user and send verification OTP'''
         
         validated_data.pop('confirm_password')
         profile_data = validated_data.pop('profile')
@@ -94,13 +95,17 @@ class SignUpSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            is_active=False
         )
         
         UserProfile.objects.create(
             user=user,
             **profile_data
         )
+        
+        request = self.context.get('request') if self.context else None
+        create_send_otp_verification_code(user, request=request)
         
         return user
         
@@ -261,8 +266,12 @@ class SignInSerializer(serializers.Serializer):
     
     def validate(self, data):
         user = authenticate(**data)
-        
+
         if user and user.is_active:
-            return user 
-        
+            return user
+
+        # If credentials are correct but user is inactive, return clearer message
+        if user and not user.is_active:
+            raise serializers.ValidationError('Account not verified. Please check your email for the verification code.')
+
         raise serializers.ValidationError('Invalid credentials')

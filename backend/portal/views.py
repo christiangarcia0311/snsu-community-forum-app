@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth import login
@@ -17,7 +18,10 @@ from django.utils import timezone
 
 
 from notifications.utils import create_follow_notification
+from .utils import create_send_otp_verification_code
 
+import pyotp
+from .models import UserOTP
 
 class SignUpView(generics.CreateAPIView):
     
@@ -25,9 +29,10 @@ class SignUpView(generics.CreateAPIView):
     
     serializer_class = SignUpSerializer
     parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [AllowAny]
     
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         
         if serializer.is_valid():
             user = serializer.save()
@@ -303,3 +308,71 @@ class AllUsersListView(APIView):
             return Response({
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            
+class OTPVerifyView(APIView):
+    
+    '''
+    Verify OTP code sent during signup
+    '''
+    
+    permission_classes =  [AllowAny]
+    
+    def post(self, request):
+        username = request.data.get('username')
+        otp_code = request.data.get('otp_code') or request.data.get('code') or request.data.get('otp')
+
+        if not username:
+            return Response({'error': 'username is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not otp_code:
+            return Response({'error': 'otp_code (or code/otp) is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            otp_obj = UserOTP.objects.get(user=user)
+        except UserOTP.DoesNotExist:
+            return Response({'error': 'No OTP request found for this user'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if otp_obj.is_verified:
+            return Response({'message': 'Already verified'}, status=status.HTTP_200_OK)
+
+        if not otp_obj.secret:
+            return Response({'error': 'No OTP secret available for this user'}, status=status.HTTP_400_BAD_REQUEST)
+
+        totp = pyotp.TOTP(otp_obj.secret)
+
+        if totp.verify(otp_code, valid_window=1):
+            otp_obj.is_verified = True
+            otp_obj.save()
+            user.is_active = True
+            user.save()
+            return Response({'message': 'Verification successful. Account activated.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+class OTPResendView(APIView):
+    
+    '''
+    Verify resend OTP code to user's email
+    '''
+    
+    permission_classes =  [AllowAny]
+    
+    def post(self, request):
+        username = request.data.get('username')
+        if not username:
+            return Response({'error': 'username is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        otp_obj = create_send_otp_verification_code(user, request=request, force_regen=True)
+        return Response({'message': 'Verification code resent'}, status=status.HTTP_200_OK)

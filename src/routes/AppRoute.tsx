@@ -8,7 +8,7 @@ import Tabs from '../layout/Tabs'
 
 import AuthSignIn from '../components/auth/AuthSignIn'
 import AuthSignUp from '../components/auth/AuthSignUp'
-
+import Verification from '../components/auth/verification/Verification'
 
 const AppRoute = () => {
   return (
@@ -24,6 +24,7 @@ const AppRoute = () => {
       {/* Auth */}
       <PublicRoute path='/auth/signin' component={AuthSignIn} exact={true} />
       <PublicRoute path='/auth/signup' component={AuthSignUp} exact={true} />
+      <PublicRoute path='/auth/verify' component={Verification} exact={true} />
 
       {/* Tabs */}
       <ProtectedRoute path='/tabs' component={Tabs} />

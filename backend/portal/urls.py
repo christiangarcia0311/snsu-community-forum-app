@@ -8,11 +8,15 @@ from .views import (
     FollowUserView,
     UserFollowersListView,
     UserFollowingListView,
-    AllUsersListView
+    AllUsersListView,
+    OTPVerifyView,
+    OTPResendView
 )
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
+    path('signup/verify/', OTPVerifyView.as_view(), name='signup_verify'),  
+    path('signup/resend/', OTPResendView.as_view(), name='signup_resend'), 
     path('signin/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile/', UserProfileView.as_view(), name='user_profile'),
