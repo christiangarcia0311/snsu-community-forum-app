@@ -171,12 +171,8 @@ SIMPLE_JWT = {
 
 
 # -- CORS CONFIGURATION --
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8100",
-    "http://localhost:5000",
-    "http://127.0.0.1:8000",
-    "https://snsu-community-forum-app.vercel.app",
-]
+# django-cors-headers setting to allow all origins during development
+CORS_ALLOW_ALL_ORIGINS = True
 
 # --- MEDIA FILES CONFIGURATION ---
 MEDIA_URL = '/media/'
