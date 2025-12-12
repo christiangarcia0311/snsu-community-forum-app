@@ -20,13 +20,10 @@ def create_send_otp_verification_code(user, request=None, force_regen: bool = Fa
         otp_obj.updated_at = timezone.now()
         otp_obj.save()
 
-    # generate TOTP code using the secret
     totp = pyotp.TOTP(otp_obj.secret)
     code = totp.now()
     
-    '''Email Address'''
-    subject = getattr(settings, 'SITE_NAME', 'Stream') + ' - Verify your account'
-    # try to get firstname from profile when available
+    subject = 'Stream - Verify your account'
     firstname = getattr(getattr(user, 'profile', None), 'firstname', None) or user.username
     message = f'Hello {firstname},\n\nYour verification code is: {code}\n\nThis code is valid for a short time. If you did not request this, please ignore this message.'
     

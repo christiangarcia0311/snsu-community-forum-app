@@ -8,7 +8,6 @@ import {
     IonButton,
     IonIcon,
     IonContent,
-    IonList,
     IonItem,
     IonAvatar,
     IonLabel,
@@ -128,7 +127,7 @@ const UserFollowers: React.FC<UserFollowersProps> = ({
         <>
             <IonModal isOpen={isOpen} onDidDismiss={onDidDismiss}>
                 <IonHeader>
-                    <IonToolbar>
+                    <IonToolbar className='adjust-background'>
                         <IonTitle>Followers</IonTitle>
                         <IonButton
                             slot='end'

@@ -8,15 +8,22 @@ import {
     IonTitle
 } from '@ionic/react'
 
+import CampusFeed from '../../components/events/CampusFeed'
 
 const EventPage = () => {
     return (
         <>
-            <IonHeader>
-                <IonToolbar className='home-header-bg'>
-                    <IonTitle>Annoncements & Events</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+            <IonPage>
+                <IonHeader>
+                    <IonToolbar className='home-header-bg'>
+                        <IonTitle>Announcements & Events</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                    <CampusFeed />
+                </IonContent>
+            </IonPage>
+    
         </>
     )
 }

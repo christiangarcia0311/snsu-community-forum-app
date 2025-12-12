@@ -176,7 +176,7 @@ SIMPLE_JWT = {
 
 
 # -- CORS CONFIGURATION --
-# django-cors-headers setting to allow all origins during development
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 # -- EMAIL / SMTP CONFIGURATION --
