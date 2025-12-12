@@ -3,15 +3,12 @@ import React from 'react'
 import { 
     IonTabBar, 
     IonTabButton, 
-    IonIcon, 
-    IonLabel,
-    IonFooter,
+    IonIcon
 } from '@ionic/react'
 
 /* Icons */
 import {
     home,
-    chatbubbles,
     people,
     calendar,
     person
@@ -35,7 +32,6 @@ const TabButtons = () => {
                 <IonTabButton tab='profile' href='/tabs/profile'>
                     <IonIcon icon={person} />           
                 </IonTabButton>
-
             </IonTabBar>
     )
 }

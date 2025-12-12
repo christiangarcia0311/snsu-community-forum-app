@@ -1,17 +1,15 @@
 import React from 'react'
-import { IonPage, IonTabs, IonRouterOutlet } from '@ionic/react'
+import { IonTabs, IonRouterOutlet } from '@ionic/react'
 
 
 /* Route Pages */
 import TabRoutes  from '../routes/TabRoutes'
 
-/* Tab Buttons and Header */
-import TabHeader from '../components/tabs/TabHeader'
+/* Tab Buttons */
 import TabButtons from '../components/tabs/TabButton'
 
 const Tabs: React.FC = () => {
     return (
-        <IonPage>
             <IonTabs>
                 <IonRouterOutlet>
                     <TabRoutes />
@@ -19,7 +17,6 @@ const Tabs: React.FC = () => {
 
                 <TabButtons />
             </IonTabs>
-        </IonPage>
     )
 }
 
