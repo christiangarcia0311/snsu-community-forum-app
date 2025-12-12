@@ -27,7 +27,12 @@ def create_send_otp_verification_code(user, request=None, force_regen: bool = Fa
     firstname = getattr(getattr(user, 'profile', None), 'firstname', None) or user.username
     message = f'Hello {firstname},\n\nYour verification code is: {code}\n\nThis code is valid for a short time. If you did not request this, please ignore this message.'
     
-    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', settings.EMAIL_HOST_USER if hasattr(settings, 'EMAIL_HOST_USER') else None)
+    # Prefer DEFAULT_FROM_EMAIL when configured; fall back to EMAIL_HOST_USER or None
+    from_email = None
+    if hasattr(settings, 'DEFAULT_FROM_EMAIL') and settings.DEFAULT_FROM_EMAIL:
+        from_email = settings.DEFAULT_FROM_EMAIL
+    elif hasattr(settings, 'EMAIL_HOST_USER') and settings.EMAIL_HOST_USER:
+        from_email = settings.EMAIL_HOST_USER
     recipient = [user.email]
     
     try:
