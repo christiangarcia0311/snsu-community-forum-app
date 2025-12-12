@@ -506,7 +506,7 @@ const ProfilePage = () => {
 
           <IonLoading
             isOpen={loadingNavigate}
-            message={"Logging out..."}
+            message={"Loading..."}
             spinner="dots"
           />
 
