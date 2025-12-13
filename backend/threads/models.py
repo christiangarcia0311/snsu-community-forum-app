@@ -1,5 +1,4 @@
 from django.db import models
-from cloudinary.models import CloudinaryField
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -18,7 +17,7 @@ class ThreadPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='thread_posts')
     title = models.CharField(max_length=255)
     content = models.TextField()
-    image = CloudinaryField('thread_image', null=True, blank=True)
+    image = models.ImageField(upload_to='thread_images/', null=True, blank=True)
     thread_type = models.CharField(max_length=50, choices=THREAD_TYPES, default='General')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

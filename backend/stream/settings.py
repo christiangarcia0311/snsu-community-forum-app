@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--#se&fb_-#!g6(y53*u%0ywgmj!($6#9ij03xbcvfpb9md#gxx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -181,6 +181,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "https://snsu-community-forum-app.vercel.app",
+    "http://localhost:8100"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -198,11 +199,12 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 # --- MEDIA FILES CONFIGURATION ---
 MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # -- CLOUDINARY CONFIGURATION --
 
+'''
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
     "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
@@ -210,6 +212,8 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+'''
+
 
 # -- JAZZMIN CONFIGURATION --
 JAZZMIN_SETTINGS = {

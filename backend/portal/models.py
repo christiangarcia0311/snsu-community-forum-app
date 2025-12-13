@@ -1,5 +1,4 @@
 from django.db import models
-from cloudinary.models import CloudinaryField
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -80,7 +79,7 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
     course = models.CharField(max_length=50, choices=COURSE_CHOICES)
-    profile_image = CloudinaryField('profile_image', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_profile_details_update = models.DateTimeField(null=True, blank=True)
