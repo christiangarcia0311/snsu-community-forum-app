@@ -317,7 +317,7 @@ const ViewThread: React.FC<ViewThreadProps> = ({
 
                 <IonHeader>
                     <IonToolbar className='home-header-bg' >
-                        <IonTitle>{headerName}'s post</IonTitle>
+                        <IonTitle>{headerName || 'User'}'s post</IonTitle>
                         <IonButton
                             slot='end'
                             fill='clear'

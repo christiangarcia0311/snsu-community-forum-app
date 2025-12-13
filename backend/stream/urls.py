@@ -37,10 +37,6 @@ else:
     # filesystem contains the media files (Render's filesystem is ephemeral).
     try:
         from whitenoise import WhiteNoise
-
-        # WhiteNoise serving is configured in stream.wsgi — no further
-        # action required here. This block is intentionally lightweight
-        # and will silently continue if WhiteNoise isn't available.
         pass
     except Exception:
         pass

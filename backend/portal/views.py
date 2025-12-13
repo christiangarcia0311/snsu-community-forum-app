@@ -144,7 +144,42 @@ class UpdateProfileImageView(APIView):
             'message': 'Profile image updated successfully',
             'profile': serializer.data
         }, status=status.HTTP_200_OK)
-        
+    
+# UPDATE PASSWORD
+class UpdatePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        profile = request.user.profile
+
+        # enforce password-change cooldown (14 days)
+        if not profile.can_change_password():
+            days_remaining = profile.days_until_password_change()
+            return Response({
+                'error': f'You can only change password once every 14 days. Please wait {days_remaining} more day(s).',
+                'days_remaining': days_remaining,
+                'can_change': False
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        old_password = request.data.get('old_password', '')
+        new_password = request.data.get('new_password', '')
+        confirm_password = request.data.get('confirm_password', '')
+
+        if not new_password or new_password != confirm_password:
+            return Response({'error': 'New password and confirmation do not match'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not request.user.check_password(old_password):
+            return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.set_password(new_password)
+        request.user.save()
+
+        # record password change timestamp
+        profile.last_password_change = timezone.now()
+        profile.save()
+
+        return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+    
 # USER FOLLOW
 class FollowUserView(APIView):
     

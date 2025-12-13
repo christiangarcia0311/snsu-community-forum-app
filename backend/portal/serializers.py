@@ -125,6 +125,9 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     
     can_update_profile = serializers.SerializerMethodField()
     days_until_next_update = serializers.SerializerMethodField()
+    # password change cooldown
+    can_change_password = serializers.SerializerMethodField()
+    days_until_password_change = serializers.SerializerMethodField()
     
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
@@ -151,6 +154,8 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'can_update_profile',
             'days_until_next_update',
+            'can_change_password',
+            'days_until_password_change',
             'followers_count',
             'following_count',
             'is_following'
@@ -194,6 +199,12 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
                 following=obj.user
             ).exists()
         return False
+
+    def get_can_change_password(self, obj):
+        return obj.can_change_password()
+
+    def get_days_until_password_change(self, obj):
+        return obj.days_until_password_change()
     
 class UserFollowSerializer(serializers.ModelSerializer):
     follower_username = serializers.CharField(source='follower.username', read_only=True)

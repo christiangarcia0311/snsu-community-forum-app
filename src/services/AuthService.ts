@@ -163,6 +163,23 @@ export const updateProfileImage = async (imageFile: File) => {
     }
 }
 
+export const changePassword = async (oldPassword: string, newPassword: string, confirmPassword: string) => {
+    try {
+        const response = await axios.patch(
+            `${API_AUTH_URL}profile/password/`,
+            { old_password: oldPassword, new_password: newPassword, confirm_password: confirmPassword },
+            { headers: getAuthHeader() }
+        )
+        return response.data
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response?.data) {
+            throw error.response.data
+        }
+        throw { error: 'Failed to change password' }
+    }
+}
+
+
 // -- FOLLOW MANAGEMENT -- 
 export const followUser = async (username: string) => {
     try {

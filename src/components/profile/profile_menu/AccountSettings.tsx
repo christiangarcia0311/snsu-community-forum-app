@@ -19,6 +19,7 @@ import {
 
 // -- SETTING COMPONENTS --
 import ProfileDetails from './settings/ProfileDetails'
+import ChangePassword from './settings/ChangePassword'
 
 
 interface AccountSettingsProps {
@@ -34,6 +35,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
 }) => {
 
     const [showProfileDetails, setShowProfileDetails] = useState(false)
+    const [showChangePassword, setShowChangePassword] = useState(false)
 
     return (
         <>
@@ -66,7 +68,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
                             <p>Update your personal information</p>
                         </IonLabel>
                     </IonItem>
-                    <IonItem button detail={false} lines='full' className='adjust-background'>   
+                    <IonItem button detail={false} lines='full' className='adjust-background' onClick={() => setShowChangePassword(true)}>   
                         <IonLabel>
                             <h2>Change Password</h2>
                             <p>Update your account password</p>
@@ -86,6 +88,10 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
                 isOpen={showProfileDetails}
                 onDidDismiss={() => setShowProfileDetails(false)}
                 onProfileUpdate={onProfileUpdate}
+            />
+            <ChangePassword
+                isOpen={showChangePassword}
+                onDidDismiss={() => setShowChangePassword(false)}
             />
         </>
     )

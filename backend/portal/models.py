@@ -83,6 +83,8 @@ class UserProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_profile_details_update = models.DateTimeField(null=True, blank=True)
+    # track last time password was changed separately
+    last_password_change = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.user.username} - {self.firstname} {self.lastname}"
@@ -111,6 +113,29 @@ class UserProfile(models.Model):
         time_since_update = timezone.now() - self.last_profile_details_update
         days_remaining = (cooldown_period - time_since_update).days
         
+        return max(0, days_remaining)
+
+    def can_change_password(self):
+        """
+        Allow password change once every 14 days.
+        """
+        if not self.last_password_change:
+            return True
+
+        cooldown_period = timedelta(days=14)
+        time_since_change = timezone.now() - self.last_password_change
+        return time_since_change >= cooldown_period
+
+    def days_until_password_change(self):
+        """
+        Days remaining until next allowed password change.
+        """
+        if not self.last_password_change:
+            return 0
+
+        cooldown_period = timedelta(days=14)
+        time_since_change = timezone.now() - self.last_password_change
+        days_remaining = (cooldown_period - time_since_change).days
         return max(0, days_remaining)
     
     class Meta:
