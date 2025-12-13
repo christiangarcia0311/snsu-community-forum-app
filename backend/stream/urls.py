@@ -27,16 +27,5 @@ urlpatterns = [
     path('api/v1/notifications/', include('notifications.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    # In production (DEBUG=False) the app is expected to be served by a
-    # static file server. For quick deployments (like Render) we can let
-    # WhiteNoise serve uploaded media by registering the media directory
-    # in the WSGI app (`stream.wsgi`). This works only when the runtime
-    # filesystem contains the media files (Render's filesystem is ephemeral).
-    try:
-        from whitenoise import WhiteNoise
-        pass
-    except Exception:
-        pass
+#if settings.DEBUG:
+#    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

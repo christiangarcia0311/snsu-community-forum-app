@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'cloudinary',
+    'cloudinary_storage',
     'portal',
     'threads',
     'community',
@@ -177,7 +179,11 @@ SIMPLE_JWT = {
 
 # -- CORS CONFIGURATION --
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://snsu-community-forum-app.vercel.app",
+]
+CORS_ALLOW_CREDENTIALS = True
+
 
 # -- EMAIL / SMTP CONFIGURATION --
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -192,8 +198,18 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 # --- MEDIA FILES CONFIGURATION ---
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+# -- CLOUDINARY CONFIGURATION --
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # -- JAZZMIN CONFIGURATION --
 JAZZMIN_SETTINGS = {
