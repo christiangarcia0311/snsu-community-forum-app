@@ -1,10 +1,10 @@
 
-const HOSTS = '127.0.0.1:8000'
-export const API_AUTH_URL = `http://${HOSTS}/api/v1/auth/`
-export const API_THREAD_URL =  `http://${HOSTS}/api/v1/threads/`
-export const API_COMMUNITY_URL = `http://${HOSTS}/api/v1/community/`
-export const API_NOTIFICATION_URL = `http://${HOSTS}/api/v1/notifications/`
-export const API_LOCAL_BASE_URL =  `http://${HOSTS}/api/v1/`
+const HOSTS = 'stream-app-api.onrender.com'
+export const API_AUTH_URL = `https://${HOSTS}/api/v1/auth/`
+export const API_THREAD_URL =  `https://${HOSTS}/api/v1/threads/`
+export const API_COMMUNITY_URL = `https://${HOSTS}/api/v1/community/`
+export const API_NOTIFICATION_URL = `https://${HOSTS}/api/v1/notifications/`
+export const API_LOCAL_BASE_URL =  `https://${HOSTS}/api/v1/`
 
 /** 
 export const API_AUTH_URL = import.meta.env.VITE_API_AUTH_URL 
