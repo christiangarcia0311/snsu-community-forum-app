@@ -12,7 +12,8 @@ import {
 	IonAlert,
 	IonTitle,
 	IonToolbar,
-	IonFooter
+	IonFooter,
+	IonLabel
 } from '@ionic/react'
 
 import axios from 'axios'
@@ -102,6 +103,11 @@ const Verification: React.FC = () => {
 									className='ion-margin-top'
 								/>
 							) }
+
+							<IonLabel>
+								<h2>Verify your Account</h2>
+								<p>Please Check your inbox or spam for verification code.</p>
+							</IonLabel>
 
 							<IonInput
 								value={otpCode}
